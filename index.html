@@ -249,13 +249,13 @@
       Tell us about your operational challenges. We'll schedule a no-obligation discovery call and tell you exactly how DMAIC can move the needle for your business.
     </p>
 
-    <form class="cta-form" onsubmit="return false;">
+    <form class="cta-form" action="https://formspree.io/f/xbdzwwev" method="POST">
       <div class="cta-row">
-        <input type="text" class="cta-input" placeholder="Your Name" />
-        <input type="text" class="cta-input" placeholder="Company" />
+        <input type="text" class="cta-input" name="name" placeholder="Your Name" />
+        <input type="text" class="cta-input" name="company" placeholder="Company" />
       </div>
-      <input type="email" class="cta-input" placeholder="Email Address" />
-      <select class="cta-input" style="cursor:pointer;">
+      <input type="email" class="cta-input" name="email" placeholder="Email Address" />
+      <select class="cta-input" name="industry" style="cursor:pointer;">
         <option value="" disabled selected>Industry / Sector</option>
         <option>Discrete Manufacturing</option>
         <option>Process Manufacturing</option>
@@ -265,7 +265,7 @@
         <option>Financial Services</option>
         <option>Other</option>
       </select>
-      <textarea class="cta-input" rows="4" placeholder="Describe your challenge in a few lines..."></textarea>
+      <textarea class="cta-input" name="message" rows="4" placeholder="Describe your challenge in a few lines..."></textarea>
       <button type="submit" class="cta-submit">Send Message →</button>
     </form>
   </div>
