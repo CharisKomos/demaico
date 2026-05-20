@@ -1,24 +1,24 @@
 <!DOCTYPE html>
-<!-- saved from url=(0031)http://localhost:3333/#services -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DeMAICo — OT DevOps &amp; Industrial CI/CD</title>
-  <link href="./css2" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css">
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DeMAICo — OT DevOps & Industrial CI/CD</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
-  <a href="http://localhost:3333/#hero" class="nav-logo"><span class="logo-dmaic">D</span>e<span class="logo-dmaic">MAIC</span>o</a>
+  <a href="#hero" class="nav-logo"><span class="logo-dmaic">D</span>e<span class="logo-dmaic">MAIC</span>o</a>
   <ul class="nav-links">
-    <li><a href="http://localhost:3333/#pipeline">Pipeline</a></li>
-    <li><a href="http://localhost:3333/#services">Services</a></li>
-    <li><a href="http://localhost:3333/#industries">Industries</a></li>
-    <li><a href="http://localhost:3333/#contact">Contact</a></li>
+    <li><a href="#pipeline">Pipeline</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#industries">Industries</a></li>
+    <li><a href="#contact">Contact</a></li>
   </ul>
-  <a href="http://localhost:3333/#contact" class="nav-cta">Get a Quote</a>
+  <a href="#contact" class="nav-cta">Get a Quote</a>
   <button class="hamburger" id="hamburger" aria-label="Toggle menu">
     <span></span><span></span><span></span>
   </button>
@@ -27,12 +27,12 @@
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobile-menu">
   <ul>
-    <li><a href="http://localhost:3333/#pipeline" class="mobile-nav-link">Pipeline</a></li>
-    <li><a href="http://localhost:3333/#services" class="mobile-nav-link">Services</a></li>
-    <li><a href="http://localhost:3333/#industries" class="mobile-nav-link">Industries</a></li>
-    <li><a href="http://localhost:3333/#contact" class="mobile-nav-link">Contact</a></li>
+    <li><a href="#pipeline" class="mobile-nav-link">Pipeline</a></li>
+    <li><a href="#services" class="mobile-nav-link">Services</a></li>
+    <li><a href="#industries" class="mobile-nav-link">Industries</a></li>
+    <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
   </ul>
-  <a href="http://localhost:3333/#contact" class="mobile-cta mobile-nav-link">Get a Quote</a>
+  <a href="#contact" class="mobile-cta mobile-nav-link">Get a Quote</a>
 </div>
 
 <!-- HERO -->
@@ -42,9 +42,9 @@
   <p class="hero-tagline">// Commit · Validate · Simulate · Comply · Deploy</p>
 
   <h1 class="hero-title">
-    CI/CD<br>
-    for the<br>
-    <span class="accent">Plant</span><br>
+    CI/CD<br/>
+    for the<br/>
+    <span class="accent">Plant</span><br/>
     Floor.
   </h1>
 
@@ -53,8 +53,8 @@
   </p>
 
   <div class="hero-actions">
-    <a href="http://localhost:3333/#services" class="btn-primary">Our Services</a>
-    <a href="http://localhost:3333/#pipeline" class="btn-ghost">How the Pipeline Works</a>
+    <a href="#services" class="btn-primary">Our Services</a>
+    <a href="#pipeline" class="btn-ghost">How the Pipeline Works</a>
   </div>
 
   <div class="hero-stats">
@@ -75,10 +75,10 @@
 
 <!-- PIPELINE -->
 <section id="pipeline" style="padding: 120px 60px; background: var(--bg-surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-  <div class="dmaic-header reveal visible">
+  <div class="dmaic-header reveal">
     <div>
       <div class="section-label">How It Works</div>
-      <h2>The OT<br>CI/CD Pipeline</h2>
+      <h2>The OT<br/>CI/CD Pipeline</h2>
     </div>
     <p>
       Every change to your PLC, SCADA, or DCS code passes through the same five-stage pipeline — automated, auditable, and safe by design.
@@ -86,31 +86,31 @@
   </div>
 
   <div class="dmaic-track">
-    <div class="dmaic-step reveal visible">
+    <div class="dmaic-step reveal">
       <div class="dmaic-dot"></div>
       <div class="dmaic-letter">1</div>
       <div class="dmaic-word">Commit</div>
       <div class="dmaic-desc">Engineer exports PLC/SCADA code to XML or JSON and pushes to Git. Binary project files are build artifacts — the export is your source of truth.</div>
     </div>
-    <div class="dmaic-step reveal visible">
+    <div class="dmaic-step reveal">
       <div class="dmaic-dot"></div>
       <div class="dmaic-letter">2</div>
       <div class="dmaic-word">Validate</div>
       <div class="dmaic-desc">Automated lint, XML well-formedness checks, tag schema validation, and naming convention enforcement. Catches errors before they reach hardware.</div>
     </div>
-    <div class="dmaic-step reveal visible">
+    <div class="dmaic-step reveal">
       <div class="dmaic-dot"></div>
       <div class="dmaic-letter">3</div>
       <div class="dmaic-word">Test</div>
       <div class="dmaic-desc">Deploy to PLC emulator or PLCSIM. Run automated logic test cases against your exported program. Failures stay in simulation, not on the plant floor.</div>
     </div>
-    <div class="dmaic-step reveal visible">
+    <div class="dmaic-step reveal">
       <div class="dmaic-dot"></div>
       <div class="dmaic-letter">4</div>
       <div class="dmaic-word">Comply</div>
       <div class="dmaic-desc">Automated gates for IEC 62443, ISA-99, OSHA PSM/PSSR, MOC ticket enforcement, and ISO 27001 controls — built into the pipeline, not bolted on after.</div>
     </div>
-    <div class="dmaic-step reveal visible">
+    <div class="dmaic-step reveal">
       <div class="dmaic-dot"></div>
       <div class="dmaic-letter">5</div>
       <div class="dmaic-word">Deploy</div>
@@ -121,19 +121,19 @@
 
 <!-- SERVICES -->
 <section id="services">
-  <div class="reveal visible">
+  <div class="reveal">
     <div class="section-label">What We Do</div>
   </div>
 
-  <div class="services-grid reveal visible">
+  <div class="services-grid reveal">
     <div class="service-card">
       <div class="service-number">01</div>
       <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="10" cy="38" r="4" stroke="#e8890c" stroke-width="1.5"></circle>
-        <circle cx="10" cy="10" r="4" stroke="#e8890c" stroke-width="1.5"></circle>
-        <circle cx="38" cy="20" r="4" stroke="#e8890c" stroke-width="1.5"></circle>
-        <line x1="10" y1="14" x2="10" y2="34" stroke="#e8890c" stroke-width="1.5"></line>
-        <path d="M10 14 Q10 20 38 20" stroke="#e8890c" stroke-width="1.5" fill="none"></path>
+        <circle cx="10" cy="38" r="4" stroke="#e8890c" stroke-width="1.5"/>
+        <circle cx="10" cy="10" r="4" stroke="#e8890c" stroke-width="1.5"/>
+        <circle cx="38" cy="20" r="4" stroke="#e8890c" stroke-width="1.5"/>
+        <line x1="10" y1="14" x2="10" y2="34" stroke="#e8890c" stroke-width="1.5"/>
+        <path d="M10 14 Q10 20 38 20" stroke="#e8890c" stroke-width="1.5" fill="none"/>
       </svg>
       <div class="service-title">OT Configuration Management</div>
       <div class="service-desc">Put every PLC, SCADA, and DCS program under version control. Rockwell L5X, Siemens SCL, Schneider XEF, Ignition JSON, DeltaV, Honeywell, and AVEVA — Git-native, diff-ready, and fully auditable.</div>
@@ -142,15 +142,15 @@
     <div class="service-card">
       <div class="service-number">02</div>
       <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="8" cy="24" r="4" stroke="#e8890c" stroke-width="1.5"></circle>
-        <circle cx="24" cy="24" r="4" stroke="#e8890c" stroke-width="1.5"></circle>
-        <circle cx="40" cy="24" r="4" stroke="#e8890c" stroke-width="1.5"></circle>
-        <line x1="12" y1="24" x2="20" y2="24" stroke="#e8890c" stroke-width="1.5"></line>
-        <line x1="28" y1="24" x2="36" y2="24" stroke="#e8890c" stroke-width="1.5"></line>
-        <polyline points="34,20 40,24 34,28" stroke="#e8890c" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></polyline>
-        <line x1="8" y1="14" x2="8" y2="20" stroke="#e8890c" stroke-width="1" opacity="0.5"></line>
-        <line x1="24" y1="14" x2="24" y2="20" stroke="#e8890c" stroke-width="1" opacity="0.5"></line>
-        <line x1="40" y1="14" x2="40" y2="20" stroke="#e8890c" stroke-width="1" opacity="0.5"></line>
+        <circle cx="8" cy="24" r="4" stroke="#e8890c" stroke-width="1.5"/>
+        <circle cx="24" cy="24" r="4" stroke="#e8890c" stroke-width="1.5"/>
+        <circle cx="40" cy="24" r="4" stroke="#e8890c" stroke-width="1.5"/>
+        <line x1="12" y1="24" x2="20" y2="24" stroke="#e8890c" stroke-width="1.5"/>
+        <line x1="28" y1="24" x2="36" y2="24" stroke="#e8890c" stroke-width="1.5"/>
+        <polyline points="34,20 40,24 34,28" stroke="#e8890c" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <line x1="8" y1="14" x2="8" y2="20" stroke="#e8890c" stroke-width="1" opacity="0.5"/>
+        <line x1="24" y1="14" x2="24" y2="20" stroke="#e8890c" stroke-width="1" opacity="0.5"/>
+        <line x1="40" y1="14" x2="40" y2="20" stroke="#e8890c" stroke-width="1" opacity="0.5"/>
       </svg>
       <div class="service-title">CI/CD Pipeline Automation</div>
       <div class="service-desc">Full pipeline design and deployment for industrial code — vendor-specific lint, compliance checks, emulator testing, and gated deployment through simulation, staging, and production environments. GitLab and GitHub native.</div>
@@ -159,11 +159,11 @@
     <div class="service-card">
       <div class="service-number">03</div>
       <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="6" y="28" width="36" height="14" stroke="#e8890c" stroke-width="1.5"></rect>
-        <polyline points="6,28 6,18 18,28 18,18 30,28 30,18 42,28" stroke="#e8890c" stroke-width="1.5" fill="none" stroke-linejoin="round"></polyline>
-        <line x1="16" y1="32" x2="16" y2="38" stroke="#e8890c" stroke-width="1.5"></line>
-        <line x1="24" y1="32" x2="24" y2="38" stroke="#e8890c" stroke-width="1.5"></line>
-        <line x1="32" y1="32" x2="32" y2="38" stroke="#e8890c" stroke-width="1.5"></line>
+        <rect x="6" y="28" width="36" height="14" stroke="#e8890c" stroke-width="1.5"/>
+        <polyline points="6,28 6,18 18,28 18,18 30,28 30,18 42,28" stroke="#e8890c" stroke-width="1.5" fill="none" stroke-linejoin="round"/>
+        <line x1="16" y1="32" x2="16" y2="38" stroke="#e8890c" stroke-width="1.5"/>
+        <line x1="24" y1="32" x2="24" y2="38" stroke="#e8890c" stroke-width="1.5"/>
+        <line x1="32" y1="32" x2="32" y2="38" stroke="#e8890c" stroke-width="1.5"/>
       </svg>
       <div class="service-title">MES DevOps</div>
       <div class="service-desc">Apply DevOps principles to Manufacturing Execution Systems — automated testing, deployment pipelines, and structured change management for MES configurations, integrations, and ERP connectivity.</div>
@@ -172,8 +172,8 @@
     <div class="service-card">
       <div class="service-number">04</div>
       <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M24 6L8 14V26C8 35 24 42 24 42C24 42 40 35 40 26V14L24 6Z" stroke="#e8890c" stroke-width="1.5" stroke-linejoin="round"></path>
-        <path d="M16 24L21 29L33 18" stroke="#e8890c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M24 6L8 14V26C8 35 24 42 24 42C24 42 40 35 40 26V14L24 6Z" stroke="#e8890c" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M16 24L21 29L33 18" stroke="#e8890c" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
       <div class="service-title">Compliance Automation</div>
       <div class="service-desc">Automated enforcement of IEC 62443, ISA-99, OSHA PSM, PSSR, Management of Change (MOC), and ISO 27001 controls — enforced at every commit, with machine-generated audit reports for every release.</div>
@@ -182,14 +182,14 @@
     <div class="service-card">
       <div class="service-number">05</div>
       <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="8" y="14" width="32" height="24" rx="2" stroke="#e8890c" stroke-width="1.5"></rect>
-        <line x1="8" y1="22" x2="40" y2="22" stroke="#e8890c" stroke-width="1.5"></line>
-        <line x1="24" y1="22" x2="24" y2="38" stroke="#e8890c" stroke-width="1" opacity="0.4"></line>
-        <circle cx="16" cy="18" r="2" stroke="#e8890c" stroke-width="1"></circle>
-        <circle cx="24" cy="18" r="2" stroke="#e8890c" stroke-width="1"></circle>
-        <circle cx="32" cy="18" r="2" stroke="#e8890c" stroke-width="1"></circle>
-        <rect x="12" y="26" width="8" height="8" rx="1" stroke="#e8890c" stroke-width="1" opacity="0.7"></rect>
-        <rect x="28" y="26" width="8" height="8" rx="1" stroke="#e8890c" stroke-width="1" opacity="0.7"></rect>
+        <rect x="8" y="14" width="32" height="24" rx="2" stroke="#e8890c" stroke-width="1.5"/>
+        <line x1="8" y1="22" x2="40" y2="22" stroke="#e8890c" stroke-width="1.5"/>
+        <line x1="24" y1="22" x2="24" y2="38" stroke="#e8890c" stroke-width="1" opacity="0.4"/>
+        <circle cx="16" cy="18" r="2" stroke="#e8890c" stroke-width="1"/>
+        <circle cx="24" cy="18" r="2" stroke="#e8890c" stroke-width="1"/>
+        <circle cx="32" cy="18" r="2" stroke="#e8890c" stroke-width="1"/>
+        <rect x="12" y="26" width="8" height="8" rx="1" stroke="#e8890c" stroke-width="1" opacity="0.7"/>
+        <rect x="28" y="26" width="8" height="8" rx="1" stroke="#e8890c" stroke-width="1" opacity="0.7"/>
       </svg>
       <div class="service-title">Simulation Containerization</div>
       <div class="service-desc">Wrap AspenPlus, HYSYS, DWSIM, Cantera, and Cape-Open simulators in containerized REST APIs. Run process simulation headlessly as part of your CI pipeline — repeatable, automated, and scalable.</div>
@@ -198,14 +198,14 @@
     <div class="service-card">
       <div class="service-number">06</div>
       <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <polyline points="6,38 14,24 22,30 30,14 38,20 44,10" stroke="#e8890c" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></polyline>
-        <circle cx="14" cy="24" r="2.5" fill="#e8890c"></circle>
-        <circle cx="22" cy="30" r="2.5" fill="#e8890c"></circle>
-        <circle cx="30" cy="14" r="2.5" fill="#e8890c"></circle>
-        <circle cx="38" cy="20" r="2.5" fill="#e8890c"></circle>
-        <line x1="6" y1="42" x2="44" y2="42" stroke="#e8890c" stroke-width="1" opacity="0.4"></line>
+        <polyline points="6,38 14,24 22,30 30,14 38,20 44,10" stroke="#e8890c" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="14" cy="24" r="2.5" fill="#e8890c"/>
+        <circle cx="22" cy="30" r="2.5" fill="#e8890c"/>
+        <circle cx="30" cy="14" r="2.5" fill="#e8890c"/>
+        <circle cx="38" cy="20" r="2.5" fill="#e8890c"/>
+        <line x1="6" y1="42" x2="44" y2="42" stroke="#e8890c" stroke-width="1" opacity="0.4"/>
       </svg>
-      <div class="service-title">Historian &amp; Tag Intelligence</div>
+      <div class="service-title">Historian & Tag Intelligence</div>
       <div class="service-desc">Tag mapping, data pipeline design, and real-time dashboards built from historian data. Turn raw OT time-series into operational intelligence — connected to your CI/CD workflow and version-controlled alongside your control code.</div>
     </div>
   </div>
@@ -214,20 +214,20 @@
 <!-- INDUSTRIES -->
 <section id="industries">
   <div class="industries-layout">
-    <div class="industries-left reveal visible">
+    <div class="industries-left reveal">
       <div class="section-label">Who We Serve</div>
-      <h2>Industries<br>We Work<br>In</h2>
+      <h2>Industries<br/>We Work<br/>In</h2>
       <p>
         DeMAICo brings industrial DevOps expertise to environments where software errors have real-world consequences. Our consultants understand both the code and the process it controls.
       </p>
-      <a href="http://localhost:3333/#contact" class="btn-primary" style="display:inline-block; margin-top: 8px;">Start a Conversation</a>
+      <a href="#contact" class="btn-primary" style="display:inline-block; margin-top: 8px;">Start a Conversation</a>
     </div>
 
-    <div class="industries-list reveal visible">
+    <div class="industries-list reveal">
       <div class="industry-item">
         <div class="industry-index">01</div>
         <div>
-          <div class="industry-name">Oil &amp; Gas &amp; Petrochemical</div>
+          <div class="industry-name">Oil & Gas & Petrochemical</div>
           <div class="industry-detail">Pipeline control, refinery DCS, and offshore SCADA — where OSHA PSM and MOC are operational mandates, not checkboxes.</div>
         </div>
       </div>
@@ -241,7 +241,7 @@
       <div class="industry-item">
         <div class="industry-index">03</div>
         <div>
-          <div class="industry-name">Pharmaceutical &amp; Biotech</div>
+          <div class="industry-name">Pharmaceutical & Biotech</div>
           <div class="industry-detail">GxP-aligned change control, 21 CFR Part 11–aware pipelines, and validated deployment workflows for regulated environments.</div>
         </div>
       </div>
@@ -255,14 +255,14 @@
       <div class="industry-item">
         <div class="industry-index">05</div>
         <div>
-          <div class="industry-name">Power &amp; Utilities</div>
+          <div class="industry-name">Power & Utilities</div>
           <div class="industry-detail">Substation automation, SCADA modernization, and IEC 62443-compliant CI/CD for critical infrastructure.</div>
         </div>
       </div>
       <div class="industry-item">
         <div class="industry-index">06</div>
         <div>
-          <div class="industry-name">Food &amp; Beverage</div>
+          <div class="industry-name">Food & Beverage</div>
           <div class="industry-detail">Hygienic process control, recipe management pipelines, and OT version control for continuous and batch production lines.</div>
         </div>
       </div>
@@ -272,27 +272,27 @@
 
 <!-- CONTACT / CTA -->
 <section id="contact">
-  <div class="cta-inner reveal visible">
+  <div class="cta-inner reveal">
     <div class="section-label">Start the Conversation</div>
-    <h2>Ready to<br><span class="accent">Version</span><br>Your Plant?</h2>
+    <h2>Ready to<br/><span class="accent">Version</span><br/>Your Plant?</h2>
     <p>
       Tell us about your OT environment. We'll schedule a no-obligation discovery call and walk you through exactly what a CI/CD pipeline would look like for your control systems.
     </p>
 
     <form class="cta-form" action="https://formspree.io/f/xbdzwwev" method="POST">
       <div class="cta-row">
-        <input type="text" class="cta-input" name="name" placeholder="Your Name">
-        <input type="text" class="cta-input" name="company" placeholder="Company">
+        <input type="text" class="cta-input" name="name" placeholder="Your Name" />
+        <input type="text" class="cta-input" name="company" placeholder="Company" />
       </div>
-      <input type="email" class="cta-input" name="email" placeholder="Email Address">
+      <input type="email" class="cta-input" name="email" placeholder="Email Address" />
       <select class="cta-input" name="industry" style="cursor:pointer;">
-        <option value="" disabled="" selected="">Industry / Sector</option>
-        <option>Oil &amp; Gas &amp; Petrochemical</option>
+        <option value="" disabled selected>Industry / Sector</option>
+        <option>Oil & Gas & Petrochemical</option>
         <option>Chemical Manufacturing</option>
-        <option>Pharmaceutical &amp; Biotech</option>
+        <option>Pharmaceutical & Biotech</option>
         <option>Discrete Manufacturing</option>
-        <option>Power &amp; Utilities</option>
-        <option>Food &amp; Beverage</option>
+        <option>Power & Utilities</option>
+        <option>Food & Beverage</option>
         <option>Other</option>
       </select>
       <textarea class="cta-input" name="message" rows="4" placeholder="Describe your OT environment and challenge in a few lines..."></textarea>
@@ -306,14 +306,13 @@
   <div class="footer-logo"><span class="logo-dmaic">D</span>e<span class="logo-dmaic">MAIC</span>o</div>
   <span class="footer-copy">© 2026 DeMAICo Consulting. All rights reserved.</span>
   <ul class="footer-links">
-    <li><a href="http://localhost:3333/#pipeline">Pipeline</a></li>
-    <li><a href="http://localhost:3333/#services">Services</a></li>
-    <li><a href="http://localhost:3333/#industries">Industries</a></li>
-    <li><a href="http://localhost:3333/#contact">Contact</a></li>
+    <li><a href="#pipeline">Pipeline</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#industries">Industries</a></li>
+    <li><a href="#contact">Contact</a></li>
   </ul>
 </footer>
 
-<script src="./DeMAICo — OT DevOps &amp; Industrial CI_CD_files/main.js.download"></script>
-
-
-</body></html>
+<script src="main.js"></script>
+</body>
+</html>
