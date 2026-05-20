@@ -210,7 +210,7 @@ section {
 #hero {
   min-height: 100vh;
   display: flex; flex-direction: column; justify-content: flex-end;
-  padding: 0 60px 80px;
+  padding: 88px 60px 80px;
   position: relative;
 }
 
@@ -698,7 +698,7 @@ footer {
 /* Large screens */
 @media (min-width: 1400px) {
   nav { padding: 0 80px; }
-  #hero { padding: 0 80px 100px; }
+  #hero { padding: 100px 80px 100px; }
   .hero-stats { right: 80px; bottom: 100px; }
   .hero-number { right: 80px; }
   #dmaic, #services, #industries, #contact { padding: 140px 80px; }
@@ -706,12 +706,18 @@ footer {
   .services-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
+/* Mid-range desktop — 15.6" laptops at 1366×768 */
+@media (max-width: 1366px) and (min-width: 1025px) {
+  .hero-title { font-size: clamp(52px, 6vw, 96px); }
+  .hero-sub { font-size: 15px; margin-bottom: 28px; }
+}
+
 /* Tablet landscape */
 @media (max-width: 1024px) {
   nav { padding: 0 36px; }
   .nav-links { gap: 24px; }
 
-  #hero { padding: 0 36px 80px; }
+  #hero { padding: 88px 36px 80px; }
   .hero-number { font-size: 18vw; right: 36px; top: 100px; opacity: 0.6; }
   .hero-stats { right: 36px; bottom: 80px; gap: 20px; }
   .hero-stat-num { font-size: 28px; }
