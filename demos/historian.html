@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Historian Tag Pipeline &mdash; demaico</title>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&display=swap');
+  :root {
+    --bg:            #0b0b0b;
+    --surface:       #111111;
+    --card:          #161616;
+    --card-hover:    #1c1c1c;
+    --accent:        #e8890c;
+    --accent-dim:    #a05f06;
+    --accent-glow:   rgba(232,137,12,0.10);
+    --text:          #f0ece4;
+    --muted:         #888070;
+    --faint:         #2a2520;
+    --border:        rgba(232,137,12,0.14);
+    --border-strong: rgba(232,137,12,0.32);
+    --green:  #2EB67D;
+    --red:    #E01E5A;
+    --yellow: #ECB22E;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+  /* ── Header ── */
+  header{background:var(--surface);border-bottom:1px solid var(--border-strong);padding:14px 32px;display:flex;align-items:center;gap:14px}
+  .wordmark{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:3px;color:var(--text)}
+  .wordmark .o{color:var(--accent)}
+  .header-divider{width:1px;height:28px;background:var(--border-strong);margin:0 4px}
+  .header-text h1{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:2px}
+  .header-text .sub{color:var(--muted);font-size:.72rem;margin-top:2px;font-family:'IBM Plex Mono',monospace}
+  .header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+  .live-label{color:var(--green);font-size:.72rem;font-weight:700;letter-spacing:.12em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+  .demo-badge{background:var(--accent-glow);color:var(--accent);border:1px solid var(--border-strong);border-radius:2px;padding:3px 10px;font-size:.68rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:3px;text-transform:uppercase}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+  /* ── Layout ── */
+  .container{max-width:1500px;margin:0 auto;padding:28px 32px}
+
+  /* ── Stats ── */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:32px}
+  .stat-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:20px 22px;position:relative;overflow:hidden}
+  .stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+  .stat-card.s-accent::after{background:var(--accent)}
+  .stat-card.s-green::after{background:var(--green)}
+  .stat-card.s-red::after{background:var(--red)}
+  .stat-card.s-yellow::after{background:var(--yellow)}
+  .stat-card .label{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px}
+  .stat-card .value{font-family:'Bebas Neue',sans-serif;font-size:3.2rem;line-height:1;color:var(--text)}
+  .stat-card.s-accent .value{color:var(--accent)}
+  .stat-card.s-green .value{color:var(--green)}
+  .stat-card.s-red   .value{color:var(--red)}
+  .stat-card.s-yellow .value{color:var(--yellow)}
+  .stat-card .delta{font-size:.7rem;color:var(--muted);margin-top:6px;font-family:'IBM Plex Mono',monospace}
+
+  /* ── Source grid ── */
+  .source-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-bottom:28px}
+  .source-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:12px 16px;display:flex;align-items:center;gap:12px;transition:border-color .2s}
+  .source-card:hover{border-color:var(--border-strong)}
+  .source-icon{font-size:1.1rem}
+  .source-info .name{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.5px}
+  .source-info .count{font-size:.7rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:2px}
+  .source-bar-wrap{flex:1;height:2px;background:var(--faint);border-radius:1px;overflow:hidden}
+  .source-bar{height:100%;background:var(--accent)}
+
+  /* ── Section title ── */
+  .section-title{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);font-weight:700;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+
+  /* ── Toolbar ── */
+  .toolbar{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .toolbar input,.toolbar select{background:var(--card);border:1px solid var(--border);border-radius:2px;color:var(--text);padding:7px 12px;font-size:.82rem;outline:none;font-family:'Barlow',sans-serif}
+  .toolbar input{flex:1;min-width:200px}
+  .toolbar input::placeholder{color:var(--muted)}
+  .toolbar input:focus,.toolbar select:focus{border-color:var(--accent)}
+  .toolbar .count-label{color:var(--muted);font-size:.72rem;margin-left:auto;font-family:'IBM Plex Mono',monospace}
+
+  /* ── Table ── */
+  .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:3px;margin-bottom:32px}
+  table{width:100%;border-collapse:collapse;font-size:.875rem}
+  thead{background:var(--surface)}
+  thead th{padding:10px 16px;text-align:left;color:var(--muted);font-weight:700;font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;border-bottom:1px solid var(--border);white-space:nowrap;font-family:'Barlow Condensed',sans-serif}
+  tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+  tbody tr:last-child{border-bottom:none}
+  tbody tr:hover{background:rgba(232,137,12,.04)}
+  tbody td{padding:10px 16px;vertical-align:middle}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:.78rem}
+
+  /* ── Badges ── */
+  .badge{display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-weight:700;letter-spacing:.08em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+  .badge.success,.badge.passed,.badge.converged{background:rgba(46,182,125,.1);color:var(--green);border:1px solid rgba(46,182,125,.22)}
+  .badge.failed   {background:rgba(224,30,90,.1); color:var(--red);   border:1px solid rgba(224,30,90,.22)}
+  .badge.partial  {background:rgba(236,178,46,.1);color:var(--yellow);border:1px solid rgba(236,178,46,.22)}
+  .badge.running  {background:var(--accent-glow);  color:var(--accent);border:1px solid var(--border-strong)}
+  .badge.queued   {background:rgba(255,255,255,.03);color:var(--muted); border:1px solid var(--border)}
+  .badge.skipped  {background:rgba(255,255,255,.03);color:var(--muted); border:1px solid var(--border)}
+
+  /* ── Pills ── */
+  .pill{display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+  .pill-accent{background:var(--accent-glow);color:var(--accent);border:1px solid var(--border-strong)}
+  .pill-muted {background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--border)}
+  .pill-green {background:rgba(46,182,125,.08);color:var(--green);border:1px solid rgba(46,182,125,.2)}
+  .pill-red   {background:rgba(224,30,90,.08); color:var(--red);  border:1px solid rgba(224,30,90,.2)}
+  .pill-yellow{background:rgba(236,178,46,.08);color:var(--yellow);border:1px solid rgba(236,178,46,.2)}
+
+  /* ── New-row flash ── */
+  .new-row{animation:newrow .9s ease}
+  @keyframes newrow{from{background:rgba(232,137,12,.1)}to{background:transparent}}
+
+  /* ── Footer ── */
+  footer{margin-top:40px;padding:18px 32px;border-top:1px solid var(--border);color:var(--muted);font-size:.72rem;display:flex;justify-content:space-between;align-items:center;font-family:'IBM Plex Mono',monospace}
+  .footer-links a{color:var(--accent);text-decoration:none}
+  .footer-links a:hover{text-decoration:underline}
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar{width:4px;height:4px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--faint);border-radius:2px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wordmark">DEMAIC<span class="o">O</span></div>
+  <div class="header-divider"></div>
+  <div class="header-text">
+    <h1>Historian Tag Pipeline</h1>
+    <div class="sub">Tag read &rarr; validate &rarr; map &rarr; simulate &middot; Historian Tag Mapping</div>
+  </div>
+  <div class="header-right">
+    <span class="demo-badge">Demo</span>
+    <div class="live-dot"></div>
+    <span class="live-label">Live</span>
+  </div>
+</header>
+<div class="container">
+
+  <div class="stats">
+    <div class="stat-card s-accent"><div class="label">Pipeline Runs</div><div class="value" id="sr">0</div><div class="delta" id="sl">every 5 min</div></div>
+    <div class="stat-card s-green"><div class="label">Tags Read</div><div class="value" id="st">0</div><div class="delta" id="stsub"></div></div>
+    <div class="stat-card s-red"><div class="label">Bad Values Caught</div><div class="value" id="sb">0</div><div class="delta">blocked from simulation</div></div>
+    <div class="stat-card s-yellow"><div class="label">Tags Mapped</div><div class="value" id="sm">0</div><div class="delta" id="smpct"></div></div>
+  </div>
+
+  <div class="section-title">Historian Source Coverage</div>
+  <div class="source-grid" id="hist-grid"></div>
+
+  <div class="toolbar">
+    <input type="text" id="ft" placeholder="Search by historian, run ID&hellip;" oninput="applyFilter()">
+    <select id="fs" onchange="applyFilter()"><option value="">All statuses</option><option value="success">Success</option><option value="partial">Partial</option><option value="failed">Failed</option></select>
+    <select id="fh" onchange="applyFilter()"><option value="">All historians</option><option value="pi_web_api">OSIsoft PI</option><option value="ip21">AspenTech IP.21</option><option value="phd">Honeywell PHD</option><option value="wonderware">AVEVA Historian</option><option value="influxdb">InfluxDB</option></select>
+    <span class="count-label" id="vc"></span>
+  </div>
+
+  <div class="section-title">Pipeline Run History</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Time</th><th>Run #</th><th>Historian</th><th>Tags Read</th><th>Valid</th><th>Bad Caught</th><th>Mapped</th><th>Duration</th><th>Status</th></tr></thead>
+    <tbody id="runs-body"></tbody>
+  </table></div>
+
+  <div class="section-title">Last Run &mdash; Tag Detail</div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Historian Tag</th><th>Source</th><th>Raw Value</th><th>Unit</th><th>Quality</th><th>Validation</th><th>Mapped To</th><th>Sim Input</th></tr></thead>
+    <tbody id="tags-body"></tbody>
+  </table></div>
+</div>
+<footer>
+  <div>demaico &mdash; Historian Tag Pipeline Dashboard &mdash; Demo Mode</div>
+  <div class="footer-links"><a href="https://github.com/CharisKomos/demaico_HistorianTagMapping_PipelineRunSimulation" target="_blank">GitHub Repository</a></div>
+</footer>
+<script>
+const HM={pi_web_api:{label:"OSIsoft PI Web API",icon:"&#x1f535;"},ip21:{label:"AspenTech IP.21",icon:"&#x1f7e2;"},phd:{label:"Honeywell PHD",icon:"&#x1f7e0;"},wonderware:{label:"AVEVA Historian",icon:"&#x1f7e1;"},influxdb:{label:"InfluxDB",icon:"&#x26aa;"}};
+const RUNS=[
+  {id:"RUN-012",ts:"2026-05-28T10:10:00Z",h:"pi_web_api",tr:8,v:8,b:0,m:8,dur:2.1,status:"success"},
+  {id:"RUN-011",ts:"2026-05-28T10:05:00Z",h:"pi_web_api",tr:8,v:7,b:1,m:7,dur:2.4,status:"partial"},
+  {id:"RUN-010",ts:"2026-05-28T10:00:00Z",h:"ip21",      tr:8,v:8,b:0,m:8,dur:3.1,status:"success"},
+  {id:"RUN-009",ts:"2026-05-28T09:55:00Z",h:"phd",       tr:8,v:6,b:2,m:6,dur:2.8,status:"partial"},
+  {id:"RUN-008",ts:"2026-05-28T09:50:00Z",h:"wonderware",tr:8,v:8,b:0,m:8,dur:2.2,status:"success"},
+  {id:"RUN-007",ts:"2026-05-28T09:45:00Z",h:"influxdb",  tr:8,v:8,b:0,m:8,dur:1.8,status:"success"},
+  {id:"RUN-006",ts:"2026-05-28T09:40:00Z",h:"pi_web_api",tr:8,v:8,b:0,m:8,dur:2.0,status:"success"},
+  {id:"RUN-005",ts:"2026-05-28T09:35:00Z",h:"ip21",      tr:8,v:5,b:3,m:5,dur:3.3,status:"partial"},
+  {id:"RUN-004",ts:"2026-05-28T09:30:00Z",h:"phd",       tr:8,v:8,b:0,m:8,dur:2.7,status:"success"},
+  {id:"RUN-003",ts:"2026-05-28T09:25:00Z",h:"wonderware",tr:8,v:8,b:0,m:8,dur:2.1,status:"success"},
+  {id:"RUN-002",ts:"2026-05-28T09:20:00Z",h:"influxdb",  tr:0,v:0,b:0,m:0,dur:0.4,status:"failed"},
+  {id:"RUN-001",ts:"2026-05-28T09:15:00Z",h:"pi_web_api",tr:8,v:8,b:0,m:8,dur:2.3,status:"success"},
+];
+const TAGS=[
+  {tag:"REACTOR.TIC-101.PV",src:"pi_web_api",raw:"84.3",    unit:"&#x00b0;C",quality:"GOOD",valid:true, mapped:"reactor_temperature",  sim:"84.3"},
+  {tag:"REACTOR.FIC-201.PV",src:"pi_web_api",raw:"124.7",   unit:"kg/h",     quality:"GOOD",valid:true, mapped:"feed_flow_rate",        sim:"124.7"},
+  {tag:"REACTOR.PI-301.PV", src:"pi_web_api",raw:"3.42",    unit:"bar",      quality:"GOOD",valid:true, mapped:"reactor_pressure",      sim:"3.42"},
+  {tag:"REACTOR.LIC-401.PV",src:"pi_web_api",raw:"62.1",    unit:"%",        quality:"GOOD",valid:true, mapped:"reactor_level",         sim:"62.1"},
+  {tag:"REACTOR.AIC-501.PV",src:"pi_web_api",raw:"999999.0",unit:"pH",       quality:"BAD", valid:false,mapped:"&mdash;",           sim:"&mdash;"},
+  {tag:"REACTOR.TIC-601.PV",src:"pi_web_api",raw:"22.1",    unit:"&#x00b0;C",quality:"GOOD",valid:true, mapped:"coolant_temperature",   sim:"22.1"},
+  {tag:"REACTOR.FIC-701.PV",src:"pi_web_api",raw:"Comm Fail",unit:"kg/h",    quality:"BAD", valid:false,mapped:"&mdash;",           sim:"&mdash;"},
+  {tag:"REACTOR.TIC-801.PV",src:"pi_web_api",raw:"41.8",    unit:"&#x00b0;C",quality:"GOOD",valid:true, mapped:"product_temperature",   sim:"41.8"},
+];
+function ft(ts){try{return new Date(ts).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"});}catch{return ts;}}
+function renderStats(){
+  const runs=RUNS.length,tags=RUNS.reduce((s,r)=>s+r.tr,0),bad=RUNS.reduce((s,r)=>s+r.b,0),mapped=RUNS.reduce((s,r)=>s+r.m,0);
+  document.getElementById("sr").textContent=runs;document.getElementById("st").textContent=tags;document.getElementById("sb").textContent=bad;document.getElementById("sm").textContent=mapped;
+  document.getElementById("sl").textContent="last: "+ft(RUNS[0].ts);
+  document.getElementById("stsub").textContent="across "+runs+" runs";
+  document.getElementById("smpct").textContent=Math.round(mapped/Math.max(tags,1)*100)+"% mapping rate";
+}
+function renderHistorians(){
+  const c={};RUNS.forEach(r=>{c[r.h]=(c[r.h]||0)+1;});const mx=Math.max(...Object.values(c));
+  document.getElementById("hist-grid").innerHTML=Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([h,n])=>{const m=HM[h]||{label:h,icon:"&#x1f4ca;"};return '<div class="source-card"><div class="source-icon">'+m.icon+'</div><div class="source-info"><div class="name">'+m.label+'</div><div class="count">'+n+' run'+(n>1?"s":"")+'</div></div><div style="flex:1"><div class="source-bar-wrap"><div class="source-bar" style="width:'+Math.round(n/mx*100)+'%"></div></div></div></div>';}).join("");
+}
+function runRow(r,isNew){
+  const hm=HM[r.h]||{label:r.h};
+  const bc=r.b>0?'<span style="color:var(--red);font-weight:700">'+r.b+'</span>':'<span style="color:var(--muted)">0</span>';
+  return '<tr class="'+(isNew?"new-row":"")+'" data-status="'+r.status+'" data-historian="'+r.h+'" data-text="'+(r.id+r.h).toLowerCase()+'">'
+    +'<td class="mono" style="color:var(--muted);white-space:nowrap">'+ft(r.ts)+'</td>'
+    +'<td class="mono" style="color:var(--accent)">'+r.id+'</td>'
+    +'<td><span class="pill pill-accent">'+hm.label+'</span></td>'
+    +'<td class="mono">'+r.tr+'</td>'
+    +'<td class="mono" style="color:var(--green)">'+r.v+'</td>'
+    +'<td>'+bc+'</td>'
+    +'<td class="mono" style="color:var(--yellow)">'+r.m+'</td>'
+    +'<td class="mono" style="color:var(--muted)">'+(r.dur>0?r.dur.toFixed(1)+"s":"&mdash;")+'</td>'
+    +'<td><span class="badge '+r.status+'">'+r.status+'</span></td>'
+    +'</tr>';
+}
+function tagRow(t){
+  const raw=t.valid?'<span style="color:var(--green)">'+t.raw+'</span>':'<span style="color:var(--red);font-weight:700">&#x26a0; '+t.raw+'</span>';
+  return '<tr>'
+    +'<td class="mono">'+t.tag+'</td>'
+    +'<td><span class="pill pill-accent">'+(HM[t.src]||{label:t.src}).label+'</span></td>'
+    +'<td>'+raw+'</td>'
+    +'<td class="mono" style="color:var(--muted)">'+t.unit+'</td>'
+    +'<td class="mono" style="color:'+(t.quality==="GOOD"?"var(--green)":"var(--red)")+'">'+t.quality+'</td>'
+    +'<td>'+(t.valid?'<span style="color:var(--green)">&#x2713; valid</span>':'<span style="color:var(--red)">&#x2717; rejected</span>')+'</td>'
+    +'<td class="mono" style="color:var(--yellow)">'+t.mapped+'</td>'
+    +'<td class="mono">'+t.sim+'</td>'
+    +'</tr>';
+}
+function renderRuns(){document.getElementById("runs-body").innerHTML=RUNS.map(r=>runRow(r,false)).join("");applyFilter();}
+function renderTags(){document.getElementById("tags-body").innerHTML=TAGS.map(tagRow).join("");}
+function applyFilter(){
+  const txt=document.getElementById("ft").value.toLowerCase(),st=document.getElementById("fs").value,hf=document.getElementById("fh").value;
+  let v=0;document.querySelectorAll("#runs-body tr").forEach(row=>{const ok=(!txt||row.dataset.text.includes(txt))&&(!st||row.dataset.status===st)&&(!hf||row.dataset.historian===hf);row.style.display=ok?"":"none";if(ok)v++;});
+  document.getElementById("vc").textContent=v===RUNS.length?RUNS.length+" runs":v+" of "+RUNS.length+" runs";
+}
+const LIVE=[
+  {h:"pi_web_api",tr:8,v:8,b:0,m:8,dur:2.0,status:"success"},
+  {h:"influxdb",  tr:8,v:7,b:1,m:7,dur:1.9,status:"partial"},
+  {h:"phd",       tr:8,v:8,b:0,m:8,dur:2.6,status:"success"},
+  {h:"wonderware",tr:8,v:8,b:0,m:8,dur:2.2,status:"success"},
+];
+let li=0,rc=13;
+function addLive(){const b=LIVE[li%LIVE.length];const r=Object.assign({},b,{id:"RUN-"+String(rc).padStart(3,"0"),ts:new Date().toISOString()});rc++;li++;RUNS.unshift(r);document.getElementById("runs-body").insertAdjacentHTML("afterbegin",runRow(r,true));applyFilter();renderStats();}
+setInterval(addLive,8000);
+renderStats();renderHistorians();renderRuns();renderTags();
+document.getElementById("vc").textContent=RUNS.length+" runs";
+</script>
+</body></html>

@@ -15,6 +15,7 @@
   <ul class="nav-links">
     <li><a href="#pipeline">Approach</a></li>
     <li><a href="#services">Services</a></li>
+    <li><a href="#work">Work</a></li>
     <li><a href="#industries">Industries</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
@@ -29,6 +30,7 @@
   <ul>
     <li><a href="#pipeline" class="mobile-nav-link">Approach</a></li>
     <li><a href="#services" class="mobile-nav-link">Services</a></li>
+    <li><a href="#work" class="mobile-nav-link">Work</a></li>
     <li><a href="#industries" class="mobile-nav-link">Industries</a></li>
     <li><a href="#contact" class="mobile-nav-link">Contact</a></li>
   </ul>
@@ -230,6 +232,66 @@
       <div class="service-title">Automated Batch Records</div>
       <div class="service-desc">Batch records are compiled automatically at batch close — pulling from MES, PI Historian, and LIMS simultaneously — with deviations flagged in real time rather than discovered during QA review. What used to take days of manual data gathering is available the moment the batch ends, with a complete, audit-ready package. Built for pharmaceutical and regulated manufacturing environments.</div>
     </div>
+  </div>
+</section>
+
+<!-- WORK / DEMOS -->
+<section id="work">
+  <div class="reveal">
+    <div class="section-label">Our Work</div>
+    <p class="demos-subtitle">Each demo shows a real demaico deliverable with simulated plant data. Connect your historian, MES, or simulator and the data becomes live.</p>
+  </div>
+
+  <div class="demos-grid reveal">
+
+    <a class="demo-card" href="demos/mes-devops.html" target="_blank" rel="noopener">
+      <div class="demo-preview">
+        <iframe src="demos/mes-devops.html" tabindex="-1" aria-hidden="true" loading="lazy"></iframe>
+      </div>
+      <div class="demo-info">
+        <div class="demo-tag">MES DevOps</div>
+        <div class="demo-title">Vendor Config Ingestion Pipeline</div>
+        <div class="demo-desc">Vendor file → schema validate → YAML transform → git commit. Live run log, config preview, vendor breakdown.</div>
+        <div class="demo-cta">View Demo →</div>
+      </div>
+    </a>
+
+    <a class="demo-card" href="demos/cicd.html" target="_blank" rel="noopener">
+      <div class="demo-preview">
+        <iframe src="demos/cicd.html" tabindex="-1" aria-hidden="true" loading="lazy"></iframe>
+      </div>
+      <div class="demo-info">
+        <div class="demo-tag">CI/CD for DCS / SCADA</div>
+        <div class="demo-title">OT CI/CD Pipeline</div>
+        <div class="demo-desc">8-stage CI pipeline for PLC/DCS/SCADA config changes. Compliance checks (IEC&nbsp;62443, ISA-99, OSHA&nbsp;PSM) on every commit. MOC tracking.</div>
+        <div class="demo-cta">View Demo →</div>
+      </div>
+    </a>
+
+    <a class="demo-card" href="demos/historian.html" target="_blank" rel="noopener">
+      <div class="demo-preview">
+        <iframe src="demos/historian.html" tabindex="-1" aria-hidden="true" loading="lazy"></iframe>
+      </div>
+      <div class="demo-info">
+        <div class="demo-tag">Real-Time Simulation Feeding</div>
+        <div class="demo-title">Historian Tag Pipeline</div>
+        <div class="demo-desc">PI tags → validation → tag mapping → Aspen simulation. Live bad-value detection across 5 historian vendors, run history.</div>
+        <div class="demo-cta">View Demo →</div>
+      </div>
+    </a>
+
+    <a class="demo-card" href="demos/simulation-api.html" target="_blank" rel="noopener">
+      <div class="demo-preview">
+        <iframe src="demos/simulation-api.html" tabindex="-1" aria-hidden="true" loading="lazy"></iframe>
+      </div>
+      <div class="demo-info">
+        <div class="demo-tag">Simulation API Wrapping</div>
+        <div class="demo-title">Aspen / HYSYS as REST</div>
+        <div class="demo-desc">Job queue, worker status (Aspen Plus, HYSYS, UniSim), live POST→poll→result API log, hourly throughput.</div>
+        <div class="demo-cta">View Demo →</div>
+      </div>
+    </a>
+
   </div>
 </section>
 

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Simulation API Dashboard &mdash; demaico</title>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&display=swap');
+  :root {
+    --bg:            #0b0b0b;
+    --surface:       #111111;
+    --card:          #161616;
+    --card-hover:    #1c1c1c;
+    --accent:        #e8890c;
+    --accent-dim:    #a05f06;
+    --accent-glow:   rgba(232,137,12,0.10);
+    --text:          #f0ece4;
+    --muted:         #888070;
+    --faint:         #2a2520;
+    --border:        rgba(232,137,12,0.14);
+    --border-strong: rgba(232,137,12,0.32);
+    --green:  #2EB67D;
+    --red:    #E01E5A;
+    --yellow: #ECB22E;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+  /* ── Header ── */
+  header{background:var(--surface);border-bottom:1px solid var(--border-strong);padding:14px 32px;display:flex;align-items:center;gap:14px}
+  .wordmark{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:3px;color:var(--text)}
+  .wordmark .o{color:var(--accent)}
+  .header-divider{width:1px;height:28px;background:var(--border-strong);margin:0 4px}
+  .header-text h1{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:2px}
+  .header-text .sub{color:var(--muted);font-size:.72rem;margin-top:2px;font-family:'IBM Plex Mono',monospace}
+  .header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+  .live-label{color:var(--green);font-size:.72rem;font-weight:700;letter-spacing:.12em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+  .demo-badge{background:var(--accent-glow);color:var(--accent);border:1px solid var(--border-strong);border-radius:2px;padding:3px 10px;font-size:.68rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:3px;text-transform:uppercase}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+  /* ── Layout ── */
+  .container{max-width:1500px;margin:0 auto;padding:28px 32px}
+
+  /* ── Stats ── */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:32px}
+  .stat-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:20px 22px;position:relative;overflow:hidden}
+  .stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+  .stat-card.s-accent::after{background:var(--accent)}
+  .stat-card.s-green::after{background:var(--green)}
+  .stat-card.s-red::after{background:var(--red)}
+  .stat-card.s-yellow::after{background:var(--yellow)}
+  .stat-card .label{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px}
+  .stat-card .value{font-family:'Bebas Neue',sans-serif;font-size:3.2rem;line-height:1;color:var(--text)}
+  .stat-card.s-accent .value{color:var(--accent)}
+  .stat-card.s-green .value{color:var(--green)}
+  .stat-card.s-red   .value{color:var(--red)}
+  .stat-card.s-yellow .value{color:var(--yellow)}
+  .stat-card .delta{font-size:.7rem;color:var(--muted);margin-top:6px;font-family:'IBM Plex Mono',monospace}
+
+  /* ── Source grid ── */
+  .source-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-bottom:28px}
+  .source-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:12px 16px;display:flex;align-items:center;gap:12px;transition:border-color .2s}
+  .source-card:hover{border-color:var(--border-strong)}
+  .source-icon{font-size:1.1rem}
+  .source-info .name{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.5px}
+  .source-info .count{font-size:.7rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:2px}
+  .source-bar-wrap{flex:1;height:2px;background:var(--faint);border-radius:1px;overflow:hidden}
+  .source-bar{height:100%;background:var(--accent)}
+
+  /* ── Section title ── */
+  .section-title{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);font-weight:700;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+
+  /* ── Toolbar ── */
+  .toolbar{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .toolbar input,.toolbar select{background:var(--card);border:1px solid var(--border);border-radius:2px;color:var(--text);padding:7px 12px;font-size:.82rem;outline:none;font-family:'Barlow',sans-serif}
+  .toolbar input{flex:1;min-width:200px}
+  .toolbar input::placeholder{color:var(--muted)}
+  .toolbar input:focus,.toolbar select:focus{border-color:var(--accent)}
+  .toolbar .count-label{color:var(--muted);font-size:.72rem;margin-left:auto;font-family:'IBM Plex Mono',monospace}
+
+  /* ── Table ── */
+  .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:3px;margin-bottom:32px}
+  table{width:100%;border-collapse:collapse;font-size:.875rem}
+  thead{background:var(--surface)}
+  thead th{padding:10px 16px;text-align:left;color:var(--muted);font-weight:700;font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;border-bottom:1px solid var(--border);white-space:nowrap;font-family:'Barlow Condensed',sans-serif}
+  tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+  tbody tr:last-child{border-bottom:none}
+  tbody tr:hover{background:rgba(232,137,12,.04)}
+  tbody td{padding:10px 16px;vertical-align:middle}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:.78rem}
+
+  /* ── Badges ── */
+  .badge{display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-weight:700;letter-spacing:.08em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+  .badge.success,.badge.passed,.badge.converged{background:rgba(46,182,125,.1);color:var(--green);border:1px solid rgba(46,182,125,.22)}
+  .badge.failed   {background:rgba(224,30,90,.1); color:var(--red);   border:1px solid rgba(224,30,90,.22)}
+  .badge.partial  {background:rgba(236,178,46,.1);color:var(--yellow);border:1px solid rgba(236,178,46,.22)}
+  .badge.running  {background:var(--accent-glow);  color:var(--accent);border:1px solid var(--border-strong)}
+  .badge.queued   {background:rgba(255,255,255,.03);color:var(--muted); border:1px solid var(--border)}
+  .badge.skipped  {background:rgba(255,255,255,.03);color:var(--muted); border:1px solid var(--border)}
+
+  /* ── Pills ── */
+  .pill{display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+  .pill-accent{background:var(--accent-glow);color:var(--accent);border:1px solid var(--border-strong)}
+  .pill-muted {background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--border)}
+  .pill-green {background:rgba(46,182,125,.08);color:var(--green);border:1px solid rgba(46,182,125,.2)}
+  .pill-red   {background:rgba(224,30,90,.08); color:var(--red);  border:1px solid rgba(224,30,90,.2)}
+  .pill-yellow{background:rgba(236,178,46,.08);color:var(--yellow);border:1px solid rgba(236,178,46,.2)}
+
+  /* ── New-row flash ── */
+  .new-row{animation:newrow .9s ease}
+  @keyframes newrow{from{background:rgba(232,137,12,.1)}to{background:transparent}}
+
+  /* ── Footer ── */
+  footer{margin-top:40px;padding:18px 32px;border-top:1px solid var(--border);color:var(--muted);font-size:.72rem;display:flex;justify-content:space-between;align-items:center;font-family:'IBM Plex Mono',monospace}
+  .footer-links a{color:var(--accent);text-decoration:none}
+  .footer-links a:hover{text-decoration:underline}
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar{width:4px;height:4px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--faint);border-radius:2px}
+
+    .worker-card{background:var(--card);border:1px solid var(--border-strong);border-radius:3px;padding:20px 24px;margin-bottom:28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px}
+    .wc-field .wf-label{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin-bottom:5px}
+    .wc-field .wf-val{font-family:'IBM Plex Mono',monospace;font-size:.88rem;color:var(--text)}
+    .wc-field .wf-val.online{color:var(--green)}.wc-field .wf-val.active{color:var(--accent)}
+    .ping-counter{font-family:'IBM Plex Mono',monospace;font-size:.88rem;color:var(--muted)}
+    .q-bar-wrap{height:3px;background:var(--faint);border-radius:2px;overflow:hidden;margin-top:6px}
+    .q-bar{height:100%;background:var(--accent);transition:width .5s}
+    .sim-pill-aspen{background:rgba(46,182,125,.08);color:var(--green);border:1px solid rgba(46,182,125,.2)}
+    .sim-pill-hysys{background:var(--accent-glow);color:var(--accent);border:1px solid var(--border-strong)}
+  </style>
+</head>
+<body>
+<header>
+  <div class="wordmark">DEMAIC<span class="o">O</span></div>
+  <div class="header-divider"></div>
+  <div class="header-text">
+    <h1>Simulation API Dashboard</h1>
+    <div class="sub">Aspen Plus / HYSYS REST API wrapper &middot; Simulation API</div>
+  </div>
+  <div class="header-right">
+    <span class="demo-badge">Demo</span>
+    <div class="live-dot"></div>
+    <span class="live-label">Live</span>
+  </div>
+</header>
+<div class="container">
+
+  <div class="stats">
+    <div class="stat-card s-accent"><div class="label">Jobs Today</div><div class="value" id="sj">0</div><div class="delta" id="slast"></div></div>
+    <div class="stat-card s-green"><div class="label">Converged</div><div class="value" id="sc">0</div><div class="delta" id="scpct"></div></div>
+    <div class="stat-card s-red"><div class="label">Failed</div><div class="value" id="sf">0</div><div class="delta" id="sfpct"></div></div>
+    <div class="stat-card s-yellow"><div class="label">Avg Runtime</div><div class="value" id="srt">0s</div><div class="delta">per simulation</div></div>
+  </div>
+
+  <div class="section-title">Worker Status</div>
+  <div class="worker-card">
+    <div class="wc-field"><div class="wf-label">Simulator</div><div class="wf-val"><span class="pill sim-pill-aspen">Aspen Plus</span> <span class="pill sim-pill-hysys">HYSYS</span></div></div>
+    <div class="wc-field"><div class="wf-label">Active Model</div><div class="wf-val" id="w-model">distillation.apw</div></div>
+    <div class="wc-field"><div class="wf-label">Model Version</div><div class="wf-val mono">a3f7c21</div></div>
+    <div class="wc-field"><div class="wf-label">Worker</div><div class="wf-val online">&#x25cf; Online</div></div>
+    <div class="wc-field"><div class="wf-label">Watchdog</div><div class="wf-val active">&#x25cf; Active</div></div>
+    <div class="wc-field">
+      <div class="wf-label">Queue Depth</div>
+      <div class="wf-val" id="w-qdepth">1 job</div>
+      <div class="q-bar-wrap"><div class="q-bar" id="q-bar" style="width:10%"></div></div>
+    </div>
+    <div class="wc-field"><div class="wf-label">Last Ping</div><div class="ping-counter" id="w-ping">0s ago</div></div>
+  </div>
+
+  <div class="toolbar">
+    <input type="text" id="ft" placeholder="Search by job ID, model&hellip;" oninput="applyFilter()">
+    <select id="fs" onchange="applyFilter()"><option value="">All statuses</option><option value="converged">Converged</option><option value="failed">Failed</option><option value="running">Running</option><option value="queued">Queued</option></select>
+    <select id="fsim" onchange="applyFilter()"><option value="">All simulators</option><option value="aspen">Aspen Plus</option><option value="hysys">HYSYS</option></select>
+    <span class="count-label" id="vc"></span>
+  </div>
+
+  <div class="table-wrap"><table>
+    <thead><tr><th>Time</th><th>Job ID</th><th>Sim</th><th>Model</th><th>Feed Flow<br><small style="font-weight:400;text-transform:none">kmol/h</small></th><th>Feed Temp<br><small style="font-weight:400;text-transform:none">&#x00b0;C</small></th><th>Pressure<br><small style="font-weight:400;text-transform:none">bar</small></th><th>Reflux</th><th>Distillate<br><small style="font-weight:400;text-transform:none">mol%</small></th><th>Bottoms<br><small style="font-weight:400;text-transform:none">mol%</small></th><th>Runtime</th><th>Status</th></tr></thead>
+    <tbody id="jobs-body"></tbody>
+  </table></div>
+</div>
+<footer>
+  <div>demaico &mdash; Simulation API Dashboard &mdash; Demo Mode</div>
+  <div class="footer-links"><a href="https://github.com/CharisKomos/demaico_Simulation_API_Wrapping" target="_blank">GitHub Repository</a></div>
+</footer>
+<script>
+const JOBS=[
+  {id:"j-a3f2",ts:"2026-05-28T10:14:22Z",sim:"aspen",model:"distillation.apw",ff:125.4,ft:82.1,fp:3.2,refl:2.8,dist:97.2,bot:0.8,rt:31,status:"converged"},
+  {id:"j-b8e1",ts:"2026-05-28T10:09:55Z",sim:"hysys",model:"absorber.hsc",    ff:98.7, ft:65.0,fp:4.1,refl:null,dist:94.1,bot:1.2,rt:44,status:"converged"},
+  {id:"j-c2d9",ts:"2026-05-28T10:05:10Z",sim:"aspen",model:"reactor.apw",     ff:210.0,ft:120.5,fp:8.5,refl:null,dist:88.4,bot:3.1,rt:null,status:"failed"},
+  {id:"j-d4f7",ts:"2026-05-28T10:00:33Z",sim:"hysys",model:"distillation.hsc",ff:135.2,ft:78.3,fp:3.0,refl:3.1,dist:96.8,bot:1.1,rt:38,status:"converged"},
+  {id:"j-e6a3",ts:"2026-05-28T09:55:47Z",sim:"aspen",model:"distillation.apw",ff:118.9,ft:85.0,fp:3.4,refl:2.5,dist:98.0,bot:0.6,rt:29,status:"converged"},
+  {id:"j-f1c8",ts:"2026-05-28T09:51:02Z",sim:"aspen",model:"reactor.apw",     ff:195.3,ft:115.2,fp:8.0,refl:null,dist:91.2,bot:2.4,rt:52,status:"converged"},
+  {id:"j-a9b4",ts:"2026-05-28T09:46:18Z",sim:"hysys",model:"absorber.hsc",    ff:102.1,ft:62.5,fp:4.3,refl:null,dist:93.7,bot:1.4,rt:41,status:"converged"},
+  {id:"j-b5e2",ts:"2026-05-28T09:41:33Z",sim:"aspen",model:"distillation.apw",ff:141.7,ft:80.8,fp:3.1,refl:2.9,dist:97.5,bot:0.9,rt:33,status:"converged"},
+  {id:"j-c7d6",ts:"2026-05-28T09:36:49Z",sim:"hysys",model:"distillation.hsc",ff:129.4,ft:76.0,fp:2.9,refl:3.3,dist:null,bot:null,rt:null,status:"failed"},
+  {id:"j-d3f1",ts:"2026-05-28T09:32:04Z",sim:"aspen",model:"reactor.apw",     ff:205.8,ft:118.0,fp:8.3,refl:null,dist:89.6,bot:2.8,rt:49,status:"converged"},
+  {id:"j-e8a5",ts:"2026-05-28T09:27:20Z",sim:"aspen",model:"distillation.apw",ff:122.3,ft:83.5,fp:3.3,refl:2.7,dist:97.9,bot:0.7,rt:30,status:"converged"},
+  {id:"j-f2c9",ts:"2026-05-28T09:22:35Z",sim:"hysys",model:"absorber.hsc",    ff:95.4, ft:68.2,fp:4.0,refl:null,dist:95.2,bot:1.0,rt:43,status:"converged"},
+  {id:"j-a6b3",ts:"2026-05-28T09:17:51Z",sim:"aspen",model:"distillation.apw",ff:133.6,ft:81.4,fp:3.2,refl:2.6,dist:97.1,bot:0.9,rt:32,status:"converged"},
+  {id:"j-live1",ts:"2026-05-28T10:18:00Z",sim:"aspen",model:"distillation.apw",ff:127.0,ft:84.0,fp:3.3,refl:2.8,dist:null,bot:null,rt:null,status:"running"},
+  {id:"j-live2",ts:"2026-05-28T10:18:30Z",sim:"hysys",model:"absorber.hsc",    ff:100.0,ft:64.0,fp:4.2,refl:null,dist:null,bot:null,rt:null,status:"queued"},
+];
+function ft(ts){try{return new Date(ts).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"});}catch{return ts;}}
+function fmt(v,dp){return v!=null?v.toFixed(dp):"&mdash;";}
+function renderStats(){
+  const c=JOBS.filter(j=>j.status==="converged").length,f=JOBS.filter(j=>j.status==="failed").length,total=JOBS.length;
+  const rts=JOBS.filter(j=>j.rt!=null).map(j=>j.rt);const avg=rts.length?Math.round(rts.reduce((a,b)=>a+b,0)/rts.length):0;
+  document.getElementById("sj").textContent=total;document.getElementById("sc").textContent=c;document.getElementById("sf").textContent=f;
+  document.getElementById("srt").textContent=avg+"s";
+  document.getElementById("slast").textContent="last: "+ft(JOBS[0].ts);
+  document.getElementById("scpct").textContent=Math.round(c/total*100)+"% convergence rate";
+  document.getElementById("sfpct").textContent=Math.round(f/total*100)+"% failure rate";
+}
+function simPill(s){const cls=s==="aspen"?"sim-pill-aspen":"sim-pill-hysys";return '<span class="pill '+cls+'">'+(s==="aspen"?"Aspen Plus":"HYSYS")+'</span>';}
+function jobRow(j,isNew){
+  return '<tr class="'+(isNew?"new-row":"")+'" data-status="'+j.status+'" data-sim="'+j.sim+'" data-text="'+(j.id+j.model).toLowerCase()+'">'
+    +'<td class="mono" style="color:var(--muted);white-space:nowrap">'+ft(j.ts)+'</td>'
+    +'<td class="mono" style="color:var(--accent)">'+j.id+'</td>'
+    +'<td>'+simPill(j.sim)+'</td>'
+    +'<td class="mono" style="color:var(--muted)">'+j.model+'</td>'
+    +'<td class="mono">'+fmt(j.ff,1)+'</td>'
+    +'<td class="mono">'+fmt(j.ft,1)+'</td>'
+    +'<td class="mono">'+fmt(j.fp,1)+'</td>'
+    +'<td class="mono">'+(j.refl!=null?j.refl.toFixed(1):"&mdash;")+'</td>'
+    +'<td class="mono" style="color:var(--green)">'+(j.dist!=null?j.dist.toFixed(1)+"%":"&mdash;")+'</td>'
+    +'<td class="mono" style="color:var(--muted)">'+(j.bot!=null?j.bot.toFixed(1)+"%":"&mdash;")+'</td>'
+    +'<td class="mono" style="color:var(--muted)">'+(j.rt!=null?j.rt+"s":"&mdash;")+'</td>'
+    +'<td><span class="badge '+j.status+'">'+j.status+'</span></td>'
+    +'</tr>';
+}
+function renderJobs(){document.getElementById("jobs-body").innerHTML=JOBS.map(j=>jobRow(j,false)).join("");applyFilter();}
+function applyFilter(){
+  const txt=document.getElementById("ft").value.toLowerCase(),st=document.getElementById("fs").value,sm=document.getElementById("fsim").value;
+  let v=0;document.querySelectorAll("#jobs-body tr").forEach(row=>{const ok=(!txt||row.dataset.text.includes(txt))&&(!st||row.dataset.status===st)&&(!sm||row.dataset.sim===sm);row.style.display=ok?"":"none";if(ok)v++;});
+  document.getElementById("vc").textContent=v===JOBS.length?JOBS.length+" jobs":v+" of "+JOBS.length+" jobs";
+}
+let pingSecs=0;setInterval(()=>{pingSecs++;document.getElementById("w-ping").textContent=pingSecs+"s ago";if(pingSecs>30)pingSecs=0;},1000);
+const LIVE_JOBS=[
+  {sim:"aspen",model:"distillation.apw",ff:130.0,ft:82.0,fp:3.2,refl:2.7},
+  {sim:"hysys",model:"absorber.hsc",    ff:99.0, ft:66.0,fp:4.1,refl:null},
+  {sim:"aspen",model:"reactor.apw",     ff:200.0,ft:117.0,fp:8.2,refl:null},
+];
+let li=0,jc=20;
+function addLive(){
+  const b=LIVE_JOBS[li%LIVE_JOBS.length];li++;
+  const qJob={...b,id:"j-q"+String(jc).padStart(3,"0"),ts:new Date().toISOString(),dist:null,bot:null,rt:null,status:"queued"};jc++;
+  JOBS.unshift(qJob);
+  document.getElementById("jobs-body").insertAdjacentHTML("afterbegin",jobRow(qJob,true));
+  updateQueue(JOBS.filter(j=>j.status==="queued").length);
+  applyFilter();renderStats();
+  setTimeout(()=>{qJob.status="running";document.getElementById("jobs-body").querySelector('tr[data-text="'+qJob.id+qJob.model+'"]') && renderJobs();},3000);
+  setTimeout(()=>{qJob.status="converged";qJob.dist=96+Math.random()*2;qJob.bot=0.5+Math.random();qJob.rt=28+Math.round(Math.random()*20);renderJobs();renderStats();updateQueue(JOBS.filter(j=>j.status==="queued").length);},9000);
+}
+function updateQueue(n){document.getElementById("w-qdepth").textContent=n+" job"+(n!==1?"s":"");document.getElementById("q-bar").style.width=Math.min(n*20,100)+"%";}
+setInterval(addLive,12000);
+renderStats();renderJobs();
+document.getElementById("vc").textContent=JOBS.length+" jobs";
+</script>
+</body></html>

@@ -27,3 +27,16 @@ document.querySelectorAll('.mobile-nav-link').forEach(link => {
     mobileMenu.classList.remove('open');
   });
 });
+
+// ── DEMO IFRAME SCALING ──
+function scaleDemoPreviews() {
+  document.querySelectorAll('.demo-preview').forEach(wrapper => {
+    const iframe = wrapper.querySelector('iframe');
+    if (!iframe) return;
+    const scale = wrapper.clientWidth / 1280;
+    iframe.style.transform = `scale(${scale})`;
+    iframe.style.height = `${wrapper.clientHeight / scale}px`;
+  });
+}
+scaleDemoPreviews();
+window.addEventListener('resize', scaleDemoPreviews);

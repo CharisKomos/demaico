@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>MES Ingestion Dashboard &mdash; demaico</title>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&display=swap');
+  :root {
+    --bg:            #0b0b0b;
+    --surface:       #111111;
+    --card:          #161616;
+    --card-hover:    #1c1c1c;
+    --accent:        #e8890c;
+    --accent-dim:    #a05f06;
+    --accent-glow:   rgba(232,137,12,0.10);
+    --text:          #f0ece4;
+    --muted:         #888070;
+    --faint:         #2a2520;
+    --border:        rgba(232,137,12,0.14);
+    --border-strong: rgba(232,137,12,0.32);
+    --green:  #2EB67D;
+    --red:    #E01E5A;
+    --yellow: #ECB22E;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+  /* ── Header ── */
+  header{background:var(--surface);border-bottom:1px solid var(--border-strong);padding:14px 32px;display:flex;align-items:center;gap:14px}
+  .wordmark{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:3px;color:var(--text)}
+  .wordmark .o{color:var(--accent)}
+  .header-divider{width:1px;height:28px;background:var(--border-strong);margin:0 4px}
+  .header-text h1{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:2px}
+  .header-text .sub{color:var(--muted);font-size:.72rem;margin-top:2px;font-family:'IBM Plex Mono',monospace}
+  .header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+  .live-label{color:var(--green);font-size:.72rem;font-weight:700;letter-spacing:.12em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+  .demo-badge{background:var(--accent-glow);color:var(--accent);border:1px solid var(--border-strong);border-radius:2px;padding:3px 10px;font-size:.68rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:3px;text-transform:uppercase}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+  /* ── Layout ── */
+  .container{max-width:1500px;margin:0 auto;padding:28px 32px}
+
+  /* ── Stats ── */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:32px}
+  .stat-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:20px 22px;position:relative;overflow:hidden}
+  .stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+  .stat-card.s-accent::after{background:var(--accent)}
+  .stat-card.s-green::after{background:var(--green)}
+  .stat-card.s-red::after{background:var(--red)}
+  .stat-card.s-yellow::after{background:var(--yellow)}
+  .stat-card .label{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px}
+  .stat-card .value{font-family:'Bebas Neue',sans-serif;font-size:3.2rem;line-height:1;color:var(--text)}
+  .stat-card.s-accent .value{color:var(--accent)}
+  .stat-card.s-green .value{color:var(--green)}
+  .stat-card.s-red   .value{color:var(--red)}
+  .stat-card.s-yellow .value{color:var(--yellow)}
+  .stat-card .delta{font-size:.7rem;color:var(--muted);margin-top:6px;font-family:'IBM Plex Mono',monospace}
+
+  /* ── Source grid ── */
+  .source-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-bottom:28px}
+  .source-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:12px 16px;display:flex;align-items:center;gap:12px;transition:border-color .2s}
+  .source-card:hover{border-color:var(--border-strong)}
+  .source-icon{font-size:1.1rem}
+  .source-info .name{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.5px}
+  .source-info .count{font-size:.7rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:2px}
+  .source-bar-wrap{flex:1;height:2px;background:var(--faint);border-radius:1px;overflow:hidden}
+  .source-bar{height:100%;background:var(--accent)}
+
+  /* ── Section title ── */
+  .section-title{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);font-weight:700;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+
+  /* ── Toolbar ── */
+  .toolbar{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .toolbar input,.toolbar select{background:var(--card);border:1px solid var(--border);border-radius:2px;color:var(--text);padding:7px 12px;font-size:.82rem;outline:none;font-family:'Barlow',sans-serif}
+  .toolbar input{flex:1;min-width:200px}
+  .toolbar input::placeholder{color:var(--muted)}
+  .toolbar input:focus,.toolbar select:focus{border-color:var(--accent)}
+  .toolbar .count-label{color:var(--muted);font-size:.72rem;margin-left:auto;font-family:'IBM Plex Mono',monospace}
+
+  /* ── Table ── */
+  .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:3px;margin-bottom:32px}
+  table{width:100%;border-collapse:collapse;font-size:.875rem}
+  thead{background:var(--surface)}
+  thead th{padding:10px 16px;text-align:left;color:var(--muted);font-weight:700;font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;border-bottom:1px solid var(--border);white-space:nowrap;font-family:'Barlow Condensed',sans-serif}
+  tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+  tbody tr:last-child{border-bottom:none}
+  tbody tr:hover{background:rgba(232,137,12,.04)}
+  tbody td{padding:10px 16px;vertical-align:middle}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:.78rem}
+
+  /* ── Badges ── */
+  .badge{display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-weight:700;letter-spacing:.08em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+  .badge.success,.badge.passed,.badge.converged{background:rgba(46,182,125,.1);color:var(--green);border:1px solid rgba(46,182,125,.22)}
+  .badge.failed   {background:rgba(224,30,90,.1); color:var(--red);   border:1px solid rgba(224,30,90,.22)}
+  .badge.partial  {background:rgba(236,178,46,.1);color:var(--yellow);border:1px solid rgba(236,178,46,.22)}
+  .badge.running  {background:var(--accent-glow);  color:var(--accent);border:1px solid var(--border-strong)}
+  .badge.queued   {background:rgba(255,255,255,.03);color:var(--muted); border:1px solid var(--border)}
+  .badge.skipped  {background:rgba(255,255,255,.03);color:var(--muted); border:1px solid var(--border)}
+
+  /* ── Pills ── */
+  .pill{display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+  .pill-accent{background:var(--accent-glow);color:var(--accent);border:1px solid var(--border-strong)}
+  .pill-muted {background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--border)}
+  .pill-green {background:rgba(46,182,125,.08);color:var(--green);border:1px solid rgba(46,182,125,.2)}
+  .pill-red   {background:rgba(224,30,90,.08); color:var(--red);  border:1px solid rgba(224,30,90,.2)}
+  .pill-yellow{background:rgba(236,178,46,.08);color:var(--yellow);border:1px solid rgba(236,178,46,.2)}
+
+  /* ── New-row flash ── */
+  .new-row{animation:newrow .9s ease}
+  @keyframes newrow{from{background:rgba(232,137,12,.1)}to{background:transparent}}
+
+  /* ── Footer ── */
+  footer{margin-top:40px;padding:18px 32px;border-top:1px solid var(--border);color:var(--muted);font-size:.72rem;display:flex;justify-content:space-between;align-items:center;font-family:'IBM Plex Mono',monospace}
+  .footer-links a{color:var(--accent);text-decoration:none}
+  .footer-links a:hover{text-decoration:underline}
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar{width:4px;height:4px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--faint);border-radius:2px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wordmark">DEMAIC<span class="o">O</span></div>
+  <div class="header-divider"></div>
+  <div class="header-text">
+    <h1>MES Ingestion Dashboard</h1>
+    <div class="sub">Vendor file &rarr; YAML config pipeline &middot; MES DevOps</div>
+  </div>
+  <div class="header-right">
+    <span class="demo-badge">Demo</span>
+    <div class="live-dot"></div>
+    <span class="live-label">Live</span>
+  </div>
+</header>
+<div class="container">
+
+  <div class="stats">
+    <div class="stat-card s-accent">
+      <div class="label">Total Processed</div>
+      <div class="value" id="stat-total">0</div>
+      <div class="delta" id="stat-last"></div>
+    </div>
+    <div class="stat-card s-green">
+      <div class="label">Success</div>
+      <div class="value" id="stat-success">0</div>
+      <div class="delta" id="stat-success-pct"></div>
+    </div>
+    <div class="stat-card s-red">
+      <div class="label">Failed</div>
+      <div class="value" id="stat-failed">0</div>
+      <div class="delta" id="stat-failed-pct"></div>
+    </div>
+    <div class="stat-card s-yellow">
+      <div class="label">Skipped</div>
+      <div class="value" id="stat-skipped">0</div>
+      <div class="delta">no changes detected</div>
+    </div>
+  </div>
+
+  <div class="section-title">Vendor Sources</div>
+  <div class="source-grid" id="vendor-grid"></div>
+
+  <div class="toolbar">
+    <input type="text" id="filter-text" placeholder="Search by file, vendor, config ID&hellip;" oninput="applyFilter()">
+    <select id="filter-status" onchange="applyFilter()">
+      <option value="">All statuses</option>
+      <option value="success">Success</option>
+      <option value="failed">Failed</option>
+      <option value="skipped">Skipped</option>
+    </select>
+    <select id="filter-vendor" onchange="applyFilter()">
+      <option value="">All vendors</option>
+      <option value="emerson_deltav">Emerson DeltaV</option>
+      <option value="siemens_opcenter">Siemens Opcenter</option>
+      <option value="rockwell_factorytalk">Rockwell FactoryTalk</option>
+      <option value="aveva_wonderware">AVEVA Wonderware</option>
+      <option value="sap_me">SAP ME</option>
+    </select>
+    <select id="filter-type" onchange="applyFilter()">
+      <option value="">All types</option>
+      <option value="recipe">Recipe</option>
+      <option value="line">Line</option>
+    </select>
+    <span class="count-label" id="visible-count"></span>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>Time</th><th>Source File</th><th>Vendor</th><th>Type</th>
+        <th>Config ID</th><th>Version</th><th>Status</th><th>Output / Error</th><th>Git</th>
+      </tr></thead>
+      <tbody id="events-body"></tbody>
+    </table>
+  </div>
+</div>
+<footer>
+  <div>demaico &mdash; MES Ingestion Dashboard &mdash; Demo Mode</div>
+  <div class="footer-links"><a href="https://github.com/CharisKomos/demaico_MES_DevOps" target="_blank">GitHub Repository</a></div>
+</footer>
+<script>
+const EVENTS = [
+  {id:"1",ts:"2026-05-28T09:45:12Z",src:"aspirin_500mg_v12.fhx",vendor:"emerson_deltav",type:"recipe",cfg:"RCP-ASPIRIN-500MG",ver:"12.3.1",status:"success",path:"configs/recipes/rcp-aspirin-500mg.yaml",errors:[],committed:true},
+  {id:"2",ts:"2026-05-28T09:44:51Z",src:"packaging_line_01.xml",vendor:"siemens_opcenter",type:"line",cfg:"LINE-01",ver:"0.0.0",status:"success",path:"configs/lines/line-01.yaml",errors:[],committed:true},
+  {id:"3",ts:"2026-05-28T09:43:08Z",src:"ibuprofen_400mg_draft.fhx",vendor:"emerson_deltav",type:"recipe",cfg:"RCP-IBUPROFEN-400MG",ver:"3.0.1",status:"failed",path:"",errors:["step 15 is not a multiple of 10","change_ref required when status is approved"],committed:false},
+  {id:"4",ts:"2026-05-28T09:41:33Z",src:"recipes_batch_export.csv",vendor:"rockwell_factorytalk",type:"recipe",cfg:"RCP-PARACETAMOL-500MG",ver:"7.1.0",status:"success",path:"configs/recipes/rcp-paracetamol-500mg.yaml",errors:[],committed:true},
+  {id:"5",ts:"2026-05-28T09:41:31Z",src:"recipes_batch_export.csv",vendor:"rockwell_factorytalk",type:"recipe",cfg:"RCP-ASPIRIN-500MG",ver:"12.3.1",status:"skipped",path:"configs/recipes/rcp-aspirin-500mg.yaml",errors:[],committed:false},
+  {id:"6",ts:"2026-05-28T09:39:17Z",src:"asp500_recipe.xml",vendor:"aveva_wonderware",type:"recipe",cfg:"RCP-ASP-500MG",ver:"12.3.1",status:"success",path:"configs/recipes/rcp-asp-500mg.yaml",errors:[],committed:true},
+  {id:"7",ts:"2026-05-28T09:38:02Z",src:"line_02_config.xml",vendor:"aveva_wonderware",type:"line",cfg:"LINE-02",ver:"0.0.0",status:"success",path:"configs/lines/line-02.yaml",errors:[],committed:true},
+  {id:"8",ts:"2026-05-28T09:36:44Z",src:"sap_recipe_export.json",vendor:"sap_me",type:"recipe",cfg:"RCP-ASP-500MG",ver:"12.3.1",status:"skipped",path:"configs/recipes/rcp-asp-500mg.yaml",errors:[],committed:false},
+  {id:"9",ts:"2026-05-28T09:34:29Z",src:"sap_resource_line1.json",vendor:"sap_me",type:"line",cfg:"LINE-01",ver:"0.0.0",status:"success",path:"configs/lines/line-01.yaml",errors:[],committed:true},
+  {id:"10",ts:"2026-05-28T09:33:01Z",src:"omeprazole_20mg.xml",vendor:"siemens_opcenter",type:"recipe",cfg:"RCP-OMEPRAZOLE-20MG",ver:"5.2.0",status:"failed",path:"",errors:["product_sku is required","bill_of_materials must have at least 1 item"],committed:false},
+  {id:"11",ts:"2026-05-28T09:31:15Z",src:"metformin_850mg.fhx",vendor:"emerson_deltav",type:"recipe",cfg:"RCP-METFORMIN-850MG",ver:"2.0.0",status:"success",path:"configs/recipes/rcp-metformin-850mg.yaml",errors:[],committed:true},
+  {id:"12",ts:"2026-05-28T09:29:44Z",src:"line_equipment_export.csv",vendor:"rockwell_factorytalk",type:"line",cfg:"LINE-03",ver:"0.0.0",status:"success",path:"configs/lines/line-03.yaml",errors:[],committed:true},
+  {id:"13",ts:"2026-05-28T09:27:08Z",src:"amoxicillin_500mg.json",vendor:"sap_me",type:"recipe",cfg:"RCP-AMOXICILLIN-500MG",ver:"4.1.2",status:"success",path:"configs/recipes/rcp-amoxicillin-500mg.yaml",errors:[],committed:true},
+  {id:"14",ts:"2026-05-28T09:25:33Z",src:"lisinopril_10mg_recipe.xml",vendor:"aveva_wonderware",type:"recipe",cfg:"RCP-LISINOPRIL-10MG",ver:"1.0.0",status:"failed",path:"",errors:["version '1.0' is not valid semver"],committed:false},
+  {id:"15",ts:"2026-05-28T09:23:17Z",src:"granulator_module.fhx",vendor:"emerson_deltav",type:"line",cfg:"LINE-GRANULATOR-01",ver:"0.0.0",status:"success",path:"configs/lines/line-granulator-01.yaml",errors:[],committed:true},
+];
+const VM={emerson_deltav:{label:"Emerson DeltaV",icon:"&#x1f535;",ext:".fhx"},siemens_opcenter:{label:"Siemens Opcenter",icon:"&#x1f7e2;",ext:".xml"},rockwell_factorytalk:{label:"Rockwell FactoryTalk",icon:"&#x1f534;",ext:".csv"},aveva_wonderware:{label:"AVEVA Wonderware",icon:"&#x1f7e0;",ext:".xml"},sap_me:{label:"SAP ME",icon:"&#x26aa;",ext:".json"}};
+function ft(ts){try{return new Date(ts).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"});}catch{return ts;}}
+function renderStats(){
+  const t=EVENTS.length,s=EVENTS.filter(e=>e.status==="success").length,f=EVENTS.filter(e=>e.status==="failed").length,sk=EVENTS.filter(e=>e.status==="skipped").length;
+  document.getElementById("stat-total").textContent=t;
+  document.getElementById("stat-success").textContent=s;
+  document.getElementById("stat-failed").textContent=f;
+  document.getElementById("stat-skipped").textContent=sk;
+  document.getElementById("stat-last").textContent="last: "+ft(EVENTS[0].ts);
+  document.getElementById("stat-success-pct").textContent=Math.round(s/t*100)+"% success rate";
+  document.getElementById("stat-failed-pct").textContent=Math.round(f/t*100)+"% failure rate";
+}
+function renderVendors(){
+  const c={};EVENTS.forEach(e=>{c[e.vendor]=(c[e.vendor]||0)+1;});
+  const mx=Math.max(...Object.values(c));
+  document.getElementById("vendor-grid").innerHTML=Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([v,n])=>{
+    const m=VM[v]||{label:v,icon:"&#x2699;",ext:""};
+    return '<div class="source-card"><div class="source-icon">'+m.icon+'</div><div class="source-info"><div class="name">'+m.label+'</div><div class="count">'+n+' file'+(n>1?"s":"")+' &middot; '+m.ext+'</div></div><div style="flex:1"><div class="source-bar-wrap"><div class="source-bar" style="width:'+Math.round(n/mx*100)+'%"></div></div></div></div>';
+  }).join("");
+}
+function rowHtml(ev,isNew){
+  const vm=VM[ev.vendor]||{label:ev.vendor};
+  const detail=ev.errors.length?'<span style="color:var(--red);font-size:.75rem">&#x26a0; '+ev.errors[0]+(ev.errors.length>1?' (+'+( ev.errors.length-1)+' more)':'')+'</span>':ev.path?'<span class="mono" style="color:var(--muted)">'+ev.path+'</span>':'<span style="color:var(--muted)">&mdash;</span>';
+  const git=ev.committed?'<span style="color:var(--green)" title="Committed">&#x2714;</span>':ev.status==="failed"?'<span style="color:var(--red)">&#x2718;</span>':'<span style="color:var(--muted)">&mdash;</span>';
+  return '<tr class="'+(isNew?"new-row":"")+'" data-status="'+ev.status+'" data-vendor="'+ev.vendor+'" data-type="'+ev.type+'" data-text="'+(ev.src+ev.vendor+ev.cfg).toLowerCase()+'">'
+    +'<td class="mono" style="color:var(--muted);white-space:nowrap">'+ft(ev.ts)+'</td>'
+    +'<td class="mono">'+ev.src+'</td>'
+    +'<td><span class="pill pill-accent">'+vm.label+'</span></td>'
+    +'<td><span class="pill pill-muted">'+ev.type+'</span></td>'
+    +'<td class="mono" style="color:var(--accent)">'+ev.cfg+'</td>'
+    +'<td class="mono" style="color:var(--muted)">'+(ev.ver!=="0.0.0"?ev.ver:"&mdash;")+'</td>'
+    +'<td><span class="badge '+ev.status+'">'+ev.status+'</span></td>'
+    +'<td>'+detail+'</td>'
+    +'<td style="text-align:center">'+git+'</td>'
+    +'</tr>';
+}
+function renderTable(){document.getElementById("events-body").innerHTML=EVENTS.map(e=>rowHtml(e,false)).join("");applyFilter();}
+function applyFilter(){
+  const txt=document.getElementById("filter-text").value.toLowerCase(),st=document.getElementById("filter-status").value,vn=document.getElementById("filter-vendor").value,tp=document.getElementById("filter-type").value;
+  let v=0;
+  document.querySelectorAll("#events-body tr").forEach(r=>{
+    const ok=(!txt||r.dataset.text.includes(txt))&&(!st||r.dataset.status===st)&&(!vn||r.dataset.vendor===vn)&&(!tp||r.dataset.type===tp);
+    r.style.display=ok?"":"none";if(ok)v++;
+  });
+  document.getElementById("visible-count").textContent=v===EVENTS.length?EVENTS.length+" events":v+" of "+EVENTS.length+" events";
+}
+const LIVE=[
+  {id:"L1",ts:"",src:"atorvastatin_20mg.fhx",vendor:"emerson_deltav",type:"recipe",cfg:"RCP-ATORVASTATIN-20MG",ver:"1.5.0",status:"success",path:"configs/recipes/rcp-atorvastatin-20mg.yaml",errors:[],committed:true},
+  {id:"L2",ts:"",src:"line_04_opcenter.xml",vendor:"siemens_opcenter",type:"line",cfg:"LINE-04",ver:"0.0.0",status:"success",path:"configs/lines/line-04.yaml",errors:[],committed:true},
+  {id:"L3",ts:"",src:"warfarin_5mg_draft.json",vendor:"sap_me",type:"recipe",cfg:"RCP-WARFARIN-5MG",ver:"2.1.0",status:"failed",path:"",errors:["approved_at is not a valid ISO-8601 date"],committed:false},
+];
+let li=0;
+function addLive(){const ev={...LIVE[li%LIVE.length]};ev.ts=new Date().toISOString();ev.id="live-"+Date.now();EVENTS.unshift(ev);li++;document.getElementById("events-body").insertAdjacentHTML("afterbegin",rowHtml(ev,true));applyFilter();renderStats();}
+setInterval(addLive,8000);
+renderStats();renderVendors();renderTable();
+document.getElementById("visible-count").textContent=EVENTS.length+" events";
+</script>
+</body></html>

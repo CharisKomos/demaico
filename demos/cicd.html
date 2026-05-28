@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>OT CI/CD Pipeline Dashboard &mdash; demaico</title>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&display=swap');
+  :root {
+    --bg:            #0b0b0b;
+    --surface:       #111111;
+    --card:          #161616;
+    --card-hover:    #1c1c1c;
+    --accent:        #e8890c;
+    --accent-dim:    #a05f06;
+    --accent-glow:   rgba(232,137,12,0.10);
+    --text:          #f0ece4;
+    --muted:         #888070;
+    --faint:         #2a2520;
+    --border:        rgba(232,137,12,0.14);
+    --border-strong: rgba(232,137,12,0.32);
+    --green:  #2EB67D;
+    --red:    #E01E5A;
+    --yellow: #ECB22E;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+  /* ── Header ── */
+  header{background:var(--surface);border-bottom:1px solid var(--border-strong);padding:14px 32px;display:flex;align-items:center;gap:14px}
+  .wordmark{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:3px;color:var(--text)}
+  .wordmark .o{color:var(--accent)}
+  .header-divider{width:1px;height:28px;background:var(--border-strong);margin:0 4px}
+  .header-text h1{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:2px}
+  .header-text .sub{color:var(--muted);font-size:.72rem;margin-top:2px;font-family:'IBM Plex Mono',monospace}
+  .header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+  .live-label{color:var(--green);font-size:.72rem;font-weight:700;letter-spacing:.12em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+  .demo-badge{background:var(--accent-glow);color:var(--accent);border:1px solid var(--border-strong);border-radius:2px;padding:3px 10px;font-size:.68rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:3px;text-transform:uppercase}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+  /* ── Layout ── */
+  .container{max-width:1500px;margin:0 auto;padding:28px 32px}
+
+  /* ── Stats ── */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:32px}
+  .stat-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:20px 22px;position:relative;overflow:hidden}
+  .stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+  .stat-card.s-accent::after{background:var(--accent)}
+  .stat-card.s-green::after{background:var(--green)}
+  .stat-card.s-red::after{background:var(--red)}
+  .stat-card.s-yellow::after{background:var(--yellow)}
+  .stat-card .label{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px}
+  .stat-card .value{font-family:'Bebas Neue',sans-serif;font-size:3.2rem;line-height:1;color:var(--text)}
+  .stat-card.s-accent .value{color:var(--accent)}
+  .stat-card.s-green .value{color:var(--green)}
+  .stat-card.s-red   .value{color:var(--red)}
+  .stat-card.s-yellow .value{color:var(--yellow)}
+  .stat-card .delta{font-size:.7rem;color:var(--muted);margin-top:6px;font-family:'IBM Plex Mono',monospace}
+
+  /* ── Source grid ── */
+  .source-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-bottom:28px}
+  .source-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:12px 16px;display:flex;align-items:center;gap:12px;transition:border-color .2s}
+  .source-card:hover{border-color:var(--border-strong)}
+  .source-icon{font-size:1.1rem}
+  .source-info .name{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.5px}
+  .source-info .count{font-size:.7rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:2px}
+  .source-bar-wrap{flex:1;height:2px;background:var(--faint);border-radius:1px;overflow:hidden}
+  .source-bar{height:100%;background:var(--accent)}
+
+  /* ── Section title ── */
+  .section-title{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);font-weight:700;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+
+  /* ── Toolbar ── */
+  .toolbar{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .toolbar input,.toolbar select{background:var(--card);border:1px solid var(--border);border-radius:2px;color:var(--text);padding:7px 12px;font-size:.82rem;outline:none;font-family:'Barlow',sans-serif}
+  .toolbar input{flex:1;min-width:200px}
+  .toolbar input::placeholder{color:var(--muted)}
+  .toolbar input:focus,.toolbar select:focus{border-color:var(--accent)}
+  .toolbar .count-label{color:var(--muted);font-size:.72rem;margin-left:auto;font-family:'IBM Plex Mono',monospace}
+
+  /* ── Table ── */
+  .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:3px;margin-bottom:32px}
+  table{width:100%;border-collapse:collapse;font-size:.875rem}
+  thead{background:var(--surface)}
+  thead th{padding:10px 16px;text-align:left;color:var(--muted);font-weight:700;font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;border-bottom:1px solid var(--border);white-space:nowrap;font-family:'Barlow Condensed',sans-serif}
+  tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+  tbody tr:last-child{border-bottom:none}
+  tbody tr:hover{background:rgba(232,137,12,.04)}
+  tbody td{padding:10px 16px;vertical-align:middle}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:.78rem}
+
+  /* ── Badges ── */
+  .badge{display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-weight:700;letter-spacing:.08em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+  .badge.success,.badge.passed,.badge.converged{background:rgba(46,182,125,.1);color:var(--green);border:1px solid rgba(46,182,125,.22)}
+  .badge.failed   {background:rgba(224,30,90,.1); color:var(--red);   border:1px solid rgba(224,30,90,.22)}
+  .badge.partial  {background:rgba(236,178,46,.1);color:var(--yellow);border:1px solid rgba(236,178,46,.22)}
+  .badge.running  {background:var(--accent-glow);  color:var(--accent);border:1px solid var(--border-strong)}
+  .badge.queued   {background:rgba(255,255,255,.03);color:var(--muted); border:1px solid var(--border)}
+  .badge.skipped  {background:rgba(255,255,255,.03);color:var(--muted); border:1px solid var(--border)}
+
+  /* ── Pills ── */
+  .pill{display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+  .pill-accent{background:var(--accent-glow);color:var(--accent);border:1px solid var(--border-strong)}
+  .pill-muted {background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--border)}
+  .pill-green {background:rgba(46,182,125,.08);color:var(--green);border:1px solid rgba(46,182,125,.2)}
+  .pill-red   {background:rgba(224,30,90,.08); color:var(--red);  border:1px solid rgba(224,30,90,.2)}
+  .pill-yellow{background:rgba(236,178,46,.08);color:var(--yellow);border:1px solid rgba(236,178,46,.2)}
+
+  /* ── New-row flash ── */
+  .new-row{animation:newrow .9s ease}
+  @keyframes newrow{from{background:rgba(232,137,12,.1)}to{background:transparent}}
+
+  /* ── Footer ── */
+  footer{margin-top:40px;padding:18px 32px;border-top:1px solid var(--border);color:var(--muted);font-size:.72rem;display:flex;justify-content:space-between;align-items:center;font-family:'IBM Plex Mono',monospace}
+  .footer-links a{color:var(--accent);text-decoration:none}
+  .footer-links a:hover{text-decoration:underline}
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar{width:4px;height:4px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--faint);border-radius:2px}
+
+    .stages{display:flex;gap:4px;align-items:center}
+    .sd{width:9px;height:9px;border-radius:50%;flex-shrink:0;cursor:default}
+    .sd.pass{background:var(--green)}.sd.fail{background:var(--red)}.sd.skip{background:var(--faint)}.sd.run{background:var(--accent);animation:pulse 1s infinite}
+    .branch-main{background:var(--accent-glow);color:var(--accent);border:1px solid var(--border-strong)}
+    .branch-develop{background:rgba(236,178,46,.08);color:var(--yellow);border:1px solid rgba(236,178,46,.22)}
+    .branch-hotfix{background:rgba(224,30,90,.08);color:var(--red);border:1px solid rgba(224,30,90,.22)}
+    .compliance-row{display:flex;gap:8px;margin-bottom:28px;flex-wrap:wrap}
+    .cc{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:2px;font-size:.68rem;font-weight:700;letter-spacing:.1em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+    .cc.pass{background:rgba(46,182,125,.08);color:var(--green);border:1px solid rgba(46,182,125,.2)}
+    .cc.fail{background:rgba(224,30,90,.08);color:var(--red);border:1px solid rgba(224,30,90,.2)}
+  </style>
+</head>
+<body>
+<header>
+  <div class="wordmark">DEMAIC<span class="o">O</span></div>
+  <div class="header-divider"></div>
+  <div class="header-text">
+    <h1>OT CI/CD Pipeline</h1>
+    <div class="sub">PLC / DCS / SCADA version control &amp; compliance &middot; CI/CD L1</div>
+  </div>
+  <div class="header-right">
+    <span class="demo-badge">Demo</span>
+    <div class="live-dot"></div>
+    <span class="live-label">Live</span>
+  </div>
+</header>
+<div class="container">
+
+  <div class="stats">
+    <div class="stat-card s-accent"><div class="label">Total Runs</div><div class="value" id="st-total">0</div><div class="delta" id="st-last"></div></div>
+    <div class="stat-card s-green"><div class="label">Passed</div><div class="value" id="st-passed">0</div><div class="delta" id="st-ppass"></div></div>
+    <div class="stat-card s-red"><div class="label">Failed</div><div class="value" id="st-failed">0</div><div class="delta" id="st-pfail"></div></div>
+    <div class="stat-card s-yellow"><div class="label">In Progress</div><div class="value" id="st-running">0</div><div class="delta">active runs</div></div>
+  </div>
+
+  <div class="section-title">Vendor Coverage</div>
+  <div class="source-grid" id="vendor-grid"></div>
+
+  <div class="section-title">Compliance &mdash; Last Main Branch Run</div>
+  <div class="compliance-row" id="compliance-row"></div>
+
+  <div class="toolbar">
+    <input type="text" id="ft" placeholder="Search by branch, commit, MOC ref&hellip;" oninput="applyFilter()">
+    <select id="fs" onchange="applyFilter()"><option value="">All statuses</option><option value="passed">Passed</option><option value="failed">Failed</option><option value="running">Running</option></select>
+    <select id="fv" onchange="applyFilter()"><option value="">All vendors</option><option value="rockwell">Rockwell</option><option value="siemens">Siemens</option><option value="deltav">Emerson DeltaV</option><option value="aveva">AVEVA</option><option value="ignition">Ignition</option></select>
+    <span class="count-label" id="vc"></span>
+  </div>
+
+  <div class="table-wrap"><table>
+    <thead><tr><th>Time</th><th>Branch</th><th>Commit</th><th>MOC Ref</th><th>Vendor</th><th title="security &middot; validate &middot; test &middot; compliance &middot; comp-ext &middot; evidence &middot; deploy-sim &middot; deploy-prod">Stages</th><th>Status</th></tr></thead>
+    <tbody id="runs-body"></tbody>
+  </table></div>
+</div>
+<footer>
+  <div>demaico &mdash; OT CI/CD Pipeline Dashboard &mdash; Demo Mode</div>
+  <div class="footer-links"><a href="https://github.com/CharisKomos/demaico_CI_CD_L1" target="_blank">GitHub Repository</a></div>
+</footer>
+<script>
+const SL=["security","validate","test","compliance","comp-ext","evidence","deploy-sim","deploy-prod"];
+const RUNS=[
+  {id:"R015",ts:"2026-05-28T10:12:44Z",branch:"main",   commit:"a3f7c21",moc:"MOC-2026-042",vendor:"rockwell",stages:["pass","pass","pass","pass","pass","pass","pass","pass"],status:"passed"},
+  {id:"R014",ts:"2026-05-28T09:58:17Z",branch:"develop",commit:"b8e1d03",moc:null,          vendor:"siemens", stages:["pass","pass","pass","pass","pass","skip","skip","skip"],status:"passed"},
+  {id:"R013",ts:"2026-05-28T09:45:33Z",branch:"main",   commit:"c2a9f55",moc:"MOC-2026-041",vendor:"deltav",  stages:["pass","pass","fail","skip","skip","skip","skip","skip"],status:"failed"},
+  {id:"R012",ts:"2026-05-28T09:31:08Z",branch:"hotfix", commit:"d4b7e12",moc:"MOC-2026-040",vendor:"aveva",   stages:["pass","pass","pass","pass","pass","pass","pass","pass"],status:"passed"},
+  {id:"R011",ts:"2026-05-28T09:18:52Z",branch:"develop",commit:"e6c3a77",moc:null,          vendor:"ignition",stages:["pass","pass","pass","pass","skip","skip","skip","skip"],status:"passed"},
+  {id:"R010",ts:"2026-05-28T09:05:29Z",branch:"main",   commit:"f1d8b44",moc:"MOC-2026-039",vendor:"rockwell",stages:["pass","fail","skip","skip","skip","skip","skip","skip"],status:"failed"},
+  {id:"R009",ts:"2026-05-28T08:52:11Z",branch:"develop",commit:"a9e4c88",moc:null,          vendor:"siemens", stages:["pass","pass","pass","pass","pass","skip","skip","skip"],status:"passed"},
+  {id:"R008",ts:"2026-05-28T08:39:45Z",branch:"main",   commit:"b5f2d66",moc:"MOC-2026-038",vendor:"deltav",  stages:["pass","pass","pass","pass","pass","pass","pass","pass"],status:"passed"},
+  {id:"R007",ts:"2026-05-28T08:26:03Z",branch:"hotfix", commit:"c7a1e33",moc:"MOC-2026-037",vendor:"aveva",   stages:["pass","pass","pass","fail","skip","skip","skip","skip"],status:"failed"},
+  {id:"R006",ts:"2026-05-28T08:12:58Z",branch:"develop",commit:"d3b9f11",moc:null,          vendor:"rockwell",stages:["pass","pass","pass","pass","skip","skip","skip","skip"],status:"passed"},
+  {id:"R005",ts:"2026-05-28T07:59:34Z",branch:"main",   commit:"e8c6a22",moc:"MOC-2026-036",vendor:"ignition",stages:["pass","pass","pass","pass","pass","pass","pass","pass"],status:"passed"},
+  {id:"R004",ts:"2026-05-28T07:46:17Z",branch:"develop",commit:"f2d4b99",moc:null,          vendor:"siemens", stages:["pass","pass","pass","pass","skip","skip","skip","skip"],status:"passed"},
+  {id:"R003",ts:"2026-05-28T07:33:44Z",branch:"main",   commit:"a6e8c55",moc:"MOC-2026-035",vendor:"deltav",  stages:["pass","pass","pass","pass","pass","pass","fail","skip"],status:"failed"},
+  {id:"R002",ts:"2026-05-28T07:20:29Z",branch:"develop",commit:"b1f5d33",moc:null,          vendor:"aveva",   stages:["pass","pass","pass","pass","skip","skip","skip","skip"],status:"passed"},
+  {id:"R001",ts:"2026-05-28T07:07:11Z",branch:"main",   commit:"c9a3e77",moc:"MOC-2026-034",vendor:"rockwell",stages:["pass","pass","pass","pass","pass","pass","pass","pass"],status:"passed"},
+];
+const VM={rockwell:{label:"Rockwell ControlLogix",icon:"&#x1f534;",ext:".L5X"},siemens:{label:"Siemens TIA Portal",icon:"&#x1f7e2;",ext:".xml"},deltav:{label:"Emerson DeltaV",icon:"&#x1f535;",ext:".xml/.csv"},aveva:{label:"AVEVA / Wonderware",icon:"&#x1f7e0;",ext:".xml"},ignition:{label:"Ignition",icon:"&#x1f7e1;",ext:".json"}};
+const COMP=[{std:"IEC 62443",s:"pass"},{std:"ISA-99",s:"pass"},{std:"OSHA PSM",s:"pass"},{std:"ISO 27001",s:"pass"}];
+function ft(ts){try{return new Date(ts).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"});}catch{return ts;}}
+function bpill(b){const c=b==="main"?"branch-main":b==="develop"?"branch-develop":"branch-hotfix";return '<span class="pill '+c+'">'+b+'</span>';}
+function stg(s){return '<div class="stages">'+s.map((x,i)=>'<div class="sd '+x+'" title="'+SL[i]+'"></div>').join("")+'</div>';}
+function renderStats(){
+  const t=RUNS.length,p=RUNS.filter(r=>r.status==="passed").length,f=RUNS.filter(r=>r.status==="failed").length,rn=RUNS.filter(r=>r.status==="running").length;
+  document.getElementById("st-total").textContent=t;document.getElementById("st-passed").textContent=p;document.getElementById("st-failed").textContent=f;document.getElementById("st-running").textContent=rn;
+  document.getElementById("st-last").textContent="last: "+ft(RUNS[0].ts);
+  document.getElementById("st-ppass").textContent=Math.round(p/t*100)+"% pass rate";
+  document.getElementById("st-pfail").textContent=Math.round(f/t*100)+"% failure rate";
+}
+function renderVendors(){
+  const c={};RUNS.forEach(r=>{c[r.vendor]=(c[r.vendor]||0)+1;});const mx=Math.max(...Object.values(c));
+  document.getElementById("vendor-grid").innerHTML=Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([v,n])=>{const m=VM[v]||{label:v,icon:"&#x2699;",ext:""};return '<div class="source-card"><div class="source-icon">'+m.icon+'</div><div class="source-info"><div class="name">'+m.label+'</div><div class="count">'+n+' run'+(n>1?"s":"")+" &middot; "+m.ext+'</div></div><div style="flex:1"><div class="source-bar-wrap"><div class="source-bar" style="width:'+Math.round(n/mx*100)+'%"></div></div></div></div>';}).join("");
+}
+function renderCompliance(){document.getElementById("compliance-row").innerHTML=COMP.map(c=>'<div class="cc '+c.s+'">'+(c.s==="pass"?"&#x2713;":"&#x2717;")+" "+c.std+"</div>").join("");}
+function rowHtml(r,isNew){const vm=VM[r.vendor]||{label:r.vendor};
+  return '<tr class="'+(isNew?"new-row":"")+'" data-status="'+r.status+'" data-vendor="'+r.vendor+'" data-text="'+(r.branch+r.commit+(r.moc||"")).toLowerCase()+'">'
+    +'<td class="mono" style="color:var(--muted);white-space:nowrap">'+ft(r.ts)+'</td>'
+    +'<td>'+bpill(r.branch)+'</td>'
+    +'<td class="mono" style="color:var(--muted)">'+r.commit+'</td>'
+    +'<td>'+(r.moc?'<span class="mono" style="color:var(--accent)">'+r.moc+'</span>':'<span style="color:var(--muted)">&mdash;</span>')+'</td>'
+    +'<td><span class="pill pill-accent">'+vm.label+'</span></td>'
+    +'<td>'+stg(r.stages)+'</td>'
+    +'<td><span class="badge '+r.status+'">'+r.status+'</span></td>'
+    +'</tr>';
+}
+function renderTable(){document.getElementById("runs-body").innerHTML=RUNS.map(r=>rowHtml(r,false)).join("");applyFilter();}
+function applyFilter(){
+  const txt=document.getElementById("ft").value.toLowerCase(),st=document.getElementById("fs").value,vn=document.getElementById("fv").value;
+  let v=0;document.querySelectorAll("#runs-body tr").forEach(row=>{const ok=(!txt||row.dataset.text.includes(txt))&&(!st||row.dataset.status===st)&&(!vn||row.dataset.vendor===vn);row.style.display=ok?"":"none";if(ok)v++;});
+  document.getElementById("vc").textContent=v===RUNS.length?RUNS.length+" runs":v+" of "+RUNS.length+" runs";
+}
+const LIVE=[
+  {branch:"develop",moc:null,vendor:"siemens",stages:["pass","pass","pass","pass","skip","skip","skip","skip"],status:"passed"},
+  {branch:"main",moc:"MOC-2026-043",vendor:"rockwell",stages:["pass","pass","pass","pass","pass","pass","run","skip"],status:"running"},
+  {branch:"develop",moc:null,vendor:"ignition",stages:["pass","fail","skip","skip","skip","skip","skip","skip"],status:"failed"},
+  {branch:"main",moc:"MOC-2026-044",vendor:"aveva",stages:["pass","pass","pass","pass","pass","pass","pass","pass"],status:"passed"},
+];
+let li=0,rc=16;
+function addLive(){const b=LIVE[li%LIVE.length];const r=Object.assign({},b,{id:"R"+String(rc).padStart(3,"0"),ts:new Date().toISOString(),commit:Math.random().toString(16).substr(2,7)});rc++;li++;RUNS.unshift(r);document.getElementById("runs-body").insertAdjacentHTML("afterbegin",rowHtml(r,true));applyFilter();renderStats();}
+setInterval(addLive,8000);
+renderStats();renderVendors();renderCompliance();renderTable();
+document.getElementById("vc").textContent=RUNS.length+" runs";
+</script>
+</body></html>
