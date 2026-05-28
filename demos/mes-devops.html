@@ -2,16 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>MES Ingestion Dashboard &mdash; demaico</title>
+  <title>MES DevOps Dashboard &mdash; demaico</title>
   <style>
   @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&display=swap');
   :root {
     --bg:            #0b0b0b;
     --surface:       #111111;
     --card:          #161616;
-    --card-hover:    #1c1c1c;
     --accent:        #e8890c;
-    --accent-dim:    #a05f06;
     --accent-glow:   rgba(232,137,12,0.10);
     --text:          #f0ece4;
     --muted:         #888070;
@@ -21,259 +19,656 @@
     --green:  #2EB67D;
     --red:    #E01E5A;
     --yellow: #ECB22E;
+    --blue:   #4a9ef5;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
   /* ── Header ── */
   header{background:var(--surface);border-bottom:1px solid var(--border-strong);padding:14px 32px;display:flex;align-items:center;gap:14px}
-  .wordmark{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:3px;color:var(--text)}
+  .wordmark{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:3px}
   .wordmark .o{color:var(--accent)}
-  .header-divider{width:1px;height:28px;background:var(--border-strong);margin:0 4px}
-  .header-text h1{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:2px}
-  .header-text .sub{color:var(--muted);font-size:.72rem;margin-top:2px;font-family:'IBM Plex Mono',monospace}
-  .header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
-  .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+  .hdiv{width:1px;height:28px;background:var(--border-strong);margin:0 4px}
+  .htxt h1{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:2px}
+  .htxt .sub{color:var(--muted);font-size:.72rem;margin-top:2px;font-family:'IBM Plex Mono',monospace}
+  .hright{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pdot 2s infinite}
   .live-label{color:var(--green);font-size:.72rem;font-weight:700;letter-spacing:.12em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
   .demo-badge{background:var(--accent-glow);color:var(--accent);border:1px solid var(--border-strong);border-radius:2px;padding:3px 10px;font-size:.68rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:3px;text-transform:uppercase}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+  @keyframes pdot{0%,100%{opacity:1}50%{opacity:.25}}
 
   /* ── Layout ── */
-  .container{max-width:1500px;margin:0 auto;padding:28px 32px}
+  .container{max-width:1500px;margin:0 auto;padding:24px 32px}
 
   /* ── Stats ── */
-  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:32px}
-  .stat-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:20px 22px;position:relative;overflow:hidden}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+  .stat-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:18px 20px;position:relative;overflow:hidden}
   .stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-  .stat-card.s-accent::after{background:var(--accent)}
-  .stat-card.s-green::after{background:var(--green)}
-  .stat-card.s-red::after{background:var(--red)}
-  .stat-card.s-yellow::after{background:var(--yellow)}
-  .stat-card .label{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px}
-  .stat-card .value{font-family:'Bebas Neue',sans-serif;font-size:3.2rem;line-height:1;color:var(--text)}
-  .stat-card.s-accent .value{color:var(--accent)}
-  .stat-card.s-green .value{color:var(--green)}
-  .stat-card.s-red   .value{color:var(--red)}
-  .stat-card.s-yellow .value{color:var(--yellow)}
-  .stat-card .delta{font-size:.7rem;color:var(--muted);margin-top:6px;font-family:'IBM Plex Mono',monospace}
+  .s-accent::after{background:var(--accent)} .s-green::after{background:var(--green)}
+  .s-yellow::after{background:var(--yellow)} .s-blue::after{background:var(--blue)}
+  .stat-lbl{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px}
+  .stat-val{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;line-height:1}
+  .s-accent .stat-val{color:var(--accent)} .s-green .stat-val{color:var(--green)}
+  .s-yellow .stat-val{color:var(--yellow)} .s-blue .stat-val{color:var(--blue)}
+  .stat-delta{font-size:.68rem;color:var(--muted);margin-top:5px;font-family:'IBM Plex Mono',monospace}
 
-  /* ── Source grid ── */
-  .source-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-bottom:28px}
-  .source-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:12px 16px;display:flex;align-items:center;gap:12px;transition:border-color .2s}
-  .source-card:hover{border-color:var(--border-strong)}
-  .source-icon{font-size:1.1rem}
-  .source-info .name{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.5px}
-  .source-info .count{font-size:.7rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:2px}
-  .source-bar-wrap{flex:1;height:2px;background:var(--faint);border-radius:1px;overflow:hidden}
-  .source-bar{height:100%;background:var(--accent)}
+  /* ── Main grid ── */
+  .main-grid{display:grid;grid-template-columns:290px 1fr;gap:16px;margin-bottom:24px}
 
   /* ── Section title ── */
-  .section-title{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);font-weight:700;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+  .section-title{font-family:'Barlow Condensed',sans-serif;font-size:.66rem;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);font-weight:700;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border)}
 
-  /* ── Toolbar ── */
-  .toolbar{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
-  .toolbar input,.toolbar select{background:var(--card);border:1px solid var(--border);border-radius:2px;color:var(--text);padding:7px 12px;font-size:.82rem;outline:none;font-family:'Barlow',sans-serif}
-  .toolbar input{flex:1;min-width:200px}
-  .toolbar input::placeholder{color:var(--muted)}
-  .toolbar input:focus,.toolbar select:focus{border-color:var(--accent)}
-  .toolbar .count-label{color:var(--muted);font-size:.72rem;margin-left:auto;font-family:'IBM Plex Mono',monospace}
+  /* ── Config inventory ── */
+  .config-list{display:flex;flex-direction:column;gap:5px;margin-bottom:18px}
+  .config-item{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:9px 12px;display:flex;align-items:center;gap:10px}
+  .cfg-type{font-family:'Barlow Condensed',sans-serif;font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:2px 5px;border-radius:1px;width:34px;text-align:center;flex-shrink:0}
+  .cfg-type.recipe{background:rgba(232,137,12,.1);color:var(--accent);border:1px solid var(--border-strong)}
+  .cfg-type.line  {background:rgba(74,158,245,.1);color:var(--blue);border:1px solid rgba(74,158,245,.3)}
+  .cfg-type.env   {background:rgba(46,182,125,.1);color:var(--green);border:1px solid rgba(46,182,125,.3)}
+  .cfg-info{flex:1;min-width:0}
+  .cfg-id{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cfg-meta{font-size:.64rem;color:var(--muted);margin-top:2px;display:flex;gap:6px;align-items:center}
+  .cfg-status{font-size:.6rem;font-weight:700;padding:1px 5px;border-radius:1px;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0}
+  .cfg-status.approved{background:rgba(46,182,125,.08);color:var(--green);border:1px solid rgba(46,182,125,.2)}
+  .cfg-status.draft   {background:rgba(236,178,46,.08);color:var(--yellow);border:1px solid rgba(236,178,46,.2)}
+  .cfg-status.ok      {background:rgba(46,182,125,.08);color:var(--green);border:1px solid rgba(46,182,125,.2)}
+  .chg-label{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);flex-shrink:0}
+
+  /* ── Health panel ── */
+  .health-panel{display:flex;flex-direction:column;gap:8px}
+  .health-env-card{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:10px 12px}
+  .health-env-label{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:7px}
+  .health-checks{display:flex;gap:6px;flex-wrap:wrap}
+  .hck{display:flex;align-items:center;gap:4px;font-size:.68rem;font-family:'IBM Plex Mono',monospace;padding:3px 8px;border-radius:2px}
+  .hck.ok{color:var(--green);background:rgba(46,182,125,.06);border:1px solid rgba(46,182,125,.15)}
+  .hck.fail{color:var(--red);background:rgba(224,30,90,.06);border:1px solid rgba(224,30,90,.15)}
+  .hck.chk{color:var(--yellow);background:rgba(236,178,46,.06);border:1px solid rgba(236,178,46,.15)}
+
+  /* ── Commit card ── */
+  .commit-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:14px 16px;transition:border-color .2s}
+  .commit-card.active{border-color:var(--border-strong);box-shadow:0 0 0 1px var(--accent-glow)}
+  .commit-header{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+  .commit-evt{font-family:'Barlow Condensed',sans-serif;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--accent)}
+  .commit-hash{font-family:'IBM Plex Mono',monospace;font-size:.8rem;color:var(--blue)}
+  .commit-author{font-size:.7rem;color:var(--muted);margin-left:auto;font-family:'IBM Plex Mono',monospace}
+  .commit-msg{font-size:.88rem;color:var(--text);margin-bottom:8px;font-weight:500;line-height:1.4}
+  .commit-files{display:flex;gap:6px;flex-wrap:wrap}
+  .commit-file{font-family:'IBM Plex Mono',monospace;font-size:.66rem;color:var(--muted);background:var(--faint);border-radius:2px;padding:2px 7px}
+
+  /* ── Pipeline card ── */
+  .pipeline-wrap{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:14px 16px}
+  .pipeline-group{margin-bottom:14px}
+  .pipeline-group:last-child{margin-bottom:0}
+  .pg-label{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .pg-label::after{content:'';flex:1;height:1px;background:var(--border)}
+  .stages{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .stage{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:10px 12px;display:flex;flex-direction:column;gap:5px;transition:border-color .2s,background .2s}
+  .stage.running{border-color:var(--accent);background:rgba(232,137,12,.04)}
+  .stage.passed {border-color:rgba(46,182,125,.3);background:rgba(46,182,125,.04)}
+  .stage.failed {border-color:rgba(224,30,90,.3);background:rgba(224,30,90,.04)}
+  .stage-row{display:flex;align-items:center;gap:6px}
+  .stage-dot{width:8px;height:8px;border-radius:50%;background:var(--faint);flex-shrink:0;transition:background .2s}
+  .stage.running .stage-dot{background:var(--accent);animation:pdot 1s infinite}
+  .stage.passed  .stage-dot{background:var(--green)}
+  .stage.failed  .stage-dot{background:var(--red)}
+  .stage-name{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .stage.running .stage-name{color:var(--accent)}
+  .stage.passed  .stage-name{color:var(--text)}
+  .stage.failed  .stage-name{color:var(--red)}
+  .stage-detail{font-family:'IBM Plex Mono',monospace;font-size:.63rem;color:var(--muted);min-height:14px}
+  .stage.passed .stage-detail{color:var(--green)}
+  .stage.failed .stage-detail{color:var(--red)}
+
+  /* ── Prod gate ── */
+  .prod-gate{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:12px 14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;transition:border-color .2s,background .2s}
+  .prod-gate.pending {border-color:rgba(236,178,46,.4);background:rgba(236,178,46,.04)}
+  .prod-gate.approved{border-color:rgba(46,182,125,.3);background:rgba(46,182,125,.04)}
+  .pg-gate-lbl{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+  .pg-gate-chg{font-family:'IBM Plex Mono',monospace;font-size:.84rem;font-weight:700;color:var(--accent)}
+  .prod-gate.approved .pg-gate-chg{color:var(--green)}
+  .pg-gate-detail{font-size:.7rem;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+
+  /* ── Live log ── */
+  .log-wrap{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:12px 14px}
+  .log-lines{background:#080808;border-radius:2px;padding:10px 12px;height:138px;overflow-y:auto;font-family:'IBM Plex Mono',monospace;font-size:.71rem;line-height:1.9}
+  .line-push{color:var(--accent)}
+  .line-ci  {color:var(--blue)}
+  .line-ok  {color:var(--green)}
+  .line-err {color:var(--red)}
+  .line-cd  {color:var(--yellow)}
+  .line-muted{color:var(--muted)}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
   /* ── Table ── */
   .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:3px;margin-bottom:32px}
-  table{width:100%;border-collapse:collapse;font-size:.875rem}
+  table{width:100%;border-collapse:collapse;font-size:.82rem}
   thead{background:var(--surface)}
-  thead th{padding:10px 16px;text-align:left;color:var(--muted);font-weight:700;font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;border-bottom:1px solid var(--border);white-space:nowrap;font-family:'Barlow Condensed',sans-serif}
+  thead th{padding:9px 14px;text-align:left;color:var(--muted);font-weight:700;font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;border-bottom:1px solid var(--border);white-space:nowrap;font-family:'Barlow Condensed',sans-serif}
   tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
   tbody tr:last-child{border-bottom:none}
-  tbody tr:hover{background:rgba(232,137,12,.04)}
-  tbody td{padding:10px 16px;vertical-align:middle}
-  .mono{font-family:'IBM Plex Mono',monospace;font-size:.78rem}
+  tbody tr:hover{background:rgba(232,137,12,.03)}
+  tbody td{padding:9px 14px;vertical-align:middle}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:.75rem}
 
-  /* ── Badges ── */
-  .badge{display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-weight:700;letter-spacing:.08em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
-  .badge.success,.badge.passed,.badge.converged{background:rgba(46,182,125,.1);color:var(--green);border:1px solid rgba(46,182,125,.22)}
-  .badge.failed   {background:rgba(224,30,90,.1); color:var(--red);   border:1px solid rgba(224,30,90,.22)}
-  .badge.partial  {background:rgba(236,178,46,.1);color:var(--yellow);border:1px solid rgba(236,178,46,.22)}
-  .badge.running  {background:var(--accent-glow);  color:var(--accent);border:1px solid var(--border-strong)}
-  .badge.queued   {background:rgba(255,255,255,.03);color:var(--muted); border:1px solid var(--border)}
-  .badge.skipped  {background:rgba(255,255,255,.03);color:var(--muted); border:1px solid var(--border)}
+  /* ── Badges & pills ── */
+  .badge{display:inline-block;padding:2px 7px;border-radius:2px;font-size:.6rem;font-weight:700;letter-spacing:.08em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+  .bg{background:rgba(46,182,125,.1);color:var(--green);border:1px solid rgba(46,182,125,.22)}
+  .br{background:rgba(224,30,90,.1);color:var(--red);border:1px solid rgba(224,30,90,.22)}
+  .by{background:rgba(236,178,46,.1);color:var(--yellow);border:1px solid rgba(236,178,46,.22)}
+  .bm{background:rgba(255,255,255,.03);color:var(--muted);border:1px solid var(--border)}
+  .pill-staging{background:rgba(74,158,245,.08);color:var(--blue);border:1px solid rgba(74,158,245,.2);display:inline-block;padding:2px 7px;border-radius:2px;font-size:.6rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.08em}
+  .pill-prod   {background:rgba(232,137,12,.08);color:var(--accent);border:1px solid var(--border-strong);display:inline-block;padding:2px 7px;border-radius:2px;font-size:.6rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.08em}
+  .rollback-btn{font-size:.62rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:2px 8px;border:1px solid var(--border);border-radius:2px;background:transparent;color:var(--muted);cursor:pointer;transition:border-color .2s,color .2s}
+  .rollback-btn:hover{border-color:var(--red);color:var(--red)}
 
-  /* ── Pills ── */
-  .pill{display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
-  .pill-accent{background:var(--accent-glow);color:var(--accent);border:1px solid var(--border-strong)}
-  .pill-muted {background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--border)}
-  .pill-green {background:rgba(46,182,125,.08);color:var(--green);border:1px solid rgba(46,182,125,.2)}
-  .pill-red   {background:rgba(224,30,90,.08); color:var(--red);  border:1px solid rgba(224,30,90,.2)}
-  .pill-yellow{background:rgba(236,178,46,.08);color:var(--yellow);border:1px solid rgba(236,178,46,.2)}
-
-  /* ── New-row flash ── */
-  .new-row{animation:newrow .9s ease}
+  .new-row{animation:newrow 1.2s ease}
   @keyframes newrow{from{background:rgba(232,137,12,.1)}to{background:transparent}}
 
   /* ── Footer ── */
-  footer{margin-top:40px;padding:18px 32px;border-top:1px solid var(--border);color:var(--muted);font-size:.72rem;display:flex;justify-content:space-between;align-items:center;font-family:'IBM Plex Mono',monospace}
-  .footer-links a{color:var(--accent);text-decoration:none}
-  .footer-links a:hover{text-decoration:underline}
+  footer{padding:18px 32px;border-top:1px solid var(--border);color:var(--muted);font-size:.7rem;display:flex;justify-content:space-between;align-items:center;font-family:'IBM Plex Mono',monospace}
+  footer a{color:var(--accent);text-decoration:none}
+  footer a:hover{text-decoration:underline}
 
-  /* ── Scrollbar ── */
   ::-webkit-scrollbar{width:4px;height:4px}
   ::-webkit-scrollbar-track{background:var(--bg)}
   ::-webkit-scrollbar-thumb{background:var(--faint);border-radius:2px}
-</style>
+  </style>
 </head>
 <body>
 <header>
   <div class="wordmark">DEMAIC<span class="o">O</span></div>
-  <div class="header-divider"></div>
-  <div class="header-text">
-    <h1>MES Ingestion Dashboard</h1>
-    <div class="sub">Vendor file &rarr; YAML config pipeline &middot; MES DevOps</div>
+  <div class="hdiv"></div>
+  <div class="htxt">
+    <h1>MES DevOps</h1>
+    <div class="sub">Config-as-Code &middot; CI/CD Pipeline &middot; Automated MES Deployment</div>
   </div>
-  <div class="header-right">
+  <div class="hright">
     <span class="demo-badge">Demo</span>
     <div class="live-dot"></div>
     <span class="live-label">Live</span>
   </div>
 </header>
+
 <div class="container">
 
+  <!-- Stats -->
   <div class="stats">
     <div class="stat-card s-accent">
-      <div class="label">Total Processed</div>
-      <div class="value" id="stat-total">0</div>
-      <div class="delta" id="stat-last"></div>
+      <div class="stat-lbl">Configs in Git</div>
+      <div class="stat-val">7</div>
+      <div class="stat-delta">3 recipes &middot; 2 lines &middot; 2 envs</div>
     </div>
     <div class="stat-card s-green">
-      <div class="label">Success</div>
-      <div class="value" id="stat-success">0</div>
-      <div class="delta" id="stat-success-pct"></div>
-    </div>
-    <div class="stat-card s-red">
-      <div class="label">Failed</div>
-      <div class="value" id="stat-failed">0</div>
-      <div class="delta" id="stat-failed-pct"></div>
+      <div class="stat-lbl">CI Runs Today</div>
+      <div class="stat-val" id="stat-ci">12</div>
+      <div class="stat-delta" id="stat-ci-delta">11 passed &middot; 1 failed</div>
     </div>
     <div class="stat-card s-yellow">
-      <div class="label">Skipped</div>
-      <div class="value" id="stat-skipped">0</div>
-      <div class="delta">no changes detected</div>
+      <div class="stat-lbl">Staging Deploys</div>
+      <div class="stat-val" id="stat-staging">8</div>
+      <div class="stat-delta" id="stat-staging-delta">last: 2h ago</div>
+    </div>
+    <div class="stat-card s-blue">
+      <div class="stat-lbl">Production Uptime</div>
+      <div class="stat-val">99.8</div>
+      <div class="stat-delta">% &middot; last 30 days</div>
     </div>
   </div>
 
-  <div class="section-title">Vendor Sources</div>
-  <div class="source-grid" id="vendor-grid"></div>
+  <div class="main-grid">
 
-  <div class="toolbar">
-    <input type="text" id="filter-text" placeholder="Search by file, vendor, config ID&hellip;" oninput="applyFilter()">
-    <select id="filter-status" onchange="applyFilter()">
-      <option value="">All statuses</option>
-      <option value="success">Success</option>
-      <option value="failed">Failed</option>
-      <option value="skipped">Skipped</option>
-    </select>
-    <select id="filter-vendor" onchange="applyFilter()">
-      <option value="">All vendors</option>
-      <option value="emerson_deltav">Emerson DeltaV</option>
-      <option value="siemens_opcenter">Siemens Opcenter</option>
-      <option value="rockwell_factorytalk">Rockwell FactoryTalk</option>
-      <option value="aveva_wonderware">AVEVA Wonderware</option>
-      <option value="sap_me">SAP ME</option>
-    </select>
-    <select id="filter-type" onchange="applyFilter()">
-      <option value="">All types</option>
-      <option value="recipe">Recipe</option>
-      <option value="line">Line</option>
-    </select>
-    <span class="count-label" id="visible-count"></span>
+    <!-- Left: Config Inventory + MES Health -->
+    <div>
+      <div class="section-title">Config Inventory</div>
+      <div class="config-list">
+        <div class="config-item">
+          <div class="cfg-type recipe">RCP</div>
+          <div class="cfg-info">
+            <div class="cfg-id">RCP-PA-500ML-EU</div>
+            <div class="cfg-meta"><span>v3.1.0</span><span class="cfg-status approved">approved</span></div>
+          </div>
+          <div class="chg-label">CHG-2024-0089</div>
+        </div>
+        <div class="config-item">
+          <div class="cfg-type recipe">RCP</div>
+          <div class="cfg-info">
+            <div class="cfg-id">RCP-PB-250MG-US</div>
+            <div class="cfg-meta"><span>v2.0.1</span><span class="cfg-status draft">draft</span></div>
+          </div>
+        </div>
+        <div class="config-item">
+          <div class="cfg-type recipe">RCP</div>
+          <div class="cfg-info">
+            <div class="cfg-id">RCP-PC-1G-INTL</div>
+            <div class="cfg-meta"><span>v4.2.0</span><span class="cfg-status approved">approved</span></div>
+          </div>
+          <div class="chg-label">CHG-2024-0091</div>
+        </div>
+        <div class="config-item">
+          <div class="cfg-type line">LINE</div>
+          <div class="cfg-info">
+            <div class="cfg-id">LINE-01</div>
+            <div class="cfg-meta"><span>6 equipment</span><span style="color:var(--green)">VI &check;</span></div>
+          </div>
+        </div>
+        <div class="config-item">
+          <div class="cfg-type line">LINE</div>
+          <div class="cfg-info">
+            <div class="cfg-id">LINE-02</div>
+            <div class="cfg-meta"><span>4 equipment</span><span style="color:var(--green)">VI &check;</span></div>
+          </div>
+        </div>
+        <div class="config-item">
+          <div class="cfg-type env">ENV</div>
+          <div class="cfg-info">
+            <div class="cfg-id">staging</div>
+            <div class="cfg-meta"><span class="cfg-status ok">&#9679; healthy</span></div>
+          </div>
+        </div>
+        <div class="config-item">
+          <div class="cfg-type env">ENV</div>
+          <div class="cfg-info">
+            <div class="cfg-id">production</div>
+            <div class="cfg-meta"><span class="cfg-status ok">&#9679; healthy</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-title">MES Health</div>
+      <div class="health-panel">
+        <div class="health-env-card">
+          <div class="health-env-label">Staging</div>
+          <div class="health-checks" id="health-staging">
+            <div class="hck ok">&#9679; database</div>
+            <div class="hck ok">&#9679; scada_conn</div>
+            <div class="hck ok">&#9679; erp_sync</div>
+          </div>
+        </div>
+        <div class="health-env-card">
+          <div class="health-env-label">Production</div>
+          <div class="health-checks" id="health-prod">
+            <div class="hck ok">&#9679; database</div>
+            <div class="hck ok">&#9679; scada_conn</div>
+            <div class="hck ok">&#9679; erp_sync</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Commit + Pipeline + Log -->
+    <div style="display:flex;flex-direction:column;gap:12px">
+
+      <div class="commit-card" id="commit-card">
+        <div class="commit-header">
+          <span class="commit-evt">&#11042; Last Commit</span>
+          <span class="commit-hash" id="c-hash">f6247f0</span>
+          <span class="commit-author" id="c-author">k.matsubara &middot; 2h ago</span>
+        </div>
+        <div class="commit-msg" id="c-msg">chore(staging): update erp_sync alerting threshold to 250ms</div>
+        <div class="commit-files" id="c-files">
+          <span class="commit-file">configs/environments/staging.yaml</span>
+        </div>
+      </div>
+
+      <div class="pipeline-wrap">
+        <div class="pipeline-group">
+          <div class="pg-label">CI &middot; GitHub Actions</div>
+          <div class="stages">
+            <div class="stage passed" id="stage-validate">
+              <div class="stage-row"><div class="stage-dot"></div><div class="stage-name">validate-configs</div></div>
+              <div class="stage-detail" id="d-validate">schema + rules &check;</div>
+            </div>
+            <div class="stage passed" id="stage-unit">
+              <div class="stage-row"><div class="stage-dot"></div><div class="stage-name">unit-tests</div></div>
+              <div class="stage-detail" id="d-unit">87% cov &middot; 23 pass</div>
+            </div>
+            <div class="stage passed" id="stage-integration">
+              <div class="stage-row"><div class="stage-dot"></div><div class="stage-name">integration-tests</div></div>
+              <div class="stage-detail" id="d-integration">12/12 &middot; sim &check;</div>
+            </div>
+            <div class="stage passed" id="stage-build">
+              <div class="stage-row"><div class="stage-dot"></div><div class="stage-name">build-and-push</div></div>
+              <div class="stage-detail" id="d-build">image pushed</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipeline-group">
+          <div class="pg-label">CD &middot; Staging</div>
+          <div class="stages">
+            <div class="stage passed" id="stage-snapshot">
+              <div class="stage-row"><div class="stage-dot"></div><div class="stage-name">snapshot</div></div>
+              <div class="stage-detail" id="d-snapshot">0528-001 saved</div>
+            </div>
+            <div class="stage passed" id="stage-dryrun">
+              <div class="stage-row"><div class="stage-dot"></div><div class="stage-name">dry-run</div></div>
+              <div class="stage-detail" id="d-dryrun">0 conflicts</div>
+            </div>
+            <div class="stage passed" id="stage-deploy">
+              <div class="stage-row"><div class="stage-dot"></div><div class="stage-name">deploy</div></div>
+              <div class="stage-detail" id="d-deploy">2 recipes applied</div>
+            </div>
+            <div class="stage passed" id="stage-smoke">
+              <div class="stage-row"><div class="stage-dot"></div><div class="stage-name">smoke-test</div></div>
+              <div class="stage-detail" id="d-smoke">/health &rarr; ok</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipeline-group">
+          <div class="pg-label">Production Gate</div>
+          <div class="prod-gate approved" id="prod-gate">
+            <div class="pg-gate-lbl">Change Ticket</div>
+            <div class="pg-gate-chg" id="gate-chg">CHG-2024-0089</div>
+            <div class="pg-gate-detail" id="gate-detail">sha: f6247f0 &middot; approved by j.okonkwo</div>
+            <div style="margin-left:auto"><span class="badge bg">Deployed</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="log-wrap">
+        <div class="section-title" style="margin-bottom:8px">Pipeline Log</div>
+        <div class="log-lines" id="log-lines">
+          <div class="line-ok">&check; CI pipeline passed &mdash; all 4 jobs</div>
+          <div class="line-cd">&#9658; CD staging triggered &mdash; commit f6247f0</div>
+          <div class="line-muted">&nbsp;&nbsp;snapshot: SNAP-20260528-001 saved</div>
+          <div class="line-muted">&nbsp;&nbsp;dry-run: plan validated, 0 conflicts</div>
+          <div class="line-ok">&nbsp;&nbsp;deploy: env_config applied</div>
+          <div class="line-ok">&nbsp;&nbsp;deploy: LINE-01, LINE-02 applied</div>
+          <div class="line-ok">&nbsp;&nbsp;deploy: RCP-PA-500ML-EU, RCP-PC-1G-INTL applied</div>
+          <div class="line-ok">&nbsp;&nbsp;smoke-test: /api/v1/health &rarr; &#123;status: ok&#125;</div>
+          <div class="line-ok">&check; Staging deployment complete</div>
+          <div class="line-cd">&#9658; Production gate: CHG-2024-0089 approved by j.okonkwo</div>
+          <div class="line-ok">&check; Production deployment complete</div>
+        </div>
+      </div>
+
+    </div>
   </div>
 
+  <!-- Deployment History -->
+  <div class="section-title">Deployment History</div>
   <div class="table-wrap">
     <table>
       <thead><tr>
-        <th>Time</th><th>Source File</th><th>Vendor</th><th>Type</th>
-        <th>Config ID</th><th>Version</th><th>Status</th><th>Output / Error</th><th>Git</th>
+        <th>Time</th><th>Environment</th><th>Commit</th><th>Change Ticket</th>
+        <th>Configs Deployed</th><th>Duration</th><th>Deployer</th><th>Status</th><th></th>
       </tr></thead>
-      <tbody id="events-body"></tbody>
+      <tbody id="history-body"></tbody>
     </table>
   </div>
 </div>
+
 <footer>
-  <div>demaico &mdash; MES Ingestion Dashboard &mdash; Demo Mode</div>
-  <div class="footer-links"><a href="https://github.com/CharisKomos/demaico_MES_DevOps" target="_blank">GitHub Repository</a></div>
+  <div>demaico &mdash; MES DevOps Dashboard &mdash; Demo Mode</div>
+  <div><a href="https://github.com/CharisKomos/demaico_MES_DevOps" target="_blank">GitHub Repository</a></div>
 </footer>
+
 <script>
-const EVENTS = [
-  {id:"1",ts:"2026-05-28T09:45:12Z",src:"aspirin_500mg_v12.fhx",vendor:"emerson_deltav",type:"recipe",cfg:"RCP-ASPIRIN-500MG",ver:"12.3.1",status:"success",path:"configs/recipes/rcp-aspirin-500mg.yaml",errors:[],committed:true},
-  {id:"2",ts:"2026-05-28T09:44:51Z",src:"packaging_line_01.xml",vendor:"siemens_opcenter",type:"line",cfg:"LINE-01",ver:"0.0.0",status:"success",path:"configs/lines/line-01.yaml",errors:[],committed:true},
-  {id:"3",ts:"2026-05-28T09:43:08Z",src:"ibuprofen_400mg_draft.fhx",vendor:"emerson_deltav",type:"recipe",cfg:"RCP-IBUPROFEN-400MG",ver:"3.0.1",status:"failed",path:"",errors:["step 15 is not a multiple of 10","change_ref required when status is approved"],committed:false},
-  {id:"4",ts:"2026-05-28T09:41:33Z",src:"recipes_batch_export.csv",vendor:"rockwell_factorytalk",type:"recipe",cfg:"RCP-PARACETAMOL-500MG",ver:"7.1.0",status:"success",path:"configs/recipes/rcp-paracetamol-500mg.yaml",errors:[],committed:true},
-  {id:"5",ts:"2026-05-28T09:41:31Z",src:"recipes_batch_export.csv",vendor:"rockwell_factorytalk",type:"recipe",cfg:"RCP-ASPIRIN-500MG",ver:"12.3.1",status:"skipped",path:"configs/recipes/rcp-aspirin-500mg.yaml",errors:[],committed:false},
-  {id:"6",ts:"2026-05-28T09:39:17Z",src:"asp500_recipe.xml",vendor:"aveva_wonderware",type:"recipe",cfg:"RCP-ASP-500MG",ver:"12.3.1",status:"success",path:"configs/recipes/rcp-asp-500mg.yaml",errors:[],committed:true},
-  {id:"7",ts:"2026-05-28T09:38:02Z",src:"line_02_config.xml",vendor:"aveva_wonderware",type:"line",cfg:"LINE-02",ver:"0.0.0",status:"success",path:"configs/lines/line-02.yaml",errors:[],committed:true},
-  {id:"8",ts:"2026-05-28T09:36:44Z",src:"sap_recipe_export.json",vendor:"sap_me",type:"recipe",cfg:"RCP-ASP-500MG",ver:"12.3.1",status:"skipped",path:"configs/recipes/rcp-asp-500mg.yaml",errors:[],committed:false},
-  {id:"9",ts:"2026-05-28T09:34:29Z",src:"sap_resource_line1.json",vendor:"sap_me",type:"line",cfg:"LINE-01",ver:"0.0.0",status:"success",path:"configs/lines/line-01.yaml",errors:[],committed:true},
-  {id:"10",ts:"2026-05-28T09:33:01Z",src:"omeprazole_20mg.xml",vendor:"siemens_opcenter",type:"recipe",cfg:"RCP-OMEPRAZOLE-20MG",ver:"5.2.0",status:"failed",path:"",errors:["product_sku is required","bill_of_materials must have at least 1 item"],committed:false},
-  {id:"11",ts:"2026-05-28T09:31:15Z",src:"metformin_850mg.fhx",vendor:"emerson_deltav",type:"recipe",cfg:"RCP-METFORMIN-850MG",ver:"2.0.0",status:"success",path:"configs/recipes/rcp-metformin-850mg.yaml",errors:[],committed:true},
-  {id:"12",ts:"2026-05-28T09:29:44Z",src:"line_equipment_export.csv",vendor:"rockwell_factorytalk",type:"line",cfg:"LINE-03",ver:"0.0.0",status:"success",path:"configs/lines/line-03.yaml",errors:[],committed:true},
-  {id:"13",ts:"2026-05-28T09:27:08Z",src:"amoxicillin_500mg.json",vendor:"sap_me",type:"recipe",cfg:"RCP-AMOXICILLIN-500MG",ver:"4.1.2",status:"success",path:"configs/recipes/rcp-amoxicillin-500mg.yaml",errors:[],committed:true},
-  {id:"14",ts:"2026-05-28T09:25:33Z",src:"lisinopril_10mg_recipe.xml",vendor:"aveva_wonderware",type:"recipe",cfg:"RCP-LISINOPRIL-10MG",ver:"1.0.0",status:"failed",path:"",errors:["version '1.0' is not valid semver"],committed:false},
-  {id:"15",ts:"2026-05-28T09:23:17Z",src:"granulator_module.fhx",vendor:"emerson_deltav",type:"line",cfg:"LINE-GRANULATOR-01",ver:"0.0.0",status:"success",path:"configs/lines/line-granulator-01.yaml",errors:[],committed:true},
+const SCENARIOS = [
+  {
+    commit:'a3f7d2e', author:'k.matsubara',
+    msg:'recipe(RCP-PA-500ML-EU): add vision post-cap inspection step, bump v3.1.1',
+    files:['configs/recipes/product-a.yaml'],
+    ciPass:true, cov:88, intTests:12,
+    configs:'2 recipes · 2 lines', snap:'SNAP-20260528-002',
+    dryrun:'0 conflicts', deployDetail:'RCP-PA-500ML-EU v3.1.1 · RCP-PC-1G-INTL v4.2.0',
+    chg:'CHG-2024-0089', approver:'j.okonkwo', deployer:'k.matsubara', hasProd:true,
+  },
+  {
+    commit:'b8c1e94', author:'j.okonkwo',
+    msg:'line(LINE-01): add torque-wrench station to final packaging cell',
+    files:['configs/lines/line-01.yaml'],
+    ciPass:true, cov:89, intTests:12,
+    configs:'2 lines', snap:'SNAP-20260528-003',
+    dryrun:'0 conflicts', deployDetail:'LINE-01 · LINE-02',
+    chg:null, approver:null, deployer:'ci-bot', hasProd:false,
+  },
+  {
+    commit:'c2d9f13', author:'k.matsubara',
+    msg:'recipe(RCP-PB-250MG-US): approve draft, add CHG-2024-0094 change ref',
+    files:['configs/recipes/product-b.yaml'],
+    ciPass:true, cov:91, intTests:12,
+    configs:'1 recipe · 2 lines', snap:'SNAP-20260528-004',
+    dryrun:'0 conflicts', deployDetail:'RCP-PB-250MG-US v2.0.1',
+    chg:'CHG-2024-0094', approver:'j.okonkwo', deployer:'k.matsubara', hasProd:true,
+  },
 ];
-const VM={emerson_deltav:{label:"Emerson DeltaV",icon:"&#x1f535;",ext:".fhx"},siemens_opcenter:{label:"Siemens Opcenter",icon:"&#x1f7e2;",ext:".xml"},rockwell_factorytalk:{label:"Rockwell FactoryTalk",icon:"&#x1f534;",ext:".csv"},aveva_wonderware:{label:"AVEVA Wonderware",icon:"&#x1f7e0;",ext:".xml"},sap_me:{label:"SAP ME",icon:"&#x26aa;",ext:".json"}};
-function ft(ts){try{return new Date(ts).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"});}catch{return ts;}}
-function renderStats(){
-  const t=EVENTS.length,s=EVENTS.filter(e=>e.status==="success").length,f=EVENTS.filter(e=>e.status==="failed").length,sk=EVENTS.filter(e=>e.status==="skipped").length;
-  document.getElementById("stat-total").textContent=t;
-  document.getElementById("stat-success").textContent=s;
-  document.getElementById("stat-failed").textContent=f;
-  document.getElementById("stat-skipped").textContent=sk;
-  document.getElementById("stat-last").textContent="last: "+ft(EVENTS[0].ts);
-  document.getElementById("stat-success-pct").textContent=Math.round(s/t*100)+"% success rate";
-  document.getElementById("stat-failed-pct").textContent=Math.round(f/t*100)+"% failure rate";
-}
-function renderVendors(){
-  const c={};EVENTS.forEach(e=>{c[e.vendor]=(c[e.vendor]||0)+1;});
-  const mx=Math.max(...Object.values(c));
-  document.getElementById("vendor-grid").innerHTML=Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([v,n])=>{
-    const m=VM[v]||{label:v,icon:"&#x2699;",ext:""};
-    return '<div class="source-card"><div class="source-icon">'+m.icon+'</div><div class="source-info"><div class="name">'+m.label+'</div><div class="count">'+n+' file'+(n>1?"s":"")+' &middot; '+m.ext+'</div></div><div style="flex:1"><div class="source-bar-wrap"><div class="source-bar" style="width:'+Math.round(n/mx*100)+'%"></div></div></div></div>';
-  }).join("");
-}
-function rowHtml(ev,isNew){
-  const vm=VM[ev.vendor]||{label:ev.vendor};
-  const detail=ev.errors.length?'<span style="color:var(--red);font-size:.75rem">&#x26a0; '+ev.errors[0]+(ev.errors.length>1?' (+'+( ev.errors.length-1)+' more)':'')+'</span>':ev.path?'<span class="mono" style="color:var(--muted)">'+ev.path+'</span>':'<span style="color:var(--muted)">&mdash;</span>';
-  const git=ev.committed?'<span style="color:var(--green)" title="Committed">&#x2714;</span>':ev.status==="failed"?'<span style="color:var(--red)">&#x2718;</span>':'<span style="color:var(--muted)">&mdash;</span>';
-  return '<tr class="'+(isNew?"new-row":"")+'" data-status="'+ev.status+'" data-vendor="'+ev.vendor+'" data-type="'+ev.type+'" data-text="'+(ev.src+ev.vendor+ev.cfg).toLowerCase()+'">'
-    +'<td class="mono" style="color:var(--muted);white-space:nowrap">'+ft(ev.ts)+'</td>'
-    +'<td class="mono">'+ev.src+'</td>'
-    +'<td><span class="pill pill-accent">'+vm.label+'</span></td>'
-    +'<td><span class="pill pill-muted">'+ev.type+'</span></td>'
-    +'<td class="mono" style="color:var(--accent)">'+ev.cfg+'</td>'
-    +'<td class="mono" style="color:var(--muted)">'+(ev.ver!=="0.0.0"?ev.ver:"&mdash;")+'</td>'
-    +'<td><span class="badge '+ev.status+'">'+ev.status+'</span></td>'
-    +'<td>'+detail+'</td>'
-    +'<td style="text-align:center">'+git+'</td>'
-    +'</tr>';
-}
-function renderTable(){document.getElementById("events-body").innerHTML=EVENTS.map(e=>rowHtml(e,false)).join("");applyFilter();}
-function applyFilter(){
-  const txt=document.getElementById("filter-text").value.toLowerCase(),st=document.getElementById("filter-status").value,vn=document.getElementById("filter-vendor").value,tp=document.getElementById("filter-type").value;
-  let v=0;
-  document.querySelectorAll("#events-body tr").forEach(r=>{
-    const ok=(!txt||r.dataset.text.includes(txt))&&(!st||r.dataset.status===st)&&(!vn||r.dataset.vendor===vn)&&(!tp||r.dataset.type===tp);
-    r.style.display=ok?"":"none";if(ok)v++;
-  });
-  document.getElementById("visible-count").textContent=v===EVENTS.length?EVENTS.length+" events":v+" of "+EVENTS.length+" events";
-}
-const LIVE=[
-  {id:"L1",ts:"",src:"atorvastatin_20mg.fhx",vendor:"emerson_deltav",type:"recipe",cfg:"RCP-ATORVASTATIN-20MG",ver:"1.5.0",status:"success",path:"configs/recipes/rcp-atorvastatin-20mg.yaml",errors:[],committed:true},
-  {id:"L2",ts:"",src:"line_04_opcenter.xml",vendor:"siemens_opcenter",type:"line",cfg:"LINE-04",ver:"0.0.0",status:"success",path:"configs/lines/line-04.yaml",errors:[],committed:true},
-  {id:"L3",ts:"",src:"warfarin_5mg_draft.json",vendor:"sap_me",type:"recipe",cfg:"RCP-WARFARIN-5MG",ver:"2.1.0",status:"failed",path:"",errors:["approved_at is not a valid ISO-8601 date"],committed:false},
+
+const INIT_HISTORY = [
+  {time:'09:41',env:'production',commit:'f6247f0',chg:'CHG-2024-0089',configs:'2 recipes · 2 lines',dur:'47s',deployer:'k.matsubara',ok:true},
+  {time:'09:38',env:'staging',   commit:'f6247f0',chg:'—',        configs:'2 recipes · 2 lines',dur:'38s',deployer:'ci-bot',       ok:true},
+  {time:'07:22',env:'staging',   commit:'b4e1c7a',chg:'—',        configs:'1 line',                  dur:'22s',deployer:'ci-bot',       ok:true},
+  {time:'06:45',env:'production',commit:'b4e1c7a',chg:'CHG-2024-0088', configs:'1 line',                  dur:'29s',deployer:'j.okonkwo',    ok:true},
+  {time:'05:13',env:'staging',   commit:'9d3f2b1',chg:'—',        configs:'3 recipes',               dur:'14s',deployer:'ci-bot',       ok:false},
+  {time:'04:58',env:'staging',   commit:'a1c5e8d',chg:'—',        configs:'3 recipes · 2 lines',dur:'44s',deployer:'ci-bot',       ok:true},
+  {time:'03:30',env:'production',commit:'a1c5e8d',chg:'CHG-2024-0087', configs:'3 recipes · 2 lines',dur:'51s',deployer:'k.matsubara',  ok:true},
+  {time:'01:15',env:'staging',   commit:'7c2a9f0',chg:'—',        configs:'1 recipe',                dur:'34s',deployer:'ci-bot',       ok:true},
 ];
-let li=0;
-function addLive(){const ev={...LIVE[li%LIVE.length]};ev.ts=new Date().toISOString();ev.id="live-"+Date.now();EVENTS.unshift(ev);li++;document.getElementById("events-body").insertAdjacentHTML("afterbegin",rowHtml(ev,true));applyFilter();renderStats();}
-setInterval(addLive,8000);
-renderStats();renderVendors();renderTable();
-document.getElementById("visible-count").textContent=EVENTS.length+" events";
+
+let ciRuns=12,ciPassed=11,ciFailed=1,stagingDeploys=8,scenIdx=0,running=false;
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+function setStage(id,state,detail){
+  const el=document.getElementById('stage-'+id);
+  if(!el)return;
+  el.className='stage '+(state||'');
+  if(detail!==undefined){
+    const d=document.getElementById('d-'+id);
+    if(d)d.textContent=detail;
+  }
+}
+
+function clearLog(){document.getElementById('log-lines').innerHTML='';}
+function addLog(text,cls){
+  const log=document.getElementById('log-lines');
+  const d=document.createElement('div');
+  d.className=cls||'line-muted';
+  d.innerHTML=text;
+  log.appendChild(d);
+  while(log.children.length>22)log.removeChild(log.firstChild);
+  log.scrollTop=log.scrollHeight;
+}
+
+function setHealth(id,states){
+  const NAMES=['database','scada_conn','erp_sync'];
+  document.getElementById(id).innerHTML=NAMES.map((n,i)=>`<div class="hck ${states[i]}">${states[i]==='chk'?'&#9900;':'&#9679;'} ${n}</div>`).join('');
+}
+
+function histRow(env,commit,chg,configs,dur,deployer,ok,isNew){
+  const isProd=env==='production';
+  return `<tr class="${isNew?'new-row':''}">
+    <td class="mono" style="color:var(--muted)">${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</td>
+    <td>${isProd?'<span class="pill-prod">Production</span>':'<span class="pill-staging">Staging</span>'}</td>
+    <td class="mono" style="color:var(--blue)">${commit}</td>
+    <td class="mono" style="color:var(--muted)">${chg||'—'}</td>
+    <td style="color:var(--muted);font-size:.75rem">${configs}</td>
+    <td class="mono" style="color:var(--muted)">${dur}</td>
+    <td style="color:var(--muted);font-size:.75rem">${deployer}</td>
+    <td><span class="badge ${ok?'bg':'br'}">${ok?'Success':'Failed'}</span></td>
+    <td><button class="rollback-btn" onclick="void 0">Rollback</button></td>
+  </tr>`;
+}
+
+function prependHistory(html){
+  const tbody=document.getElementById('history-body');
+  tbody.insertAdjacentHTML('afterbegin',html);
+  while(tbody.children.length>10)tbody.removeChild(tbody.lastChild);
+}
+
+async function simulate(){
+  if(running)return;
+  running=true;
+  const s=SCENARIOS[scenIdx%SCENARIOS.length];
+  scenIdx++;
+
+  // Update commit card
+  document.getElementById('c-hash').textContent=s.commit;
+  document.getElementById('c-author').textContent=s.author+' · just now';
+  document.getElementById('c-msg').textContent=s.msg;
+  document.getElementById('c-files').innerHTML=s.files.map(f=>`<span class="commit-file">${f}</span>`).join('');
+  document.getElementById('commit-card').className='commit-card active';
+
+  clearLog();
+  ['validate','unit','integration','build','snapshot','dryrun','deploy','smoke'].forEach(id=>setStage(id,'','—'));
+
+  const gate=document.getElementById('prod-gate');
+  gate.className='prod-gate';
+  gate.innerHTML='<div class="pg-gate-lbl">Production Gate</div><div class="pg-gate-detail" style="color:var(--muted)">Waiting for CI&hellip;</div>';
+
+  ciRuns++;
+  document.getElementById('stat-ci').textContent=ciRuns;
+
+  addLog('&#11042; git push detected: '+s.commit+' &rarr; main','line-push');
+  addLog('&nbsp;&nbsp;changed: '+s.files[0],'line-muted');
+  await sleep(1400);
+
+  // CI: validate-configs
+  setStage('validate','running','checking&hellip;');
+  addLog('&#9658; CI: validate-configs','line-ci');
+  await sleep(2200);
+  if(!s.ciPass){
+    setStage('validate','failed','rules violated');
+    addLog('&nbsp;&nbsp;&#x2718; change_ref required when status=approved','line-err');
+    ciFailed++;
+    document.getElementById('stat-ci-delta').textContent=(ciRuns-ciFailed)+' passed · '+ciFailed+' failed';
+    running=false; setTimeout(simulate,10000); return;
+  }
+  setStage('validate','passed','schema + rules ✓');
+  addLog('&nbsp;&nbsp;✓ schema validation passed ('+s.files.length+' config'+(s.files.length>1?'s':'')+')', 'line-ok');
+  addLog('&nbsp;&nbsp;✓ business rules passed','line-ok');
+  await sleep(400);
+
+  // CI: unit-tests
+  setStage('unit','running','running&hellip;');
+  addLog('&#9658; CI: unit-tests (pytest)','line-ci');
+  await sleep(2600);
+  setStage('unit','passed',s.cov+'% cov · 23 pass');
+  addLog('&nbsp;&nbsp;✓ 23 tests passed, coverage '+s.cov+'% (threshold 85%)','line-ok');
+  await sleep(400);
+
+  // CI: integration-tests
+  setStage('integration','running','sim starting&hellip;');
+  addLog('&#9658; CI: integration-tests (MES simulator :7070)','line-ci');
+  await sleep(3000);
+  setStage('integration','passed',s.intTests+'/12 · sim ✓');
+  addLog('&nbsp;&nbsp;✓ simulator: &#123;status: ok, db: connected&#125;','line-ok');
+  addLog('&nbsp;&nbsp;✓ '+s.intTests+'/12 integration tests passed','line-ok');
+  await sleep(400);
+
+  // CI: build
+  setStage('build','running','building&hellip;');
+  addLog('&#9658; CI: build-and-push','line-ci');
+  await sleep(1900);
+  setStage('build','passed','image pushed');
+  addLog('&nbsp;&nbsp;✓ docker build deployer:'+s.commit,'line-ok');
+  addLog('&nbsp;&nbsp;✓ pushed to ghcr.io/chariskomos/mes-deployer','line-ok');
+  ciPassed++;
+  document.getElementById('stat-ci-delta').textContent=ciPassed+' passed · '+ciFailed+' failed';
+  await sleep(700);
+  addLog('✓ CI pipeline passed — triggering CD staging','line-ok');
+
+  // CD: snapshot
+  setStage('snapshot','running','saving&hellip;');
+  addLog('&#9658; CD staging: pre-deploy snapshot','line-cd');
+  await sleep(1500);
+  setStage('snapshot','passed',s.snap.slice(-7)+' saved');
+  addLog('&nbsp;&nbsp;✓ '+s.snap+' saved','line-ok');
+  await sleep(350);
+
+  // CD: dry-run
+  setStage('dryrun','running','validating&hellip;');
+  addLog('&#9658; CD staging: dry-run deployment plan','line-cd');
+  await sleep(1700);
+  setStage('dryrun','passed',s.dryrun);
+  addLog('&nbsp;&nbsp;✓ deployment plan: '+s.dryrun,'line-ok');
+  await sleep(350);
+
+  // CD: deploy
+  setStage('deploy','running','applying&hellip;');
+  addLog('&#9658; CD staging: deploy','line-cd');
+  await sleep(2500);
+  setStage('deploy','passed',s.configs);
+  addLog('&nbsp;&nbsp;✓ env_config applied (staging)','line-ok');
+  addLog('&nbsp;&nbsp;✓ '+s.deployDetail,'line-ok');
+  stagingDeploys++;
+  document.getElementById('stat-staging').textContent=stagingDeploys;
+  document.getElementById('stat-staging-delta').textContent='just now';
+  await sleep(350);
+
+  // CD: smoke-test (with health animation)
+  setStage('smoke','running','testing&hellip;');
+  addLog('&#9658; CD staging: smoke-test','line-cd');
+  setHealth('health-staging',['chk','chk','chk']);
+  await sleep(900);
+  setHealth('health-staging',['ok','chk','chk']);
+  await sleep(550);
+  setHealth('health-staging',['ok','ok','chk']);
+  await sleep(500);
+  setHealth('health-staging',['ok','ok','ok']);
+  setStage('smoke','passed','/health → ok');
+  addLog('&nbsp;&nbsp;✓ /api/v1/health → &#123;status: ok, db: connected, scada: synced, erp: online&#125;','line-ok');
+  addLog('✓ Staging deployment complete','line-ok');
+  prependHistory(histRow('staging',s.commit,null,s.configs,'42s','ci-bot',true,true));
+  await sleep(700);
+
+  // Production gate
+  if(s.hasProd && s.chg){
+    gate.className='prod-gate pending';
+    gate.innerHTML=`<div class="pg-gate-lbl">Change Ticket</div><div class="pg-gate-chg" style="color:var(--yellow)">${s.chg}</div><div class="pg-gate-detail">sha: ${s.commit} · awaiting approval</div><div style="margin-left:auto"><span class="badge by">Pending</span></div>`;
+    addLog('&#11042; Production gate: '+s.chg+' · awaiting manual approval','line-cd');
+    await sleep(2600);
+
+    gate.className='prod-gate approved';
+    gate.innerHTML=`<div class="pg-gate-lbl">Change Ticket</div><div class="pg-gate-chg">${s.chg}</div><div class="pg-gate-detail">sha: ${s.commit} · approved by ${s.approver}</div><div style="margin-left:auto"><span class="badge bg">Approved</span></div>`;
+    addLog('&nbsp;&nbsp;✓ Approved by '+s.approver+' — triggering production deploy','line-ok');
+    await sleep(900);
+
+    addLog('&#9658; CD production: pre-deploy snapshot','line-cd');
+    await sleep(1200);
+    addLog('&nbsp;&nbsp;✓ SNAP-PROD-'+s.commit+' saved','line-ok');
+    addLog('&#9658; CD production: deploy','line-cd');
+    setHealth('health-prod',['chk','chk','chk']);
+    await sleep(2200);
+    addLog('&nbsp;&nbsp;✓ '+s.deployDetail+' deployed to production','line-ok');
+    setHealth('health-prod',['ok','ok','ok']);
+    addLog('&#9658; CD production: smoke-test','line-cd');
+    await sleep(1100);
+    addLog('&nbsp;&nbsp;✓ /api/v1/health → &#123;status: ok&#125;','line-ok');
+    addLog('✓ Production deployment complete','line-ok');
+    gate.innerHTML=`<div class="pg-gate-lbl">Change Ticket</div><div class="pg-gate-chg">${s.chg}</div><div class="pg-gate-detail">sha: ${s.commit} · deployed by ${s.deployer}</div><div style="margin-left:auto"><span class="badge bg">Deployed</span></div>`;
+    prependHistory(histRow('production',s.commit,s.chg,s.configs,'54s',s.deployer,true,true));
+  } else {
+    gate.className='prod-gate';
+    gate.innerHTML='<div class="pg-gate-lbl">Production Gate</div><div class="pg-gate-detail" style="color:var(--muted)">No approved recipe changes — no production deploy required</div><div style="margin-left:auto"><span class="badge bm">N/A</span></div>';
+    addLog('&nbsp;&nbsp;No approved recipe changes — production deploy skipped','line-muted');
+  }
+
+  document.getElementById('commit-card').className='commit-card';
+  running=false;
+  setTimeout(simulate,11000);
+}
+
+// Render initial history
+(function(){
+  document.getElementById('history-body').innerHTML=INIT_HISTORY.map(r=>{
+    const isProd=r.env==='production';
+    return `<tr>
+      <td class="mono" style="color:var(--muted)">${r.time}</td>
+      <td>${isProd?'<span class="pill-prod">Production</span>':'<span class="pill-staging">Staging</span>'}</td>
+      <td class="mono" style="color:var(--blue)">${r.commit}</td>
+      <td class="mono" style="color:var(--muted)">${r.chg}</td>
+      <td style="color:var(--muted);font-size:.75rem">${r.configs}</td>
+      <td class="mono" style="color:var(--muted)">${r.dur}</td>
+      <td style="color:var(--muted);font-size:.75rem">${r.deployer}</td>
+      <td><span class="badge ${r.ok?'bg':'br'}">${r.ok?'Success':'Failed'}</span></td>
+      <td><button class="rollback-btn" onclick="void 0">Rollback</button></td>
+    </tr>`;
+  }).join('');
+})();
+
+setTimeout(simulate, 2500);
 </script>
-</body></html>
+</body>
+</html>
