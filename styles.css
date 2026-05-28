@@ -790,6 +790,7 @@ footer {
     background: linear-gradient(180deg, var(--accent) 0%, var(--accent-dim) 60%, transparent 100%);
   }
   .dmaic-step { padding: 0 0 40px 52px; display: flex; flex-direction: column; }
+  .dmaic-step:first-child { padding-left: 52px; }
   .dmaic-dot { position: absolute; left: 0; top: 0; margin-bottom: 0; }
   .dmaic-letter { font-size: 40px; margin-top: 0; }
   .dmaic-desc { max-width: 100%; }
