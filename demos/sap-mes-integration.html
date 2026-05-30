@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>SAP-MES Integration Dashboard &mdash; demaico</title>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&display=swap');
+  :root {
+    --bg:            #0b0b0b;
+    --surface:       #111111;
+    --card:          #161616;
+    --accent:        #e8890c;
+    --accent-glow:   rgba(232,137,12,0.10);
+    --text:          #f0ece4;
+    --muted:         #888070;
+    --faint:         #2a2520;
+    --border:        rgba(232,137,12,0.14);
+    --border-strong: rgba(232,137,12,0.32);
+    --green:  #2EB67D;
+    --red:    #E01E5A;
+    --yellow: #ECB22E;
+    --blue:   #4a9ef5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+  /* ── Header ── */
+  header{background:var(--surface);border-bottom:1px solid var(--border-strong);padding:14px 32px;display:flex;align-items:center;gap:14px}
+  .wordmark{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:3px}
+  .wordmark .o{color:var(--accent)}
+  .hdiv{width:1px;height:28px;background:var(--border-strong);margin:0 4px}
+  .htxt h1{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:2px}
+  .htxt .sub{color:var(--muted);font-size:.72rem;margin-top:2px;font-family:'IBM Plex Mono',monospace}
+  .hright{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pdot 2s infinite}
+  .live-label{color:var(--green);font-size:.72rem;font-weight:700;letter-spacing:.12em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+  .demo-badge{background:var(--accent-glow);color:var(--accent);border:1px solid var(--border-strong);border-radius:2px;padding:3px 10px;font-size:.68rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:3px;text-transform:uppercase}
+  @keyframes pdot{0%,100%{opacity:1}50%{opacity:.25}}
+
+  /* ── Layout ── */
+  .container{max-width:1500px;margin:0 auto;padding:24px 32px}
+
+  /* ── Stats ── */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+  .stat-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:18px 20px;position:relative;overflow:hidden}
+  .stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+  .s-accent::after{background:var(--accent)} .s-green::after{background:var(--green)}
+  .s-yellow::after{background:var(--yellow)} .s-blue::after{background:var(--blue)}
+  .stat-lbl{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px}
+  .stat-val{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;line-height:1}
+  .s-accent .stat-val{color:var(--accent)} .s-green .stat-val{color:var(--green)}
+  .s-yellow .stat-val{color:var(--yellow)} .s-blue .stat-val{color:var(--blue)}
+  .stat-delta{font-size:.68rem;color:var(--muted);margin-top:5px;font-family:'IBM Plex Mono',monospace}
+
+  /* ── Main grid ── */
+  .main-grid{display:grid;grid-template-columns:310px 1fr;gap:16px;margin-bottom:24px}
+  .section-title{font-family:'Barlow Condensed',sans-serif;font-size:.66rem;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);font-weight:700;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+
+  /* ── Flow diagram (left panel) ── */
+  .flow-diagram{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:14px;margin-bottom:12px}
+  .sys-box{border:1px solid var(--border-strong);border-radius:3px;padding:10px 12px;text-align:center;background:var(--surface)}
+  .sys-label{font-family:'Barlow Condensed',sans-serif;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent)}
+  .sys-sub{font-size:.65rem;color:var(--muted);margin-top:3px;font-family:'IBM Plex Mono',monospace}
+
+  /* ── Message lanes ── */
+  .lane-wrap{padding:10px 0;display:flex;flex-direction:column;gap:8px}
+  .lane{display:flex;align-items:center;gap:6px;position:relative}
+  .lane-label{font-size:.62rem;font-family:'IBM Plex Mono',monospace;color:var(--muted);width:100px;flex-shrink:0;text-align:right}
+  .lane-track{flex:1;height:20px;position:relative;display:flex;align-items:center}
+  .lane-line{position:absolute;left:0;right:0;height:1px;background:var(--faint)}
+  .lane-line.active{background:var(--border-strong)}
+  .lane-head{position:absolute;right:0;color:var(--faint);font-size:10px}
+  .lane-head.active{color:var(--accent)}
+  .lane-dot{width:8px;height:8px;border-radius:50%;background:var(--faint);position:absolute;left:0}
+  .lane-dot.flowing{background:var(--accent);box-shadow:0 0 6px var(--accent);animation:flow 1.6s ease-in-out infinite}
+  .lane-dot.reverse{animation:flow-rev 1.6s ease-in-out infinite}
+  @keyframes flow    {0%{left:0;opacity:1}85%{left:calc(100% - 8px);opacity:1}100%{opacity:0}}
+  @keyframes flow-rev{0%{left:calc(100% - 8px);opacity:1}85%{left:0;opacity:1}100%{opacity:0}}
+  .lane-dir{font-size:.62rem;font-family:'IBM Plex Mono',monospace;color:var(--muted);width:78px;flex-shrink:0}
+
+  /* ── MES vendor list ── */
+  .vendor-list{display:flex;flex-direction:column;gap:5px;margin-bottom:16px}
+  .vendor-item{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:8px 10px;display:flex;align-items:center;gap:8px;transition:border-color .2s}
+  .vendor-item.active{border-color:var(--border-strong);background:var(--accent-glow)}
+  .v-dot{width:8px;height:8px;border-radius:50%;background:var(--faint);flex-shrink:0}
+  .v-dot.idle{background:var(--faint)} .v-dot.active{background:var(--accent);animation:pdot 1s infinite} .v-dot.ok{background:var(--green)}
+  .v-info{flex:1}
+  .v-name{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--text)}
+  .v-proto{font-size:.62rem;color:var(--muted);margin-top:2px}
+  .proto-chip{font-family:'IBM Plex Mono',monospace;font-size:.58rem;border-radius:2px;padding:1px 4px;display:inline-flex;align-items:center}
+  .proto-chip.sql  {color:var(--blue);background:rgba(74,158,245,.08);border:1px solid rgba(74,158,245,.2)}
+  .proto-chip.rest {color:var(--green);background:rgba(46,182,125,.08);border:1px solid rgba(46,182,125,.2)}
+  .proto-chip.opcua{color:var(--yellow);background:rgba(236,178,46,.08);border:1px solid rgba(236,178,46,.2)}
+  .proto-chip.mqtt {color:var(--accent);background:var(--accent-glow);border:1px solid var(--border-strong)}
+
+  /* ── Queues ── */
+  .queue-panel{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:12px 14px;margin-bottom:12px}
+  .queue-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px solid var(--border)}
+  .queue-row:first-of-type{border-top:none}
+  .q-name{flex:1;font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--muted)}
+  .q-bar-wrap{width:70px;height:5px;background:var(--faint);border-radius:3px;overflow:hidden}
+  .q-bar{height:100%;background:var(--accent);border-radius:3px;transition:width .4s ease;min-width:2px}
+  .q-depth{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--text);width:18px;text-align:right}
+  .q-today{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted);width:38px;text-align:right}
+
+  /* ── Active flow card ── */
+  .flow-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:14px 16px;margin-bottom:12px;transition:border-color .2s}
+  .flow-card.active{border-color:var(--border-strong);box-shadow:0 0 0 1px var(--accent-glow)}
+  .flow-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+  .flow-evt{font-family:'Barlow Condensed',sans-serif;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--accent)}
+  .flow-rk{font-family:'IBM Plex Mono',monospace;font-size:.8rem;color:var(--blue)}
+  .flow-ts{font-size:.7rem;color:var(--muted);margin-left:auto;font-family:'IBM Plex Mono',monospace}
+  .flow-msg{font-size:.9rem;color:var(--text);font-weight:500;line-height:1.4;margin-bottom:8px}
+  .flow-chips{display:flex;gap:6px;flex-wrap:wrap}
+  .flow-chip{font-family:'IBM Plex Mono',monospace;font-size:.62rem;border-radius:2px;padding:2px 7px;border:1px solid var(--border);color:var(--muted)}
+  .flow-chip.hl{border-color:var(--border-strong);color:var(--accent);background:var(--accent-glow)}
+
+  /* ── Stages ── */
+  .stages-wrap{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:14px 16px;margin-bottom:12px}
+  .stages{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .stage{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:10px 12px;display:flex;flex-direction:column;gap:5px;transition:border-color .2s,background .2s}
+  .stage.running{border-color:var(--accent);background:var(--accent-glow)}
+  .stage.ok{border-color:rgba(46,182,125,.3);background:rgba(46,182,125,.04)}
+  .stage-row{display:flex;align-items:center;gap:6px}
+  .stage-dot{width:7px;height:7px;border-radius:50%;background:var(--faint);flex-shrink:0}
+  .stage.running .stage-dot{background:var(--accent);animation:pdot 1s infinite}
+  .stage.ok  .stage-dot{background:var(--green)}
+  .stage-name{font-family:'Barlow Condensed',sans-serif;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .stage.running .stage-name{color:var(--accent)}
+  .stage.ok  .stage-name{color:var(--text)}
+  .stage-detail{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted);min-height:14px}
+  .stage.ok .stage-detail{color:var(--green)}
+
+  /* ── Log ── */
+  .log-wrap{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:12px 14px}
+  .log-lines{background:#080808;border-radius:2px;padding:10px 12px;height:160px;overflow-y:auto;font-family:'IBM Plex Mono',monospace;font-size:.7rem;line-height:1.9}
+  .l-push{color:var(--accent)} .l-ci{color:var(--blue)} .l-ok{color:var(--green)}
+  .l-err{color:var(--red)} .l-cd{color:var(--yellow)} .l-m{color:var(--muted)}
+
+  /* ── Table ── */
+  .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:3px;margin-bottom:32px}
+  table{width:100%;border-collapse:collapse;font-size:.82rem}
+  thead{background:var(--surface)}
+  thead th{padding:9px 14px;text-align:left;color:var(--muted);font-weight:700;font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;border-bottom:1px solid var(--border);white-space:nowrap;font-family:'Barlow Condensed',sans-serif}
+  tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+  tbody tr:last-child{border-bottom:none}
+  tbody tr:hover{background:rgba(232,137,12,.03)}
+  tbody td{padding:8px 14px;vertical-align:middle}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:.74rem}
+  .badge{display:inline-block;padding:2px 7px;border-radius:2px;font-size:.6rem;font-weight:700;letter-spacing:.08em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+  .bg{background:rgba(46,182,125,.1);color:var(--green);border:1px solid rgba(46,182,125,.22)}
+  .new-row{animation:newrow 1.2s ease}
+  @keyframes newrow{from{background:rgba(232,137,12,.1)}to{background:transparent}}
+
+  /* ── Footer ── */
+  footer{padding:18px 32px;border-top:1px solid var(--border);color:var(--muted);font-size:.7rem;display:flex;justify-content:space-between;align-items:center;font-family:'IBM Plex Mono',monospace}
+  footer a{color:var(--accent);text-decoration:none}
+  ::-webkit-scrollbar{width:4px;height:4px} ::-webkit-scrollbar-track{background:var(--bg)} ::-webkit-scrollbar-thumb{background:var(--faint);border-radius:2px}
+  </style>
+</head>
+<body>
+<header>
+  <div class="wordmark">DEMAIC<span class="o">O</span></div>
+  <div class="hdiv"></div>
+  <div class="htxt">
+    <h1>SAP–MES Integration</h1>
+    <div class="sub">Resilient Message Queue &middot; SAP S/4HANA &amp; ECC &middot; 6 MES Vendors &middot; No Point-to-Point</div>
+  </div>
+  <div class="hright">
+    <span class="demo-badge">Demo</span>
+    <div class="live-dot"></div>
+    <span class="live-label">Live</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="stats">
+    <div class="stat-card s-accent">
+      <div class="stat-lbl">Messages Today</div>
+      <div class="stat-val" id="stat-msgs">0</div>
+      <div class="stat-delta">across all flows</div>
+    </div>
+    <div class="stat-card s-blue">
+      <div class="stat-lbl">Orders SAP → MES</div>
+      <div class="stat-val" id="stat-orders">0</div>
+      <div class="stat-delta">production orders dispatched</div>
+    </div>
+    <div class="stat-card s-green">
+      <div class="stat-lbl">Confirmations MES → SAP</div>
+      <div class="stat-val" id="stat-confirms">0</div>
+      <div class="stat-delta">posted back to SAP</div>
+    </div>
+    <div class="stat-card s-yellow">
+      <div class="stat-lbl">Dead-Letter Queue</div>
+      <div class="stat-val" id="stat-dlq" style="color:var(--green)">0</div>
+      <div class="stat-delta">failed messages (target: 0)</div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+
+    <!-- Left: flow diagram + vendor list -->
+    <div>
+      <div class="section-title">Message Flow</div>
+      <div class="flow-diagram">
+        <div class="sys-box" id="sap-box">
+          <div class="sys-label">SAP S/4HANA</div>
+          <div class="sys-sub" id="sap-sub">plant 1000 &middot; OData v4</div>
+        </div>
+        <div class="lane-wrap">
+          <div class="lane">
+            <div class="lane-label">prod. orders</div>
+            <div class="lane-track" id="lt-orders">
+              <div class="lane-line" id="ll-orders"></div>
+              <div class="lane-head" id="lh-orders">▶</div>
+              <div class="lane-dot" id="ld-orders"></div>
+            </div>
+            <div class="lane-dir" style="color:var(--blue)">→ MES</div>
+          </div>
+          <div class="lane">
+            <div class="lane-label">confirmations</div>
+            <div class="lane-track" id="lt-confirms">
+              <div class="lane-line" id="ll-confirms"></div>
+              <div class="lane-head" id="lh-confirms">◀</div>
+              <div class="lane-dot" id="ld-confirms"></div>
+            </div>
+            <div class="lane-dir" style="color:var(--green)">← MES</div>
+          </div>
+          <div class="lane">
+            <div class="lane-label">mat. movements</div>
+            <div class="lane-track">
+              <div class="lane-line" id="ll-mats"></div>
+              <div class="lane-head" id="lh-mats">◀</div>
+              <div class="lane-dot" id="ld-mats"></div>
+            </div>
+            <div class="lane-dir" style="color:var(--green)">← MES</div>
+          </div>
+          <div class="lane">
+            <div class="lane-label">quality results</div>
+            <div class="lane-track">
+              <div class="lane-line" id="ll-quality"></div>
+              <div class="lane-head" id="lh-quality">◀</div>
+              <div class="lane-dot" id="ld-quality"></div>
+            </div>
+            <div class="lane-dir" style="color:var(--green)">← MES</div>
+          </div>
+        </div>
+        <div class="sys-box" id="mes-box">
+          <div class="sys-label" id="mes-label">Siemens Opcenter</div>
+          <div class="sys-sub" id="mes-sub">REST + OPC-UA &middot; connected</div>
+        </div>
+      </div>
+
+      <div class="section-title">MES Vendors Supported</div>
+      <div class="vendor-list" id="vendor-list"></div>
+    </div>
+
+    <!-- Right: active flow + queues + log -->
+    <div style="display:flex;flex-direction:column;gap:12px">
+
+      <div class="flow-card" id="flow-card">
+        <div class="flow-header">
+          <span class="flow-evt">&#11042; Now Flowing</span>
+          <span class="flow-rk" id="fc-rk">production_order.released</span>
+          <span class="flow-ts" id="fc-ts"></span>
+        </div>
+        <div class="flow-msg" id="fc-msg">SAP–MES integration armed — waiting for first event</div>
+        <div class="flow-chips" id="fc-chips"></div>
+      </div>
+
+      <div class="stages-wrap">
+        <div class="section-title">Integration Pipeline</div>
+        <div class="stages">
+          <div class="stage" id="stage-poll">
+            <div class="stage-row"><div class="stage-dot"></div><div class="stage-name">SAP Poll</div></div>
+            <div class="stage-detail" id="d-poll">&mdash;</div>
+          </div>
+          <div class="stage" id="stage-queue">
+            <div class="stage-row"><div class="stage-dot"></div><div class="stage-name">RabbitMQ</div></div>
+            <div class="stage-detail" id="d-queue">&mdash;</div>
+          </div>
+          <div class="stage" id="stage-mes">
+            <div class="stage-row"><div class="stage-dot"></div><div class="stage-name">MES Write</div></div>
+            <div class="stage-detail" id="d-mes">&mdash;</div>
+          </div>
+          <div class="stage" id="stage-read">
+            <div class="stage-row"><div class="stage-dot"></div><div class="stage-name">MES Poll</div></div>
+            <div class="stage-detail" id="d-read">&mdash;</div>
+          </div>
+          <div class="stage" id="stage-pub">
+            <div class="stage-row"><div class="stage-dot"></div><div class="stage-name">Publish</div></div>
+            <div class="stage-detail" id="d-pub">&mdash;</div>
+          </div>
+          <div class="stage" id="stage-sap">
+            <div class="stage-row"><div class="stage-dot"></div><div class="stage-name">SAP Write</div></div>
+            <div class="stage-detail" id="d-sap">&mdash;</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="queue-panel">
+        <div class="section-title">RabbitMQ Queues</div>
+        <div id="queue-rows"></div>
+      </div>
+
+      <div class="log-wrap">
+        <div class="section-title" style="margin-bottom:8px">Integration Log</div>
+        <div class="log-lines" id="log-lines">
+          <div class="l-m">&nbsp;&nbsp;SAP–MES integration bridge armed &mdash; waiting for events&hellip;</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section-title">Message History</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>Time</th><th>Routing Key</th><th>Direction</th><th>Payload</th>
+        <th>Queue</th><th>Duration</th><th>Status</th>
+      </tr></thead>
+      <tbody id="history-body"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<footer>
+  <div>demaico &mdash; SAP-MES Integration Dashboard &mdash; Demo Mode</div>
+  <div><a href="https://github.com/CharisKomos/demaico_MES_SAP_Integration" target="_blank">GitHub Repository</a></div>
+</footer>
+
+<script>
+const VENDORS = [
+  { key:'siemens',   label:'Siemens Opcenter',         proto:['rest','opcua'] },
+  { key:'rockwell',  label:'Rockwell Plex',             proto:['rest','sql']   },
+  { key:'aspentech', label:'AspenTech aspenONE MES',   proto:['sql']          },
+  { key:'emerson',   label:'Emerson Syncade / DeltaV', proto:['opcua','sql']  },
+  { key:'aveva',     label:'AVEVA Wonderware MES',      proto:['sql']          },
+  { key:'ignition',  label:'Ignition / Sepasoft',      proto:['rest','mqtt']  },
+];
+
+const FLOWS = [
+  { rk:'production_order.released',  dir:'sap_to_mes', label:'Production Order released by SAP', queue:'mes.production_orders',  lane:'orders'   },
+  { rk:'production_order.confirmed', dir:'mes_to_sap', label:'Order confirmed by MES operator',  queue:'sap.confirmations',      lane:'confirms'  },
+  { rk:'material_movement.consumed', dir:'mes_to_sap', label:'Material consumption from MES',    queue:'sap.goods_movements',    lane:'mats'      },
+  { rk:'quality_result.recorded',    dir:'mes_to_sap', label:'Quality result from MES',          queue:'sap.quality_results',    lane:'quality'   },
+  { rk:'material_movement.issued',   dir:'sap_to_mes', label:'Material issued by SAP to order',  queue:'mes.material_movements', lane:'orders'    },
+];
+
+const QUEUES = [
+  { name:'mes.production_orders',  display:'production orders'  },
+  { name:'mes.material_movements', display:'material movements' },
+  { name:'sap.confirmations',      display:'confirmations'      },
+  { name:'sap.quality_results',    display:'quality results'    },
+  { name:'sap.goods_movements',    display:'goods movements'    },
+];
+
+const STAGES_S2M = ['poll','queue','mes'];
+const STAGES_M2S = ['read','pub','sap'];
+
+let totalMsgs=0, totalOrders=0, totalConfirms=0;
+let queueDepths = QUEUES.map(() => 0);
+let currentVendorIdx = 0;
+
+const $ = id => document.getElementById(id);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// Build vendor list
+$('vendor-list').innerHTML = VENDORS.map((v,i) => `
+  <div class="vendor-item" id="vi-${v.key}">
+    <div class="v-dot" id="vd-${v.key}"></div>
+    <div class="v-info">
+      <div class="v-name">${v.label}</div>
+      <div class="v-proto">${v.proto.map(p=>`<span class="proto-chip ${p}">${p}</span>`).join('')}</div>
+    </div>
+  </div>`).join('');
+
+// Build queue rows
+$('queue-rows').innerHTML = QUEUES.map((q,i) => `
+  <div class="queue-row">
+    <span class="q-name">${q.display}</span>
+    <div class="q-bar-wrap"><div class="q-bar" id="qb-${i}" style="width:2%"></div></div>
+    <span class="q-depth" id="qd-${i}">0</span>
+    <span class="q-today" id="qt-${i}" style="color:var(--muted);font-size:.62rem">0 today</span>
+  </div>`).join('');
+
+function setStage(id, state, detail) {
+  const el = $('stage-'+id); if(!el) return;
+  el.className = 'stage '+(state||'');
+  const d = $('d-'+id); if(d) d.innerHTML = detail||'&mdash;';
+}
+function resetStages() {
+  ['poll','queue','mes','read','pub','sap'].forEach(s => setStage(s,'','&mdash;'));
+}
+
+function addLog(text, cls) {
+  const log = $('log-lines');
+  const d = document.createElement('div');
+  d.className = cls||'l-m'; d.innerHTML = text;
+  log.prepend(d);
+  while(log.children.length > 20) log.removeChild(log.lastChild);
+}
+
+function activateLane(lane, active) {
+  const ll = $('ll-'+lane), lh = $('lh-'+lane), ld = $('ld-'+lane);
+  if(ll) ll.className = 'lane-line'+(active?' active':'');
+  if(lh) lh.className = 'lane-head'+(active?' active':'');
+  if(ld) {
+    ld.className = 'lane-dot'+(active?' flowing':'');
+  }
+}
+
+function clearAllLanes() {
+  ['orders','confirms','mats','quality'].forEach(l => activateLane(l, false));
+}
+
+function updateQueues(activeIdx) {
+  QUEUES.forEach((q, i) => {
+    if(i === activeIdx) queueDepths[i] = Math.min(20, queueDepths[i] + (Math.random()<0.7?2:0));
+    else queueDepths[i] = Math.max(0, queueDepths[i] - (Math.random()<0.5?1:0));
+    const pct = Math.min(100, queueDepths[i]*5);
+    $('qb-'+i).style.width = Math.max(2,pct)+'%';
+    $('qd-'+i).textContent = queueDepths[i];
+  });
+}
+
+function histRow(flow, vendor, dur, isNew) {
+  const dir = flow.dir === 'sap_to_mes' ? 'SAP → MES' : 'MES → SAP';
+  const payload = flow.dir === 'sap_to_mes'
+    ? `ORD-${100000+Math.floor(Math.random()*899999)}`
+    : `LOT-${1000+Math.floor(Math.random()*8999)}`;
+  return `<tr class="${isNew?'new-row':''}">
+    <td class="mono" style="color:var(--muted)">${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'})}</td>
+    <td class="mono" style="color:var(--blue)">${flow.rk}</td>
+    <td style="color:${flow.dir==='sap_to_mes'?'var(--blue)':'var(--green)'}">${dir}</td>
+    <td class="mono" style="color:var(--muted)">${payload}</td>
+    <td class="mono" style="color:var(--muted);font-size:.68rem">${flow.queue}</td>
+    <td class="mono" style="color:var(--muted)">${dur}ms</td>
+    <td><span class="badge bg">Delivered</span></td>
+  </tr>`;
+}
+
+function prependHistory(html) {
+  const tb = $('history-body');
+  tb.insertAdjacentHTML('afterbegin', html);
+  while(tb.children.length > 10) tb.removeChild(tb.lastChild);
+}
+
+async function runFlow(flow, vendor) {
+  const isSAP2MES = flow.dir === 'sap_to_mes';
+  const stages = isSAP2MES ? STAGES_S2M : STAGES_M2S;
+
+  // Activate vendor dot
+  VENDORS.forEach(v => { $('vi-'+v.key).className='vendor-item'; $('vd-'+v.key).className='v-dot'; });
+  $('vi-'+vendor.key).className = 'vendor-item active';
+  $('vd-'+vendor.key).className = 'v-dot active';
+
+  // Update flow card
+  $('fc-rk').textContent = flow.rk;
+  $('fc-ts').textContent = new Date().toLocaleTimeString();
+  $('fc-msg').textContent = flow.label + ' — ' + vendor.label;
+  $('fc-chips').innerHTML = [
+    `<span class="flow-chip hl">${flow.dir==='sap_to_mes'?'SAP → RabbitMQ → MES':'MES → RabbitMQ → SAP'}</span>`,
+    `<span class="flow-chip">${flow.queue}</span>`,
+    ...vendor.proto.map(p=>`<span class="flow-chip">${p}</span>`),
+  ].join('');
+  $('flow-card').className = 'flow-card active';
+
+  clearAllLanes();
+  resetStages();
+
+  const t0 = Date.now();
+  const ordNum = `ORD-${100000+Math.floor(Math.random()*899999)}`;
+
+  if(isSAP2MES) {
+    addLog(`&#11042; SAP poller: fetching released orders (plant 1000)`, 'l-push');
+    setStage('poll','running','polling SAP…');
+    await sleep(1100);
+    setStage('poll','ok', `3 orders fetched`);
+    addLog(`&nbsp;&nbsp;&#9654; SAP: 3 released orders → sap.outbound (${flow.rk})`, 'l-ci');
+
+    setStage('queue','running','routing…');
+    activateLane(flow.lane, true);
+    await sleep(900);
+    setStage('queue','ok',`${flow.queue}`);
+    addLog(`&nbsp;&nbsp;&#9654; RabbitMQ: routed → ${flow.queue}`, 'l-ci');
+
+    setStage('mes','running',`writing to ${vendor.label.split(' ')[0]}…`);
+    await sleep(1300);
+    setStage('mes','ok',`${ordNum} written`);
+    addLog(`&nbsp;&nbsp;&#10003; ${vendor.label}: ${ordNum} dispatched (${vendor.proto[0].toUpperCase()})`, 'l-ok');
+
+    totalOrders += 3;
+    $('stat-orders').textContent = totalOrders;
+
+  } else {
+    addLog(`&#11042; MES poller: reading confirmations from ${vendor.label}`, 'l-push');
+    setStage('read','running',`polling ${vendor.label.split(' ')[0]}…`);
+    activateLane(flow.lane, true);
+    await sleep(1200);
+    setStage('read','ok','2 records read');
+    addLog(`&nbsp;&nbsp;&#9654; ${vendor.label}: 2 record(s) → mes.outbound (${flow.rk})`, 'l-ci');
+
+    setStage('pub','running','publishing…');
+    await sleep(700);
+    setStage('pub','ok',flow.queue);
+    addLog(`&nbsp;&nbsp;&#9654; RabbitMQ: routed → ${flow.queue}`, 'l-ci');
+
+    setStage('sap','running','writing to SAP…');
+    await sleep(1100);
+    setStage('sap','ok','BAPI posted');
+    const bapi = flow.rk.includes('quality') ? 'BAPI_INSPLOT_SENDRESULTS'
+               : flow.rk.includes('consumed') ? 'BAPI_GOODSMVT_CREATE'
+               : 'BAPI_PRODORD_CONFIRM_TIMETICKET';
+    addLog(`&nbsp;&nbsp;&#10003; SAP: ${bapi} posted for ${ordNum}`, 'l-ok');
+
+    totalConfirms += 2;
+    $('stat-confirms').textContent = totalConfirms;
+  }
+
+  const dur = Date.now() - t0;
+  totalMsgs++;
+  $('stat-msgs').textContent = totalMsgs;
+
+  // Find queue index
+  const qIdx = QUEUES.findIndex(q => q.name === flow.queue);
+  updateQueues(qIdx);
+  if(qIdx >= 0) {
+    const todayEl = $('qt-'+qIdx);
+    if(todayEl) {
+      const prev = parseInt(todayEl.textContent)||0;
+      todayEl.textContent = (prev+1)+' today';
+    }
+    // Drain after 0.8s
+    setTimeout(() => {
+      queueDepths[qIdx] = Math.max(0, queueDepths[qIdx]-2);
+      $('qb-'+qIdx).style.width = Math.max(2, queueDepths[qIdx]*5)+'%';
+      $('qd-'+qIdx).textContent = queueDepths[qIdx];
+    }, 800);
+  }
+
+  prependHistory(histRow(flow, vendor, dur, true));
+  addLog(`&#10003; ${flow.rk}: delivered in ${dur}ms — queue safe`, 'l-ok');
+
+  // Mark vendor done
+  $('vd-'+vendor.key).className = 'v-dot ok';
+  $('flow-card').className = 'flow-card';
+  clearAllLanes();
+}
+
+async function loop() {
+  let fi = 0;
+  while(true) {
+    const vendor = VENDORS[currentVendorIdx % VENDORS.length];
+    const flow = FLOWS[fi % FLOWS.length];
+
+    // Update MES box
+    $('mes-label').textContent = vendor.label;
+    $('mes-sub').textContent = vendor.proto.join(' + ') + ' · connected';
+
+    await runFlow(flow, vendor);
+    fi++;
+    currentVendorIdx++;
+    await sleep(2200);
+  }
+}
+
+setTimeout(loop, 800);
+</script>
+</body>
+</html>
