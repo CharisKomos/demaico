@@ -931,13 +931,131 @@ footer {
   letter-spacing: 0.5px;
 }
 
+/* ── DMAIC Analytics Platform Section ─────────────────────────────── */
+
+#dmaic-analytics {
+  padding: 120px 60px;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.platform-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 64px;
+}
+
+.platform-intro h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(42px, 5vw, 72px);
+  letter-spacing: 2px;
+  line-height: 1;
+}
+
+.platform-intro p {
+  font-size: 14px;
+  color: var(--text-muted);
+  max-width: 320px;
+  line-height: 1.8;
+  text-align: right;
+}
+
+.capability-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  margin-bottom: 72px;
+}
+
+.capability-item {
+  background: var(--bg);
+  padding: 40px 36px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s;
+}
+
+.capability-item::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 2px; width: 0;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+
+.capability-item:hover { background: var(--bg-card-hover); }
+.capability-item:hover::after { width: 100%; }
+
+.capability-letter {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  color: var(--accent);
+  opacity: 0.25;
+  line-height: 1;
+  margin-bottom: 16px;
+  letter-spacing: 2px;
+}
+
+.capability-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.capability-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.platform-demo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.platform-demo-cta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  transition: letter-spacing 0.15s;
+}
+
+.platform-demo-cta:hover { letter-spacing: 1.5px; }
+
+.demo-preview--large {
+  height: 560px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+/* ── Work / Demos ─────────────────────────────────────────────────── */
+
 @media (max-width: 900px) {
   #work { padding: 80px 32px; }
   .demos-grid { grid-template-columns: 1fr; }
   .demo-preview { height: 200px; }
+  #dmaic-analytics { padding: 80px 32px; }
+  .platform-intro { flex-direction: column; gap: 16px; align-items: flex-start; }
+  .platform-intro p { text-align: left; max-width: 100%; }
+  .capability-grid { grid-template-columns: 1fr 1fr; }
+  .demo-preview--large { height: 360px; }
 }
 
 @media (max-width: 480px) {
   #work { padding: 64px 24px; }
   .demo-preview { height: 160px; }
+  #dmaic-analytics { padding: 64px 24px; }
+  .capability-grid { grid-template-columns: 1fr; }
+  .demo-preview--large { height: 260px; }
 }
