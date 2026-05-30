@@ -61,7 +61,7 @@
 
   <div class="hero-stats">
     <div>
-      <span class="hero-stat-num">7</span>
+      <span class="hero-stat-num">8</span>
       <span class="hero-stat-label">Specialist solutions</span>
     </div>
     <div>
@@ -219,8 +219,25 @@
       <div class="service-desc">Production orders, material movements, and quality results flow reliably between SAP and your MES through a resilient message queue — not brittle point-to-point connections. One system going down no longer stalls the other, and the interfaces stop requiring constant engineer attention to stay operational.</div>
     </div>
 
-    <div class="service-card service-card--wide">
+    <div class="service-card">
       <div class="service-number">07</div>
+      <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="4,36 12,24 20,28 28,14 36,20 44,8" stroke="#e8890c" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="12" cy="24" r="2.5" fill="#e8890c"/>
+        <circle cx="20" cy="28" r="2.5" fill="#e8890c"/>
+        <circle cx="28" cy="14" r="2.5" fill="#e8890c"/>
+        <circle cx="36" cy="20" r="2.5" fill="#e8890c"/>
+        <line x1="4" y1="44" x2="44" y2="44" stroke="#e8890c" stroke-width="1" opacity="0.3"/>
+        <line x1="4" y1="36" x2="4" y2="44" stroke="#e8890c" stroke-width="1" opacity="0.3"/>
+        <rect x="32" y="38" width="8" height="6" rx="1" stroke="#e8890c" stroke-width="1" opacity="0.5"/>
+        <rect x="22" y="40" width="8" height="4" rx="1" stroke="#e8890c" stroke-width="1" opacity="0.5"/>
+      </svg>
+      <div class="service-title">DMAIC Process Analytics</div>
+      <div class="service-desc">Historian and MES data run continuously through the full DMAIC cycle — CTQs defined once, process capability and OEE measured every hour, anomalies detected in real time by a rule-first ML engine, waste classified by DOWNTIME category, and improvement actions tracked with before/after sigma verification. Every detection decision is source-attributed for GMP audit traceability.</div>
+    </div>
+
+    <div class="service-card service-card--wide">
+      <div class="service-number">08</div>
       <svg class="service-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect x="8" y="4" width="28" height="36" rx="2" stroke="#e8890c" stroke-width="1.5"/>
         <line x1="14" y1="14" x2="30" y2="14" stroke="#e8890c" stroke-width="1" opacity="0.4"/>
@@ -312,6 +329,18 @@
         <div class="demo-tag">SAP–MES Integration</div>
         <div class="demo-title">Resilient Message Queue Bridge</div>
         <div class="demo-desc">Production orders, confirmations &amp; quality results flow between SAP S/4HANA &amp; ECC and 6 MES vendors via RabbitMQ — no brittle point-to-point connections.</div>
+        <div class="demo-cta">View Demo →</div>
+      </div>
+    </a>
+
+    <a class="demo-card" href="demos/dmaic-pipeline.html" target="_blank" rel="noopener">
+      <div class="demo-preview">
+        <iframe src="demos/dmaic-pipeline.html" tabindex="-1" aria-hidden="true" loading="lazy"></iframe>
+      </div>
+      <div class="demo-info">
+        <div class="demo-tag">DMAIC Process Analytics</div>
+        <div class="demo-title">Continuous DMAIC Pipeline — Real-Time &amp; Batch</div>
+        <div class="demo-desc">Historian tags scored against CTQ spec limits every 5 seconds. Rule-first ML anomaly detection, CUSUM/EWMA/Western Electric SPC, 8-waste DOWNTIME classification, process capability (Cpk, OEE, sigma level), and improvement action tracking with before/after sigma verification.</div>
         <div class="demo-cta">View Demo →</div>
       </div>
     </a>

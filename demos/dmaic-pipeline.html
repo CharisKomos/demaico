@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>demaico DMAIC Pipeline — Live Demo</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #070d1a; --surface: #0f1929; --surface2: #162133; --border: #1e3050;
+    --brand: #0ea5e9; --brand2: #38bdf8;
+    --emerald: #34d399; --amber: #fbbf24; --red: #f87171; --purple: #a78bfa;
+    --text: #e2e8f0; --muted: #64748b; --subtle: #94a3b8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif;
+         font-size: 13px; line-height: 1.5; min-height: 100vh; }
+
+  /* Layout */
+  .app { display: flex; min-height: 100vh; }
+  .sidebar { width: 220px; background: var(--surface); border-right: 1px solid var(--border);
+             padding: 20px 12px; display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+  .main { flex: 1; overflow: auto; padding: 24px; }
+
+  /* Sidebar */
+  .logo { display: flex; align-items: center; gap: 8px; padding: 4px 8px 16px;
+          border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+  .logo-dot { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, var(--brand), #7c3aed);
+              display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
+  .logo-text { font-size: 14px; font-weight: 600; }
+  .logo-sub { font-size: 10px; color: var(--muted); }
+  .nav-item { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 8px;
+              cursor: pointer; transition: all .15s; color: var(--muted); font-size: 12px; font-weight: 500; }
+  .nav-item:hover { background: rgba(255,255,255,.05); color: var(--text); }
+  .nav-item.active { background: rgba(14,165,233,.12); color: var(--brand); }
+  .nav-icon { width: 15px; height: 15px; }
+  .live-badge { margin-left: auto; display: flex; align-items: center; gap: 4px; font-size: 9px;
+                color: var(--emerald); background: rgba(52,211,153,.1); padding: 2px 6px; border-radius: 99px; }
+  .live-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--emerald);
+              animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+  /* DMAIC Phase Bar */
+  .phase-bar { display: flex; align-items: center; gap: 6px; margin-bottom: 20px; }
+  .phase-chip { padding: 4px 14px; border-radius: 99px; font-size: 11px; font-weight: 600;
+                cursor: default; transition: all .2s; border: 1px solid transparent; }
+  .phase-connector { height: 1px; width: 20px; background: var(--border); }
+  .phase-chip.done { background: rgba(255,255,255,.07); color: var(--subtle); }
+  .phase-chip.active { color: #fff; box-shadow: 0 2px 12px rgba(0,0,0,.4); }
+  .phase-chip.future { background: rgba(255,255,255,.03); color: var(--muted); }
+  .phase-define.active   { background: #7c3aed; border-color: #7c3aed; }
+  .phase-measure.active  { background: #0ea5e9; border-color: #0ea5e9; }
+  .phase-analyze.active  { background: #06b6d4; border-color: #06b6d4; }
+  .phase-improve.active  { background: #10b981; border-color: #10b981; }
+  .phase-control.active  { background: #f59e0b; border-color: #f59e0b; }
+
+  /* Header */
+  .page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .page-title { font-size: 18px; font-weight: 700; }
+  .page-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .header-right { display: flex; align-items: center; gap: 8px; }
+  .btn { padding: 6px 14px; border-radius: 7px; font-size: 11px; font-weight: 600; border: none;
+         cursor: pointer; transition: all .15s; }
+  .btn-ghost { background: var(--surface2); color: var(--subtle); border: 1px solid var(--border); }
+  .btn-ghost:hover { color: var(--text); border-color: var(--brand); }
+  .btn-primary { background: var(--brand); color: #fff; }
+  .btn-primary:hover { background: var(--brand2); }
+
+  /* Grid layouts */
+  .grid-5 { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; margin-bottom: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 16px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .grid-32 { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; margin-bottom: 16px; }
+  @media(max-width:1200px) {
+    .grid-5 { grid-template-columns: repeat(3,1fr); }
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+    .grid-32, .grid-2 { grid-template-columns: 1fr; }
+  }
+
+  /* Cards */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+  .card-label { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted);
+                margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+  .kpi-value { font-size: 28px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+  .kpi-unit { font-size: 11px; color: var(--muted); margin-left: 3px; }
+  .kpi-target { font-size: 10px; color: var(--muted); margin-top: 5px; }
+  .kpi-target span { color: var(--subtle); }
+  .c-ok { color: var(--emerald); }
+  .c-warn { color: var(--amber); }
+  .c-bad { color: var(--red); }
+  .c-brand { color: var(--brand2); }
+  .c-purple { color: var(--purple); }
+  .trend { display: flex; align-items: center; gap: 3px; font-size: 10px; margin-top: 3px; }
+
+  /* Health gauge */
+  .gauge-wrap { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .gauge-label { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  .gauge-status { font-size: 11px; font-weight: 600; }
+
+  /* SPC chart panel */
+  .chart-panel { position: relative; }
+  canvas { max-height: 220px; }
+
+  /* Anomaly feed */
+  .feed { max-height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+  .feed::-webkit-scrollbar { width: 4px; }
+  .feed::-webkit-scrollbar-track { background: transparent; }
+  .feed::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  .feed-item { display: flex; gap: 10px; padding: 8px 10px; border-radius: 8px; border: 1px solid;
+               animation: slideIn .3s ease; font-size: 11px; }
+  @keyframes slideIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:none} }
+  .feed-item.critical { background: rgba(248,113,113,.07); border-color: rgba(248,113,113,.25); }
+  .feed-item.high     { background: rgba(251,146,60,.07);  border-color: rgba(251,146,60,.25); }
+  .feed-item.medium   { background: rgba(251,191,36,.07);  border-color: rgba(251,191,36,.25); }
+  .feed-item.ok       { background: rgba(52,211,153,.05);  border-color: rgba(52,211,153,.15); }
+  .feed-sev { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; align-self: flex-start; }
+  .feed-item.critical .feed-sev { background: rgba(248,113,113,.2); color: var(--red); }
+  .feed-item.high     .feed-sev { background: rgba(251,146,60,.2);  color: #fb923c; }
+  .feed-item.medium   .feed-sev { background: rgba(251,191,36,.2);  color: var(--amber); }
+  .feed-item.ok       .feed-sev { background: rgba(52,211,153,.2);  color: var(--emerald); }
+  .feed-tag { font-weight: 600; color: var(--text); }
+  .feed-desc { color: var(--muted); margin-top: 1px; }
+  .feed-meta { display: flex; align-items: center; gap: 6px; margin-top: 3px; color: var(--muted); font-size: 10px; }
+  .source-pill { padding: 1px 6px; border-radius: 4px; background: rgba(255,255,255,.06); }
+
+  /* Waste Pareto */
+  .pareto-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,.04); }
+  .pareto-code { width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center;
+                 font-size: 10px; font-weight: 700; color: #fff; flex-shrink: 0; }
+  .pareto-label { flex: 1; font-size: 11px; color: var(--subtle); }
+  .pareto-bar-wrap { width: 100px; height: 6px; background: rgba(255,255,255,.08); border-radius: 3px; overflow: hidden; }
+  .pareto-bar { height: 100%; border-radius: 3px; transition: width 1s ease; }
+  .pareto-count { width: 28px; text-align: right; font-size: 11px; font-weight: 600; color: var(--text); }
+  .pareto-pct { width: 36px; text-align: right; font-size: 10px; color: var(--muted); }
+
+  /* Tag list */
+  .tag-row { display: flex; align-items: center; justify-content: space-between;
+             padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,.04); }
+  .tag-name { font-family: monospace; font-size: 11px; color: var(--subtle); }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Summary stats */
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stat-box { background: rgba(255,255,255,.03); border-radius: 8px; padding: 10px 12px; }
+  .stat-box .num { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat-box .lbl { font-size: 10px; color: var(--muted); margin-top: 1px; }
+
+  /* Footer */
+  .footer { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border);
+            display: flex; justify-content: space-between; color: var(--muted); font-size: 10px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="logo">
+    <div class="logo-dot">D</div>
+    <div>
+      <div class="logo-text">demaico</div>
+      <div class="logo-sub">DMAIC Pipeline</div>
+    </div>
+  </div>
+
+  <div class="nav-item active" onclick="setPage('overview')">
+    <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+      <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+    </svg>
+    Overview
+    <span class="live-badge"><span class="live-dot"></span>LIVE</span>
+  </div>
+  <div class="nav-item" onclick="setPage('measure')">
+    <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+    </svg>
+    Measure
+  </div>
+  <div class="nav-item" onclick="setPage('analyze')">
+    <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    Analyze
+  </div>
+  <div class="nav-item" onclick="setPage('control')">
+    <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+    Control
+  </div>
+  <div style="flex:1"></div>
+  <div style="padding:8px 10px;font-size:10px;color:var(--muted)">
+    <div style="color:var(--subtle);font-weight:600;margin-bottom:4px">Active Project</div>
+    <div style="color:var(--text)">Granulation Line 3</div>
+    <div>pharma_batch profile</div>
+    <div style="margin-top:6px;color:var(--amber)">Phase: Control ●</div>
+  </div>
+</div>
+
+<!-- Main content -->
+<div class="main" id="mainContent">
+  <!-- Rendered by JS -->
+</div>
+
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────
+// Simulation data
+// ─────────────────────────────────────────────────────────
+const TAGS = ["MOISTURE_LOD","BLEND_RSD","TABLET_HARDNESS","DISSOLUTION_T80","ASSAY_PCT"];
+const TAG_PARAMS = {
+  MOISTURE_LOD:      {cl:2.05, sigma:.35, ucl:3.12, lcl:.98, usl:3.0, lsl:0.5, unit:"%"},
+  BLEND_RSD:         {cl:2.8,  sigma:.4,  ucl:4.0,  lcl:1.6, usl:5.0, lsl:0.0, unit:"%RSD"},
+  TABLET_HARDNESS:   {cl:14.2, sigma:1.1, ucl:17.5, lcl:10.9,usl:20.0,lsl:8.0, unit:"kP"},
+  DISSOLUTION_T80:   {cl:28.5, sigma:3.2, ucl:38.1, lcl:18.9,usl:45.0,lsl:0.0, unit:"min"},
+  ASSAY_PCT:         {cl:100.2,sigma:.6,  ucl:102.0,lcl:98.4, usl:102.0,lsl:98.0,unit:"%"},
+};
+
+let spcHistory = {};
+TAGS.forEach(t => {
+  const p = TAG_PARAMS[t];
+  spcHistory[t] = Array.from({length:40}, () => p.cl + (Math.random()-.5)*p.sigma*2.2);
+});
+
+const WASTE_DATA = [
+  {code:"W",label:"Waiting",       color:"#facc15", count:47},
+  {code:"D",label:"Defects",       color:"#f87171", count:32},
+  {code:"E",label:"Extra-proc.",   color:"#e879f9", count:21},
+  {code:"I",label:"Inventory",     color:"#38bdf8", count:15},
+  {code:"O",label:"Overproduction",color:"#fb923c", count:9},
+  {code:"M",label:"Motion",        color:"#818cf8", count:6},
+];
+const WASTE_TOTAL = WASTE_DATA.reduce((s,w)=>s+w.count,0);
+
+const KPI_BASE = {oee:.872, cpk:1.41, sigma:4.23, yield:.953, cycleTime:43.2};
+let kpis = {...KPI_BASE};
+let healthScore = .91;
+let anomalyFeed = [];
+let tick = 0;
+let charts = {};
+let currentPage = 'overview';
+
+// ─────────────────────────────────────────────────────────
+// Simulation engine
+// ─────────────────────────────────────────────────────────
+function nextVal(tag) {
+  const p = TAG_PARAMS[tag];
+  const drift = Math.sin(tick * 0.03) * p.sigma * 0.3;
+  const noise = (Math.random()-.5) * p.sigma * 1.5;
+  let val = p.cl + drift + noise;
+  if (Math.random() < .04) val = p.ucl + Math.random() * p.sigma;
+  if (Math.random() < .04) val = p.lcl - Math.random() * p.sigma;
+  return parseFloat(val.toFixed(3));
+}
+
+function randomAnomaly() {
+  const severities = ['critical','high','medium','medium','ok','ok'];
+  const sources = ['Rule','ML','SPC'];
+  const wastes = ['D','W','E','I',null,null];
+  const tag = TAGS[Math.floor(Math.random()*TAGS.length)];
+  const sev = severities[Math.floor(Math.random()*severities.length)];
+  const src = sources[Math.floor(Math.random()*sources.length)];
+  const waste = wastes[Math.floor(Math.random()*wastes.length)];
+  const messages = {
+    critical: `Out-of-spec: ${tag} exceeded USL`,
+    high: `SPC violation: 2 of 3 beyond 2σ`,
+    medium: `ML anomaly detected (confidence: ${(0.65+Math.random()*.3).toFixed(2)})`,
+    ok: `Process in control — ${tag}`,
+  };
+  return { id: Math.random(), tag, severity: sev, source: src, waste, msg: messages[sev], time: new Date() };
+}
+
+function updateKPIs() {
+  kpis.oee    = Math.max(.60, Math.min(.98, kpis.oee    + (Math.random()-.5)*.008));
+  kpis.cpk    = Math.max(.80, Math.min(1.9, kpis.cpk    + (Math.random()-.5)*.012));
+  kpis.sigma  = Math.max(2.5, Math.min(5.5, kpis.sigma  + (Math.random()-.5)*.05));
+  kpis.yield  = Math.max(.85, Math.min(.999,kpis.yield  + (Math.random()-.5)*.005));
+  kpis.cycleTime = Math.max(35,Math.min(55,  kpis.cycleTime+(Math.random()-.5)*.5));
+  healthScore = Math.max(.55, Math.min(.99, healthScore + (Math.random()-.5)*.02));
+}
+
+function kpiStatus(name, val) {
+  const thresholds = { oee:[.85,.7], cpk:[1.33,1.0], sigma:[4.0,3.0], yield:[.95,.9] };
+  const [good, warn] = thresholds[name] ?? [Infinity, Infinity];
+  return val >= good ? 'ok' : val >= warn ? 'warn' : 'bad';
+}
+
+// ─────────────────────────────────────────────────────────
+// Rendering
+// ─────────────────────────────────────────────────────────
+function phaseBar(active) {
+  const phases = ['define','measure','analyze','improve','control'];
+  const idx = phases.indexOf(active);
+  return `<div class="phase-bar" title="DMAIC lifecycle status — this project is in the ${active.charAt(0).toUpperCase() + active.slice(1)} phase">` + phases.map((p,i) => {
+    const cls = i < idx ? 'done' : i === idx ? `active phase-${p}` : 'future';
+    const label = p.charAt(0).toUpperCase() + p.slice(1);
+    const state = i < idx ? 'completed' : i === idx ? 'current phase' : 'upcoming';
+    return `<div class="phase-chip ${cls}" title="${label} — ${state}">${label}</div>` +
+           (i < phases.length-1 ? `<div class="phase-connector"></div>` : '');
+  }).join('') + `</div>`;
+}
+
+function gaugeHTML(score, label) {
+  const pct = Math.round(score*100);
+  const color = pct>=90?'#34d399':pct>=70?'#fbbf24':'#f87171';
+  const r=40, circ=2*Math.PI*r, dash=(pct/100)*circ;
+  const statusText = pct>=90?'In Control':pct>=70?'Monitor':'Action Required';
+  return `
+  <div class="card gauge-wrap" style="justify-content:center;padding:16px 12px">
+    <div class="gauge-label">${label}</div>
+    <svg width="104" height="104" viewBox="0 0 104 104">
+      <circle cx="52" cy="52" r="${r}" fill="none" stroke="#1e3050" stroke-width="9"/>
+      <circle cx="52" cy="52" r="${r}" fill="none" stroke="${color}" stroke-width="9"
+        stroke-dasharray="${dash.toFixed(1)} ${circ.toFixed(1)}" stroke-linecap="round"
+        transform="rotate(-90 52 52)" style="transition:stroke-dasharray .7s ease"/>
+      <text x="52" y="56" text-anchor="middle" font-size="20" font-weight="700" fill="${color}">${pct}%</text>
+    </svg>
+    <div class="gauge-status" style="color:${color}">${statusText}</div>
+  </div>`;
+}
+
+function kpiCardHTML(label, value, unit, target, status, sub) {
+  const colors = {ok:'c-ok', warn:'c-warn', bad:'c-bad', brand:'c-brand', purple:'c-purple'};
+  const cls = colors[status] ?? 'c-brand';
+  return `
+  <div class="card">
+    <div class="card-label">${label}</div>
+    <div>
+      <span class="kpi-value ${cls}">${value}</span>
+      ${unit ? `<span class="kpi-unit">${unit}</span>` : ''}
+    </div>
+    ${target ? `<div class="kpi-target">Target: <span>${target}</span></div>` : ''}
+    ${sub ? `<div style="font-size:10px;color:var(--muted);margin-top:4px">${sub}</div>` : ''}
+  </div>`;
+}
+
+function anomalyItemHTML(a) {
+  const wasteHTML = a.waste ? `<span class="source-pill">Waste:${a.waste}</span>` : '';
+  const ago = Math.round((Date.now()-a.time)/1000);
+  const agoStr = ago<60?`${ago}s ago`:`${Math.round(ago/60)}m ago`;
+  return `
+  <div class="feed-item ${a.severity}">
+    <div style="flex:1;min-width:0">
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="feed-tag">${a.tag}</span>
+        <span class="feed-sev">${a.severity}</span>
+      </div>
+      <div class="feed-desc">${a.msg}</div>
+      <div class="feed-meta">
+        <span class="source-pill">${a.source}</span>
+        ${wasteHTML}
+        <span style="margin-left:auto">${agoStr}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ─────────────────────────────────────────────────────────
+// SPC Chart via Chart.js
+// ─────────────────────────────────────────────────────────
+function renderSPCChart(canvasId, tag) {
+  const p = TAG_PARAMS[tag];
+  const data = spcHistory[tag];
+  const labels = data.map((_,i)=>`T-${data.length-i}`);
+  const bgColors = data.map(v => (v>p.ucl||v<p.lcl) ? 'rgba(248,113,113,.9)' : 'rgba(56,189,248,.8)');
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+  if (charts[canvasId]) { charts[canvasId].destroy(); }
+  charts[canvasId] = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data, borderColor: '#38bdf8', borderWidth: 1.5, pointRadius: 3,
+        pointBackgroundColor: bgColors, tension: 0.3, fill: false,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: false,
+      plugins: { legend: {display:false}, tooltip: {
+        backgroundColor:'#0f1929', borderColor:'#1e3050', borderWidth:1,
+        titleColor:'#94a3b8', bodyColor:'#e2e8f0',
+      }},
+      scales: {
+        x: { grid:{color:'rgba(255,255,255,.04)'}, ticks:{color:'#475569',font:{size:9},maxRotation:0,maxTicksLimit:8} },
+        y: { grid:{color:'rgba(255,255,255,.04)'}, ticks:{color:'#475569',font:{size:10}},
+             min: p.lcl - p.sigma, max: p.ucl + p.sigma }
+      },
+      plugins2: {},
+    },
+    plugins: [{
+      id:'limits',
+      afterDraw(chart) {
+        const {ctx:c, scales:{y,x}, chartArea:{left,right}} = chart;
+        [[p.ucl,'#f87171'],[p.cl,'#475569'],[p.lcl,'#f87171']].forEach(([val,col])=>{
+          const yp = y.getPixelForValue(val);
+          c.save(); c.strokeStyle=col; c.lineWidth=1;
+          c.setLineDash([4,3]); c.beginPath(); c.moveTo(left,yp); c.lineTo(right,yp);
+          c.stroke(); c.restore();
+          c.fillStyle=col; c.font='9px system-ui'; c.fillText(
+            val===p.cl?`CL ${val.toFixed(2)}`:val===p.ucl?`UCL ${val.toFixed(2)}`:`LCL ${val.toFixed(2)}`,
+            right+3, yp+3
+          );
+        });
+      }
+    }]
+  });
+}
+
+function renderParetoChart(canvasId) {
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+  if (charts[canvasId]) { charts[canvasId].destroy(); }
+  const sorted = [...WASTE_DATA].sort((a,b)=>b.count-a.count);
+  let cum=0;
+  const cumPcts = sorted.map(w=>{cum+=w.count/WASTE_TOTAL*100;return parseFloat(cum.toFixed(1));});
+  charts[canvasId] = new Chart(ctx, {
+    data: {
+      labels: sorted.map(w=>w.label),
+      datasets: [
+        { type:'bar', data:sorted.map(w=>w.count), backgroundColor:sorted.map(w=>w.color+'cc'),
+          borderColor:sorted.map(w=>w.color), borderWidth:1, borderRadius:4, yAxisID:'y' },
+        { type:'line', data:cumPcts, borderColor:'#fbbf24', borderWidth:2,
+          pointBackgroundColor:'#fbbf24', pointRadius:3, tension:.3, yAxisID:'y2' }
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false, animation:false,
+      plugins:{legend:{display:false},tooltip:{backgroundColor:'#0f1929',borderColor:'#1e3050',borderWidth:1,titleColor:'#94a3b8',bodyColor:'#e2e8f0'}},
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#475569',font:{size:10}}},
+        y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#475569',font:{size:10}},beginAtZero:true},
+        y2:{position:'right',min:0,max:100,grid:{display:false},ticks:{color:'#fbbf24',font:{size:9},callback:v=>`${v}%`}}
+      }
+    }
+  });
+}
+
+function renderOEETrend(canvasId) {
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+  if (charts[canvasId]) charts[canvasId].destroy();
+  const hours = Array.from({length:24},(_,i)=>`${23-i}h`).reverse();
+  const avail = hours.map(()=>0.85+Math.random()*.1);
+  const perf  = hours.map(()=>0.88+Math.random()*.1);
+  const qual  = hours.map(()=>0.92+Math.random()*.07);
+  const oee   = avail.map((a,i)=>parseFloat((a*perf[i]*qual[i]).toFixed(3)));
+  charts[canvasId] = new Chart(ctx,{
+    type:'line',
+    data:{labels:hours,datasets:[
+      {label:'OEE',data:oee,borderColor:'#38bdf8',borderWidth:2,pointRadius:2,tension:.4,fill:false},
+      {label:'Availability',data:avail,borderColor:'#34d399',borderWidth:1.5,pointRadius:0,tension:.4,fill:false,borderDash:[3,3]},
+      {label:'Performance', data:perf, borderColor:'#a78bfa',borderWidth:1.5,pointRadius:0,tension:.4,fill:false,borderDash:[3,3]},
+      {label:'Quality',     data:qual, borderColor:'#fbbf24',borderWidth:1.5,pointRadius:0,tension:.4,fill:false,borderDash:[3,3]},
+    ]},
+    options:{
+      responsive:true,maintainAspectRatio:false,animation:false,
+      plugins:{legend:{labels:{color:'#94a3b8',font:{size:10},boxWidth:12}},tooltip:{backgroundColor:'#0f1929',borderColor:'#1e3050',borderWidth:1,titleColor:'#94a3b8',bodyColor:'#e2e8f0'}},
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#475569',font:{size:9},maxTicksLimit:8}},
+        y:{min:.6,max:1.0,grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#475569',font:{size:10},callback:v=>`${(v*100).toFixed(0)}%`}}
+      }
+    }
+  });
+}
+
+// ─────────────────────────────────────────────────────────
+// Page renderers
+// ─────────────────────────────────────────────────────────
+function renderOverview() {
+  const st = s => kpiStatus(s, kpis[s]);
+  const viol24 = 3 + Math.floor(Math.random()*8);
+  const crit24 = Math.floor(Math.random()*3);
+  document.getElementById('mainContent').innerHTML = `
+    ${phaseBar('control')}
+    <div class="page-header">
+      <div>
+        <div class="page-title">Process Overview</div>
+        <div class="page-sub">Granulation Line 3 · pharma_batch · Real-time monitoring</div>
+      </div>
+      <div class="header-right">
+        <span class="live-badge" style="font-size:11px;padding:4px 10px"><span class="live-dot"></span>Live Feed Active</span>
+        <button class="btn btn-ghost">Ad-hoc Analysis</button>
+      </div>
+    </div>
+
+    <div class="grid-5">
+      ${gaugeHTML(healthScore,'Process Health')}
+      ${kpiCardHTML('OEE',(kpis.oee*100).toFixed(1),'%','85%',st('oee'),`A:${(kpis.oee*.97*100).toFixed(0)}% P:${(kpis.oee*.99*100).toFixed(0)}% Q:${(kpis.yield*100).toFixed(1)}%`)}
+      ${kpiCardHTML('Cpk',kpis.cpk.toFixed(3),null,'1.33',st('cpk'),`Cp: ${(kpis.cpk*1.05).toFixed(3)}`)}
+      ${kpiCardHTML('Sigma Level',kpis.sigma.toFixed(2),'σ','4.0σ',st('sigma'),`${((1-kpis.yield)*1e6).toFixed(0)} DPMO`)}
+      ${kpiCardHTML('Batch Yield',(kpis.yield*100).toFixed(1),'%','95%',st('yield'),`${Math.round(kpis.yield*48)} / 48 pass`)}
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-label">24h Summary</div>
+        <div class="stat-grid">
+          <div class="stat-box"><div class="num ${viol24>5?'c-warn':'c-ok'}">${viol24}</div><div class="lbl">SPC Violations</div></div>
+          <div class="stat-box"><div class="num ${crit24>0?'c-bad':'c-ok'}">${crit24}</div><div class="lbl">Critical Alerts</div></div>
+          <div class="stat-box"><div class="num c-brand">${(1200+Math.floor(Math.random()*400)).toLocaleString()}</div><div class="lbl">Events Processed</div></div>
+          <div class="stat-box"><div class="num c-purple">${anomalyFeed.filter(a=>a.severity!=='ok').length}</div><div class="lbl">Anomalies Unacked</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Live Anomaly Feed <span style="color:var(--muted)">(${anomalyFeed.length})</span></div>
+        <div class="feed" id="anomalyFeed">
+          ${anomalyFeed.slice(0,8).map(anomalyItemHTML).join('') || '<div style="color:var(--muted);text-align:center;padding:20px;font-size:12px">No anomalies detected</div>'}
+        </div>
+      </div>
+    </div>
+
+    <div class="card chart-panel">
+      <div class="card-label">
+        SPC Control Chart — MOISTURE_LOD (Live)
+        <span style="color:var(--muted)">CUSUM · EWMA · Western Electric Rules</span>
+      </div>
+      <div style="height:200px;position:relative">
+        <canvas id="spcChart1"></canvas>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:8px;font-size:10px;color:var(--muted)">
+        <span>UCL <span style="color:var(--red)">${TAG_PARAMS.MOISTURE_LOD.ucl}</span></span>
+        <span>CL <span style="color:var(--subtle)">${TAG_PARAMS.MOISTURE_LOD.cl}</span></span>
+        <span>LCL <span style="color:var(--red)">${TAG_PARAMS.MOISTURE_LOD.lcl}</span></span>
+        <span style="margin-left:auto">● Violation</span>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>demaico DMAIC Pipeline · v1.0.0</span>
+      <span>Last update: <span id="lastUpdate">${new Date().toLocaleTimeString()}</span></span>
+    </div>
+  `;
+  renderSPCChart('spcChart1', 'MOISTURE_LOD');
+}
+
+function renderMeasure() {
+  document.getElementById('mainContent').innerHTML = `
+    ${phaseBar('measure')}
+    <div class="page-header">
+      <div><div class="page-title">Measure</div><div class="page-sub">KPI trending · Process capability · OEE breakdown</div></div>
+      <div class="header-right">
+        ${['1h','6h','24h','7d'].map(h=>`<button class="btn ${h==='24h'?'btn-primary':'btn-ghost'}">${h}</button>`).join('')}
+      </div>
+    </div>
+
+    <div class="grid-5" style="grid-template-columns:repeat(5,1fr)">
+      ${kpiCardHTML('OEE',(kpis.oee*100).toFixed(1),'%','85%','brand','')}
+      ${kpiCardHTML('Cpk',kpis.cpk.toFixed(3),null,'1.33','ok','')}
+      ${kpiCardHTML('Sigma',kpis.sigma.toFixed(2),'σ','4.0','ok','')}
+      ${kpiCardHTML('Yield',(kpis.yield*100).toFixed(1),'%','95%','ok','')}
+      ${kpiCardHTML('Cycle Time',kpis.cycleTime.toFixed(1),'min','48','warn','')}
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-label">OEE Trend (24h) · Availability / Performance / Quality</div>
+      <div style="height:200px;position:relative"><canvas id="oeeTrend"></canvas></div>
+    </div>
+
+    <div class="grid-2">
+      ${TAGS.slice(0,2).map((tag,i) => `
+        <div class="card chart-panel">
+          <div class="card-label">${tag} <span style="color:var(--muted)">${TAG_PARAMS[tag].unit}</span></div>
+          <div style="height:170px;position:relative"><canvas id="spcSmall${i}"></canvas></div>
+          <div style="display:flex;gap:12px;margin-top:6px;font-size:10px;color:var(--muted)">
+            <span>USL <span style="color:var(--red)">${TAG_PARAMS[tag].usl}</span></span>
+            <span>LSL <span style="color:var(--red)">${TAG_PARAMS[tag].lsl}</span></span>
+            <span>σ <span style="color:var(--subtle)">${TAG_PARAMS[tag].sigma}</span></span>
+          </div>
+        </div>`).join('')}
+    </div>
+    <div class="footer"><span>demaico DMAIC Pipeline</span><span>Last update: ${new Date().toLocaleTimeString()}</span></div>
+  `;
+  renderOEETrend('oeeTrend');
+  TAGS.slice(0,2).forEach((tag,i) => renderSPCChart(`spcSmall${i}`, tag));
+}
+
+function renderAnalyze() {
+  const total = WASTE_TOTAL;
+  document.getElementById('mainContent').innerHTML = `
+    ${phaseBar('analyze')}
+    <div class="page-header">
+      <div><div class="page-title">Analyze</div><div class="page-sub">8-Waste identification · Anomaly classification · Pareto analysis</div></div>
+    </div>
+
+    <div class="grid-32">
+      <div class="card">
+        <div class="card-label">8-Waste Register (DOWNTIME)</div>
+        ${WASTE_DATA.sort((a,b)=>b.count-a.count).map(w=>`
+          <div class="pareto-row">
+            <div class="pareto-code" style="background:${w.color}22;color:${w.color}">${w.code}</div>
+            <div class="pareto-label">${w.label}</div>
+            <div class="pareto-bar-wrap"><div class="pareto-bar" style="width:${(w.count/WASTE_DATA[0].count*100).toFixed(0)}%;background:${w.color}"></div></div>
+            <div class="pareto-count" style="color:${w.color}">${w.count}</div>
+            <div class="pareto-pct">${(w.count/total*100).toFixed(0)}%</div>
+          </div>`).join('')}
+      </div>
+      <div class="card chart-panel">
+        <div class="card-label">Pareto Chart · Cumulative % <span style="color:var(--amber)">——</span></div>
+        <div style="height:240px;position:relative"><canvas id="paretoChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Anomaly Feed (72h) <span style="color:var(--muted)">${anomalyFeed.length} events</span></div>
+      <div class="feed" style="max-height:260px" id="analyzeFeed">
+        ${anomalyFeed.slice(0,12).map(anomalyItemHTML).join('') || '<div style="color:var(--muted);text-align:center;padding:20px">No anomalies in window</div>'}
+      </div>
+    </div>
+    <div class="footer"><span>demaico DMAIC Pipeline</span><span>Last update: ${new Date().toLocaleTimeString()}</span></div>
+  `;
+  renderParetoChart('paretoChart');
+}
+
+function renderControl() {
+  document.getElementById('mainContent').innerHTML = `
+    ${phaseBar('control')}
+    <div class="page-header">
+      <div><div class="page-title">Control</div><div class="page-sub">SPC monitoring · Control limits · Process health</div></div>
+      <div class="header-right">
+        ${gaugeHTML(healthScore,'Health').replace('class="card gauge-wrap"','style="background:transparent;border:none;padding:0;display:flex;gap:8px;align-items:center;flex-direction:row"')}
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-label">Active Control Limits</div>
+      <table style="width:100%;border-collapse:collapse">
+        <thead><tr style="font-size:10px;color:var(--muted)">
+          ${['Tag','USL','UCL','CL (Mean)','LCL','LSL','σ','Status'].map(h=>`<th style="text-align:left;padding:6px 10px;border-bottom:1px solid var(--border);font-weight:500">${h}</th>`).join('')}
+        </tr></thead>
+        <tbody>
+          ${TAGS.map(tag=>{
+            const p=TAG_PARAMS[tag];
+            const latest=spcHistory[tag].slice(-1)[0];
+            const ok=latest<=p.ucl&&latest>=p.lcl;
+            const statusDot=ok?'#34d399':'#f87171';
+            const statusText=ok?'In Control':'Violation';
+            return `<tr style="border-bottom:1px solid rgba(255,255,255,.03)">
+              <td style="padding:7px 10px;font-family:monospace;font-size:11px;color:#94a3b8">${tag}</td>
+              <td style="padding:7px 10px;color:#f87171;font-variant-numeric:tabular-nums">${p.usl}</td>
+              <td style="padding:7px 10px;color:#f87171;font-variant-numeric:tabular-nums">${p.ucl}</td>
+              <td style="padding:7px 10px;font-variant-numeric:tabular-nums">${p.cl}</td>
+              <td style="padding:7px 10px;color:#f87171;font-variant-numeric:tabular-nums">${p.lcl}</td>
+              <td style="padding:7px 10px;color:#f87171;font-variant-numeric:tabular-nums">${p.lsl}</td>
+              <td style="padding:7px 10px;color:var(--muted);font-variant-numeric:tabular-nums">${p.sigma}</td>
+              <td style="padding:7px 10px">
+                <span style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;color:${statusDot}">
+                  <span style="width:6px;height:6px;border-radius:50%;background:${statusDot}"></span>${statusText}
+                </span>
+              </td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid-2">
+      ${TAGS.slice(2,4).map((tag,i) => `
+        <div class="card chart-panel">
+          <div class="card-label">${tag} — SPC Control Chart</div>
+          <div style="height:190px;position:relative"><canvas id="ctrlSpc${i}"></canvas></div>
+        </div>`).join('')}
+    </div>
+    <div class="footer"><span>demaico DMAIC Pipeline</span><span>Last update: ${new Date().toLocaleTimeString()}</span></div>
+  `;
+  TAGS.slice(2,4).forEach((tag,i) => renderSPCChart(`ctrlSpc${i}`, tag));
+}
+
+// ─────────────────────────────────────────────────────────
+// Main loop
+// ─────────────────────────────────────────────────────────
+function setPage(page) {
+  currentPage = page;
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick')?.includes(page)) n.classList.add('active');
+  });
+  renderPage();
+}
+
+function renderPage() {
+  const renderers = { overview:renderOverview, measure:renderMeasure, analyze:renderAnalyze, control:renderControl };
+  (renderers[currentPage] || renderOverview)();
+}
+
+function update() {
+  tick++;
+  TAGS.forEach(tag => {
+    const v = nextVal(tag);
+    spcHistory[tag].push(v);
+    if (spcHistory[tag].length > 60) spcHistory[tag].shift();
+  });
+  updateKPIs();
+  if (Math.random() < .25) {
+    anomalyFeed.unshift(randomAnomaly());
+    if (anomalyFeed.length > 50) anomalyFeed.pop();
+  }
+  renderPage();
+}
+
+// Init
+renderPage();
+setInterval(update, 3000);
+</script>
+</body>
+</html>
