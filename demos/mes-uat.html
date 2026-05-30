@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>MES Automated UAT Dashboard &mdash; demaico</title>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&display=swap');
+  :root {
+    --bg:            #0b0b0b;
+    --surface:       #111111;
+    --card:          #161616;
+    --accent:        #e8890c;
+    --accent-glow:   rgba(232,137,12,0.10);
+    --text:          #f0ece4;
+    --muted:         #888070;
+    --faint:         #2a2520;
+    --border:        rgba(232,137,12,0.14);
+    --border-strong: rgba(232,137,12,0.32);
+    --green:  #2EB67D;
+    --red:    #E01E5A;
+    --yellow: #ECB22E;
+    --blue:   #4a9ef5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+  /* ── Header ── */
+  header{background:var(--surface);border-bottom:1px solid var(--border-strong);padding:14px 32px;display:flex;align-items:center;gap:14px}
+  .wordmark{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:3px}
+  .wordmark .o{color:var(--accent)}
+  .hdiv{width:1px;height:28px;background:var(--border-strong);margin:0 4px}
+  .htxt h1{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:2px}
+  .htxt .sub{color:var(--muted);font-size:.72rem;margin-top:2px;font-family:'IBM Plex Mono',monospace}
+  .hright{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pdot 2s infinite}
+  .live-label{color:var(--green);font-size:.72rem;font-weight:700;letter-spacing:.12em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+  .demo-badge{background:var(--accent-glow);color:var(--accent);border:1px solid var(--border-strong);border-radius:2px;padding:3px 10px;font-size:.68rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:3px;text-transform:uppercase}
+  @keyframes pdot{0%,100%{opacity:1}50%{opacity:.25}}
+
+  /* ── Layout ── */
+  .container{max-width:1500px;margin:0 auto;padding:24px 32px}
+
+  /* ── Stats ── */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+  .stat-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:18px 20px;position:relative;overflow:hidden}
+  .stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+  .s-accent::after{background:var(--accent)} .s-green::after{background:var(--green)}
+  .s-yellow::after{background:var(--yellow)} .s-blue::after{background:var(--blue)}
+  .stat-lbl{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px}
+  .stat-val{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;line-height:1}
+  .s-accent .stat-val{color:var(--accent)} .s-green .stat-val{color:var(--green)}
+  .s-yellow .stat-val{color:var(--yellow)} .s-blue .stat-val{color:var(--blue)}
+  .stat-delta{font-size:.68rem;color:var(--muted);margin-top:5px;font-family:'IBM Plex Mono',monospace}
+
+  /* ── Main grid ── */
+  .main-grid{display:grid;grid-template-columns:300px 1fr;gap:16px;margin-bottom:24px}
+
+  /* ── Section title ── */
+  .section-title{font-family:'Barlow Condensed',sans-serif;font-size:.66rem;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);font-weight:700;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+
+  /* ── Vendor matrix ── */
+  .config-list{display:flex;flex-direction:column;gap:5px;margin-bottom:18px}
+  .config-item{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:9px 11px;display:flex;align-items:center;gap:9px;transition:border-color .2s,background .2s}
+  .config-item.active{border-color:var(--border-strong);background:rgba(232,137,12,.04)}
+  .v-dot{width:9px;height:9px;border-radius:50%;background:var(--faint);flex-shrink:0;transition:background .2s}
+  .v-dot.running{background:var(--accent);animation:pdot 1s infinite}
+  .v-dot.pass{background:var(--green)}
+  .v-dot.attention{background:var(--red)}
+  .cfg-info{flex:1;min-width:0}
+  .cfg-id{font-family:'IBM Plex Mono',monospace;font-size:.74rem;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cfg-meta{font-size:.64rem;color:var(--muted);margin-top:3px;display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+  .acc{font-family:'IBM Plex Mono',monospace;font-size:.6rem;border-radius:2px;padding:1px 5px;display:inline-flex;align-items:center;gap:4px}
+  .acc.sql {color:var(--blue);background:rgba(74,158,245,.08);border:1px solid rgba(74,158,245,.22)}
+  .acc.rest{color:var(--green);background:rgba(46,182,125,.08);border:1px solid rgba(46,182,125,.22)}
+  .acc.opcua{color:var(--yellow);background:rgba(236,178,46,.08);border:1px solid rgba(236,178,46,.22)}
+  .acc.mqtt{color:var(--accent);background:var(--accent-glow);border:1px solid var(--border-strong)}
+  .mode{font-size:.52rem;text-transform:uppercase;letter-spacing:.04em;border-radius:1px;padding:0 3px}
+  .mode.real{background:var(--accent);color:#0b0b0b;font-weight:700}
+  .mode.sim {background:var(--faint);color:var(--muted)}
+
+  /* ── Legend ── */
+  .legend{display:flex;align-items:center;flex-wrap:wrap;gap:8px;color:var(--muted);font-size:.66rem;font-family:'IBM Plex Mono',monospace;margin-bottom:18px}
+
+  /* ── Backends panel ── */
+  .health-panel{display:flex;flex-direction:column;gap:8px}
+  .health-env-card{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:10px 12px}
+  .health-env-label{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:7px}
+  .health-checks{display:flex;gap:6px;flex-wrap:wrap}
+  .hck{display:flex;align-items:center;gap:4px;font-size:.68rem;font-family:'IBM Plex Mono',monospace;padding:3px 8px;border-radius:2px}
+  .hck.ok{color:var(--green);background:rgba(46,182,125,.06);border:1px solid rgba(46,182,125,.15)}
+  .hck.chk{color:var(--yellow);background:rgba(236,178,46,.06);border:1px solid rgba(236,178,46,.15)}
+
+  /* ── Current-run card ── */
+  .commit-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:14px 16px;transition:border-color .2s}
+  .commit-card.active{border-color:var(--border-strong);box-shadow:0 0 0 1px var(--accent-glow)}
+  .commit-header{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+  .commit-evt{font-family:'Barlow Condensed',sans-serif;font-size:.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--accent)}
+  .commit-hash{font-family:'IBM Plex Mono',monospace;font-size:.8rem;color:var(--blue)}
+  .commit-author{font-size:.7rem;color:var(--muted);margin-left:auto;font-family:'IBM Plex Mono',monospace}
+  .commit-msg{font-size:.9rem;color:var(--text);margin-bottom:8px;font-weight:500;line-height:1.4}
+  .commit-files{display:flex;gap:6px;flex-wrap:wrap}
+
+  /* ── Pipeline card ── */
+  .pipeline-wrap{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:14px 16px}
+  .pipeline-group{margin-bottom:14px}
+  .pipeline-group:last-child{margin-bottom:0}
+  .pg-label{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .pg-label::after{content:'';flex:1;height:1px;background:var(--border)}
+  .stages{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .stage{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:10px 12px;display:flex;flex-direction:column;gap:5px;transition:border-color .2s,background .2s}
+  .stage.running{border-color:var(--accent);background:rgba(232,137,12,.04)}
+  .stage.passed {border-color:rgba(46,182,125,.3);background:rgba(46,182,125,.04)}
+  .stage.failed {border-color:rgba(224,30,90,.3);background:rgba(224,30,90,.04)}
+  .stage-row{display:flex;align-items:center;gap:6px}
+  .stage-dot{width:8px;height:8px;border-radius:50%;background:var(--faint);flex-shrink:0;transition:background .2s}
+  .stage.running .stage-dot{background:var(--accent);animation:pdot 1s infinite}
+  .stage.passed  .stage-dot{background:var(--green)}
+  .stage.failed  .stage-dot{background:var(--red)}
+  .stage-name{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .stage.running .stage-name{color:var(--accent)}
+  .stage.passed  .stage-name{color:var(--text)}
+  .stage.failed  .stage-name{color:var(--red)}
+  .stage-detail{font-family:'IBM Plex Mono',monospace;font-size:.63rem;color:var(--muted);min-height:14px}
+  .stage.passed .stage-detail{color:var(--green)}
+  .stage.failed .stage-detail{color:var(--red)}
+
+  /* ── Regression gate ── */
+  .prod-gate{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:12px 14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;transition:border-color .2s,background .2s}
+  .prod-gate.pending {border-color:rgba(236,178,46,.4);background:rgba(236,178,46,.04)}
+  .prod-gate.approved{border-color:rgba(46,182,125,.3);background:rgba(46,182,125,.04)}
+  .prod-gate.failed  {border-color:rgba(224,30,90,.3);background:rgba(224,30,90,.04)}
+  .pg-gate-lbl{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+  .pg-gate-chg{font-family:'IBM Plex Mono',monospace;font-size:.84rem;font-weight:700;color:var(--accent)}
+  .prod-gate.approved .pg-gate-chg{color:var(--green)}
+  .prod-gate.failed .pg-gate-chg{color:var(--red)}
+  .pg-gate-detail{font-size:.7rem;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+
+  /* ── Live log ── */
+  .log-wrap{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:12px 14px}
+  .log-lines{background:#080808;border-radius:2px;padding:10px 12px;height:150px;overflow-y:auto;font-family:'IBM Plex Mono',monospace;font-size:.71rem;line-height:1.9}
+  .line-push{color:var(--accent)}
+  .line-ci  {color:var(--blue)}
+  .line-ok  {color:var(--green)}
+  .line-err {color:var(--red)}
+  .line-cd  {color:var(--yellow)}
+  .line-muted{color:var(--muted)}
+
+  /* ── Table ── */
+  .table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:3px;margin-bottom:32px}
+  table{width:100%;border-collapse:collapse;font-size:.82rem}
+  thead{background:var(--surface)}
+  thead th{padding:9px 14px;text-align:left;color:var(--muted);font-weight:700;font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;border-bottom:1px solid var(--border);white-space:nowrap;font-family:'Barlow Condensed',sans-serif}
+  tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+  tbody tr:last-child{border-bottom:none}
+  tbody tr:hover{background:rgba(232,137,12,.03)}
+  tbody td{padding:9px 14px;vertical-align:middle}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:.75rem}
+
+  /* ── Badges & pills ── */
+  .badge{display:inline-block;padding:2px 7px;border-radius:2px;font-size:.6rem;font-weight:700;letter-spacing:.08em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+  .bg{background:rgba(46,182,125,.1);color:var(--green);border:1px solid rgba(46,182,125,.22)}
+  .br{background:rgba(224,30,90,.1);color:var(--red);border:1px solid rgba(224,30,90,.22)}
+  .by{background:rgba(236,178,46,.1);color:var(--yellow);border:1px solid rgba(236,178,46,.22)}
+  .evidence-link{font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--accent);text-decoration:none}
+  .evidence-link:hover{text-decoration:underline}
+
+  .new-row{animation:newrow 1.2s ease}
+  @keyframes newrow{from{background:rgba(232,137,12,.1)}to{background:transparent}}
+
+  /* ── Footer ── */
+  footer{padding:18px 32px;border-top:1px solid var(--border);color:var(--muted);font-size:.7rem;display:flex;justify-content:space-between;align-items:center;font-family:'IBM Plex Mono',monospace}
+  footer a{color:var(--accent);text-decoration:none}
+  footer a:hover{text-decoration:underline}
+
+  ::-webkit-scrollbar{width:4px;height:4px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--faint);border-radius:2px}
+  </style>
+</head>
+<body>
+<header>
+  <div class="wordmark">DEMAIC<span class="o">O</span></div>
+  <div class="hdiv"></div>
+  <div class="htxt">
+    <h1>MES Automated UAT</h1>
+    <div class="sub">Vendor-Neutral Scenarios &middot; SQL / REST / OPC-UA / MQTT &middot; Overnight Evidence</div>
+  </div>
+  <div class="hright">
+    <span class="demo-badge">Demo</span>
+    <div class="live-dot"></div>
+    <span class="live-label">Live</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-card s-accent">
+      <div class="stat-lbl">Vendors Under Test</div>
+      <div class="stat-val">6</div>
+      <div class="stat-delta">AspenTech &middot; Rockwell &middot; Siemens &middot; +3</div>
+    </div>
+    <div class="stat-card s-blue">
+      <div class="stat-lbl">Scenarios / Night</div>
+      <div class="stat-val">24</div>
+      <div class="stat-delta">6 vendors &times; 4 scenarios</div>
+    </div>
+    <div class="stat-card s-green">
+      <div class="stat-lbl">Pass Rate</div>
+      <div class="stat-val" id="stat-pass">100</div>
+      <div class="stat-delta" id="stat-pass-delta">% &middot; this run</div>
+    </div>
+    <div class="stat-card s-yellow">
+      <div class="stat-lbl">Regressions Caught</div>
+      <div class="stat-val" id="stat-reg">0</div>
+      <div class="stat-delta" id="stat-reg-delta">before production</div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+
+    <!-- Left: Vendor matrix + Access backends -->
+    <div>
+      <div class="section-title">Vendor Matrix</div>
+      <div class="config-list" id="vendor-list"></div>
+
+      <div class="legend">
+        <span class="mode real">real</span> live MES (config + secrets)
+        <span class="mode sim">sim</span> built-in simulator
+      </div>
+
+      <div class="section-title">Access Backends</div>
+      <div class="health-panel">
+        <div class="health-env-card">
+          <div class="health-env-label">Connection Layer</div>
+          <div class="health-checks" id="backends">
+            <div class="hck ok">&#9679; sql</div>
+            <div class="hck ok">&#9679; rest</div>
+            <div class="hck ok">&#9679; opcua</div>
+            <div class="hck ok">&#9679; mqtt</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Current run + pipeline + log -->
+    <div style="display:flex;flex-direction:column;gap:12px">
+
+      <div class="commit-card" id="run-card">
+        <div class="commit-header">
+          <span class="commit-evt">&#11042; Now Testing</span>
+          <span class="commit-hash" id="r-vendor">aspentech</span>
+          <span class="commit-author" id="r-env">env: staging &middot; idle</span>
+        </div>
+        <div class="commit-msg" id="r-label">DEMAICO MES Automated UAT &mdash; nightly run</div>
+        <div class="commit-files" id="r-access"></div>
+      </div>
+
+      <div class="pipeline-wrap">
+        <div class="pipeline-group">
+          <div class="pg-label">Execute &middot; Behave (vendor-neutral scenarios)</div>
+          <div class="stages">
+            <div class="stage" id="stage-connect">
+              <div class="stage-row"><div class="stage-dot"></div><div class="stage-name">connect</div></div>
+              <div class="stage-detail" id="d-connect">&mdash;</div>
+            </div>
+            <div class="stage" id="stage-execute">
+              <div class="stage-row"><div class="stage-dot"></div><div class="stage-name">scenarios</div></div>
+              <div class="stage-detail" id="d-execute">&mdash;</div>
+            </div>
+            <div class="stage" id="stage-baseline">
+              <div class="stage-row"><div class="stage-dot"></div><div class="stage-name">baseline</div></div>
+              <div class="stage-detail" id="d-baseline">&mdash;</div>
+            </div>
+            <div class="stage" id="stage-evidence">
+              <div class="stage-row"><div class="stage-dot"></div><div class="stage-name">evidence</div></div>
+              <div class="stage-detail" id="d-evidence">&mdash;</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pipeline-group">
+          <div class="pg-label">Regression Gate &middot; before production</div>
+          <div class="prod-gate" id="reg-gate">
+            <div class="pg-gate-lbl">Baseline Compare</div>
+            <div class="pg-gate-detail" style="color:var(--muted)">Waiting for run&hellip;</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="log-wrap">
+        <div class="section-title" style="margin-bottom:8px">UAT Log</div>
+        <div class="log-lines" id="log-lines">
+          <div class="line-muted">&nbsp;&nbsp;nightly UAT scheduler armed &mdash; 02:00 UTC</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Run history -->
+  <div class="section-title">Run History</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>Time</th><th>Vendor</th><th>Access</th><th>Scenarios</th>
+        <th>Regressions</th><th>Duration</th><th>Evidence</th><th>Status</th>
+      </tr></thead>
+      <tbody id="history-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<footer>
+  <div>demaico &mdash; MES Automated UAT Dashboard &mdash; Demo Mode</div>
+  <div><a href="https://github.com/CharisKomos/demaico_MES_AutomatedTesting" target="_blank">GitHub Repository</a></div>
+</footer>
+
+<script>
+// Vendor / access matrix — mirrors src/constants.py + adapter routing.
+// mode = "real" connects to a live MES (config + env secrets); "sim" uses the
+// built-in simulator. Out of the box every vendor/access is "sim"; here the
+// flagship AspenTech/Oracle case is shown "real" to illustrate incremental rollout.
+const VENDORS = [
+  { key:'aspentech', label:'AspenTech',  access:['sql'],            mode:'real' },
+  { key:'rockwell',  label:'Rockwell',   access:['rest','sql'],     mode:'sim'  },
+  { key:'siemens',   label:'Siemens',    access:['rest','opcua'],   mode:'sim'  },
+  { key:'emerson',   label:'Emerson',    access:['opcua','sql'],    mode:'sim'  },
+  { key:'aveva',     label:'AVEVA',      access:['sql'],            mode:'sim'  },
+  { key:'ignition',  label:'Ignition',   access:['rest','sql','mqtt'], mode:'sim' },
+];
+
+// The four UAT scenarios and the access type each vendor routes them over.
+const SCENARIOS = [
+  { op:'genealogy',  name:'Batch genealogy & traceability', rows:3,
+    route:{aspentech:'sql',rockwell:'sql',siemens:'rest',emerson:'sql',aveva:'sql',ignition:'sql'} },
+  { op:'recipe',     name:'Recipe steps within tolerance',  rows:3,
+    route:{aspentech:'sql',rockwell:'rest',siemens:'opcua',emerson:'opcua',aveva:'sql',ignition:'mqtt'} },
+  { op:'consumption',name:'Consumption within plan',        rows:3,
+    route:{aspentech:'sql',rockwell:'sql',siemens:'rest',emerson:'sql',aveva:'sql',ignition:'mqtt'} },
+  { op:'oee',        name:'Line OEE meets target',          rows:1,
+    route:{aspentech:'sql',rockwell:'rest',siemens:'opcua',emerson:'opcua',aveva:'sql',ignition:'rest'} },
+];
+
+const REGRESSION_CHANCE = 0.18;
+let cycleScenarios=0, cyclePassed=0, totalRegressions=0, idx=0, running=false;
+
+const $ = id => document.getElementById(id);
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+function accChip(a){ return `<span class="acc ${a}">${a}</span>`; }
+
+// Render vendor matrix
+$('vendor-list').innerHTML = VENDORS.map(v=>`
+  <div class="config-item" id="v-${v.key}">
+    <div class="v-dot" id="vdot-${v.key}"></div>
+    <div class="cfg-info">
+      <div class="cfg-id">${v.label}</div>
+      <div class="cfg-meta">
+        ${v.access.map(accChip).join('')}
+        <span class="mode ${v.mode}">${v.mode}</span>
+      </div>
+    </div>
+  </div>`).join('');
+
+function setStage(id,state,detail){
+  const el=$('stage-'+id); if(!el) return;
+  el.className='stage '+(state||'');
+  if(detail!==undefined){ const d=$('d-'+id); if(d) d.innerHTML=detail; }
+}
+function resetStages(){ ['connect','execute','baseline','evidence'].forEach(s=>setStage(s,'','&mdash;')); }
+
+function addLog(text,cls){
+  const log=$('log-lines');
+  const d=document.createElement('div');
+  d.className=cls||'line-muted'; d.innerHTML=text;
+  log.appendChild(d);
+  while(log.children.length>24) log.removeChild(log.firstChild);
+  log.scrollTop=log.scrollHeight;
+}
+function clearLog(){ $('log-lines').innerHTML=''; }
+
+function setVdot(key,state){ $('vdot-'+key).className='v-dot '+(state||''); }
+
+function newRunId(){
+  const d=new Date(),p=n=>String(n).padStart(2,'0');
+  return `run-${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
+}
+
+function histRow(v,scText,regs,dur,ok,isNew){
+  return `<tr class="${isNew?'new-row':''}">
+    <td class="mono" style="color:var(--muted)">${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</td>
+    <td>${v.label} <span class="mode ${v.mode}" style="margin-left:4px">${v.mode}</span></td>
+    <td>${v.access.map(accChip).join(' ')}</td>
+    <td class="mono" style="color:${ok?'var(--green)':'var(--red)'}">${scText}</td>
+    <td class="mono" style="color:${regs?'var(--red)':'var(--muted)'}">${regs||'—'}</td>
+    <td class="mono" style="color:var(--muted)">${dur}s</td>
+    <td><a class="evidence-link" href="javascript:void 0">${v.key}.html &#8599;</a></td>
+    <td><span class="badge ${ok?'bg':'br'}">${ok?'Pass':'Attention'}</span></td>
+  </tr>`;
+}
+function prependHistory(html){
+  const tb=$('history-body');
+  tb.insertAdjacentHTML('afterbegin',html);
+  while(tb.children.length>10) tb.removeChild(tb.lastChild);
+}
+
+function updatePassStat(){
+  const pct = cycleScenarios ? Math.round((cyclePassed/cycleScenarios)*100) : 100;
+  $('stat-pass').textContent=pct;
+  $('stat-pass-delta').innerHTML=`% &middot; ${cyclePassed}/${cycleScenarios} scenarios`;
+}
+
+async function runVendor(v){
+  VENDORS.forEach(x=>$('v-'+x.key).className='config-item');
+  $('v-'+v.key).className='config-item active';
+  setVdot(v.key,'running');
+
+  $('r-vendor').textContent=v.key;
+  $('r-env').innerHTML=`env: staging &middot; ${v.mode==='real'?'live MES':'simulator'}`;
+  $('r-label').textContent=`${v.label} — vendor-neutral UAT (${v.access.join(' / ')})`;
+  $('r-access').innerHTML=v.access.map(accChip).join('');
+  $('run-card').className='commit-card active';
+
+  resetStages();
+  const gate=$('reg-gate');
+  gate.className='prod-gate';
+  gate.innerHTML='<div class="pg-gate-lbl">Baseline Compare</div><div class="pg-gate-detail" style="color:var(--muted)">Running scenarios&hellip;</div>';
+
+  const t0=Date.now();
+  const primary=v.access[0];
+  addLog(`&#11042; ${v.key}: nightly UAT started &middot; ${v.access.join('/')} &middot; ${v.mode}`,'line-push');
+
+  // connect
+  setStage('connect','running','dialing&hellip;');
+  addLog(`&#9658; connect: ${primary} &rarr; ${v.mode==='real'?'live MES (oracledb/asyncua/&hellip;)':'simulator (SQLite + FastAPI)'}`,'line-ci');
+  await sleep(1300);
+  setStage('connect','passed', v.mode==='real'?'real ✓':'sim ✓');
+  addLog(`&nbsp;&nbsp;✓ connected (${v.mode})`,'line-ok');
+
+  // execute scenarios
+  setStage('execute','running','0/'+SCENARIOS.length);
+  let regressedOp=null;
+  for(let i=0;i<SCENARIOS.length;i++){
+    const sc=SCENARIOS[i];
+    const acc=sc.route[v.key];
+    await sleep(900+Math.random()*500);
+    setStage('execute','running',(i+1)+'/'+SCENARIOS.length);
+    addLog(`&nbsp;&nbsp;[${acc}] ${sc.name} &middot; ${sc.rows} row(s)`,'line-muted');
+  }
+  if(Math.random()<REGRESSION_CHANCE){
+    regressedOp=SCENARIOS[1+Math.floor(Math.random()*3)];
+  }
+  setStage('execute','passed',SCENARIOS.length+'/'+SCENARIOS.length+' ran');
+
+  // baseline compare
+  setStage('baseline','running','comparing&hellip;');
+  addLog('&#9658; baseline: comparing against approved values','line-cd');
+  await sleep(1600);
+  const scPass = regressedOp ? SCENARIOS.length-1 : SCENARIOS.length;
+  cycleScenarios += SCENARIOS.length;
+  cyclePassed += scPass;
+  updatePassStat();
+
+  if(regressedOp){
+    setStage('baseline','failed','drift in '+regressedOp.op);
+    addLog(`&nbsp;&nbsp;&#x2718; REGRESSION: ${regressedOp.op} differs from baseline (${regressedOp.route[v.key]})`,'line-err');
+    totalRegressions++;
+    $('stat-reg').textContent=totalRegressions;
+    $('stat-reg-delta').innerHTML='caught before production';
+  } else {
+    setStage('baseline','passed',SCENARIOS.length+' match');
+    addLog('&nbsp;&nbsp;✓ all operations match the approved baseline','line-ok');
+  }
+
+  // evidence (always written)
+  setStage('evidence','running','rendering&hellip;');
+  addLog('&#9658; evidence: signing UAT evidence pack','line-cd');
+  await sleep(1200);
+  setStage('evidence','passed',v.key+'.html');
+  addLog(`&nbsp;&nbsp;✓ evidence pack out/evidence/${v.key}.html`,'line-ok');
+
+  const dur=((Date.now()-t0)/1000).toFixed(1);
+
+  // gate
+  if(regressedOp){
+    gate.className='prod-gate failed';
+    gate.innerHTML=`<div class="pg-gate-lbl">Baseline Compare</div><div class="pg-gate-chg">${regressedOp.op}</div><div class="pg-gate-detail">drift caught &middot; run fails &middot; production gate held</div><div style="margin-left:auto"><span class="badge br">Regression</span></div>`;
+    addLog(`&#x2718; ${v.key}: run FAILED &mdash; regression gate held the deploy`,'line-err');
+    setVdot(v.key,'attention');
+  } else {
+    gate.className='prod-gate approved';
+    gate.innerHTML=`<div class="pg-gate-lbl">Baseline Compare</div><div class="pg-gate-chg">${SCENARIOS.length}/${SCENARIOS.length} match</div><div class="pg-gate-detail">no drift &middot; safe to promote</div><div style="margin-left:auto"><span class="badge bg">Pass</span></div>`;
+    addLog(`✓ ${v.key}: ${scPass}/${SCENARIOS.length} scenarios passed in ${dur}s`,'line-ok');
+    setVdot(v.key,'pass');
+  }
+
+  prependHistory(histRow(v, `${scPass}/${SCENARIOS.length}`, regressedOp?1:0, dur, !regressedOp, true));
+  $('run-card').className='commit-card';
+}
+
+async function loop(){
+  if(running) return;
+  running=true;
+  while(true){
+    // start of a fresh nightly cycle
+    cycleScenarios=0; cyclePassed=0;
+    updatePassStat();
+    VENDORS.forEach(v=>setVdot(v.key,''));
+    clearLog();
+    addLog(`&#11042; nightly UAT started &mdash; ${VENDORS.length} vendors, env=staging`,'line-push');
+    await sleep(700);
+    for(idx=0; idx<VENDORS.length; idx++){
+      await runVendor(VENDORS[idx]);
+      await sleep(1400);
+    }
+    addLog(`✓ nightly UAT complete &mdash; ${cyclePassed}/${cycleScenarios} scenarios, ${totalRegressions} regression(s) caught to date`,'line-ok');
+    await sleep(6000);
+  }
+}
+
+setTimeout(loop, 1200);
+</script>
+</body>
+</html>
