@@ -6,120 +6,194 @@
   <style>
   @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&display=swap');
   :root{
-    --bg:#0b0b0b;--surface:#111111;--card:#161616;--card-hover:#1c1c1c;
+    --bg:#0b0b0b;--surface:#111111;--card:#161616;--card2:#1a1a1a;
     --accent:#e8890c;--accent-dim:#a05f06;--accent-glow:rgba(232,137,12,0.10);
     --text:#f0ece4;--muted:#888070;--faint:#2a2520;
     --border:rgba(232,137,12,0.14);--border-strong:rgba(232,137,12,0.32);
-    --green:#2EB67D;--red:#E01E5A;--yellow:#ECB22E;--blue:#4a9eff;
+    --green:#2EB67D;--red:#E01E5A;--yellow:#ECB22E;--blue:#4a9eff;--purple:#9b59b6;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+  body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
 
-  /* ── Header ── */
-  header{background:var(--surface);border-bottom:1px solid var(--border-strong);padding:14px 32px;display:flex;align-items:center;gap:14px}
-  .wordmark{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:3px;color:var(--text)}
+  /* Header */
+  header{background:var(--surface);border-bottom:1px solid var(--border-strong);padding:12px 24px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+  .wordmark{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:3px}
   .wordmark .o{color:var(--accent)}
-  .header-divider{width:1px;height:28px;background:var(--border-strong);margin:0 4px}
-  .header-text h1{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:2px}
-  .header-text .sub{color:var(--muted);font-size:.72rem;margin-top:2px;font-family:'IBM Plex Mono',monospace}
-  .header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .hdiv{width:1px;height:26px;background:var(--border-strong);margin:0 2px}
+  .htitle h1{font-family:'Barlow Condensed',sans-serif;font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:2px}
+  .htitle .sub{color:var(--muted);font-size:.68rem;margin-top:2px;font-family:'IBM Plex Mono',monospace}
+  .hright{margin-left:auto;display:flex;align-items:center;gap:10px}
   .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
-  .live-label{color:var(--green);font-size:.72rem;font-weight:700;letter-spacing:.12em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
-  .demo-badge{background:var(--accent-glow);color:var(--accent);border:1px solid var(--border-strong);border-radius:2px;padding:3px 10px;font-size:.68rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:3px;text-transform:uppercase}
+  .live-label{color:var(--green);font-size:.68rem;font-weight:700;letter-spacing:.12em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+  .demo-badge{background:var(--accent-glow);color:var(--accent);border:1px solid var(--border-strong);border-radius:2px;padding:3px 10px;font-size:.65rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:3px;text-transform:uppercase}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
 
-  /* ── Layout ── */
-  .container{max-width:1600px;margin:0 auto;padding:28px 32px}
+  /* App shell */
+  .app{display:flex;flex:1;overflow:hidden;height:calc(100vh - 53px)}
 
-  /* ── Stats ── */
-  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:32px}
-  .stat-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:20px 22px;position:relative;overflow:hidden}
+  /* Sidebar nav */
+  nav.sidebar{width:64px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:4px;flex-shrink:0}
+  .nav-item{width:48px;padding:10px 0;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;border-radius:3px;border:1px solid transparent;transition:all .15s;user-select:none}
+  .nav-item:hover{background:var(--card)}
+  .nav-item.active{background:var(--accent-glow);border-color:var(--border-strong)}
+  .nav-icon{font-size:1.1rem}
+  .nav-label{font-family:'Barlow Condensed',sans-serif;font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+  .nav-item.active .nav-label{color:var(--accent)}
+
+  /* Main scroll area */
+  .main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+
+  /* Views */
+  .view{padding:24px 28px;flex:1}
+  .view.hidden{display:none}
+
+  /* Stats */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+  .stat-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:18px 20px;position:relative;overflow:hidden}
   .stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-  .stat-card.s-accent::after{background:var(--accent)}
-  .stat-card.s-green::after{background:var(--green)}
-  .stat-card.s-red::after{background:var(--red)}
-  .stat-card.s-yellow::after{background:var(--yellow)}
-  .stat-card.s-blue::after{background:var(--blue)}
-  .stat-card .label{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px}
-  .stat-card .value{font-family:'Bebas Neue',sans-serif;font-size:3.2rem;line-height:1}
-  .stat-card.s-accent .value{color:var(--accent)}
-  .stat-card.s-green .value{color:var(--green)}
-  .stat-card.s-red .value{color:var(--red)}
-  .stat-card.s-yellow .value{color:var(--yellow)}
-  .stat-card.s-blue .value{color:var(--blue)}
-  .stat-card .delta{font-size:.7rem;color:var(--muted);margin-top:6px;font-family:'IBM Plex Mono',monospace}
+  .s-accent::after{background:var(--accent)} .s-green::after{background:var(--green)}
+  .s-red::after{background:var(--red)} .s-yellow::after{background:var(--yellow)}
+  .s-blue::after{background:var(--blue)}
+  .stat-card .label{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px}
+  .stat-card .value{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;line-height:1}
+  .s-accent .value{color:var(--accent)} .s-green .value{color:var(--green)}
+  .s-red .value{color:var(--red)} .s-yellow .value{color:var(--yellow)} .s-blue .value{color:var(--blue)}
+  .stat-card .delta{font-size:.68rem;color:var(--muted);margin-top:5px;font-family:'IBM Plex Mono',monospace}
 
-  /* ── Pipeline diagram ── */
-  .pipeline{display:flex;align-items:center;gap:0;margin-bottom:32px;background:var(--card);border:1px solid var(--border);border-radius:3px;padding:18px 24px;overflow-x:auto}
-  .pipe-stage{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;min-width:100px}
-  .pipe-icon{width:44px;height:44px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;border:1px solid var(--border)}
-  .pipe-icon.active{border-color:var(--accent);background:var(--accent-glow);box-shadow:0 0 12px var(--accent-glow)}
+  /* Pipeline */
+  .pipeline{display:flex;align-items:center;margin-bottom:20px;background:var(--card);border:1px solid var(--border);border-radius:3px;padding:16px 20px;overflow-x:auto}
+  .pipe-stage{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;min-width:90px}
+  .pipe-icon{width:40px;height:40px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:1rem;border:1px solid var(--border);transition:all .3s}
+  .pipe-icon.active{border-color:var(--accent);background:var(--accent-glow);box-shadow:0 0 10px var(--accent-glow)}
   .pipe-icon.done{border-color:rgba(46,182,125,.3);background:rgba(46,182,125,.06)}
-  .pipe-label{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);text-align:center;line-height:1.2}
-  .pipe-sub{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--accent);text-align:center}
-  .pipe-arrow{color:var(--muted);font-size:.9rem;padding:0 4px;padding-bottom:20px;flex-shrink:0}
+  .pipe-label{font-family:'Barlow Condensed',sans-serif;font-size:.63rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:center;line-height:1.2}
+  .pipe-sub{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--accent);text-align:center}
+  .pipe-arrow{color:var(--muted);font-size:.9rem;padding:0 4px;padding-bottom:18px;flex-shrink:0}
 
-  /* ── Two-column layout ── */
-  .two-col{display:grid;grid-template-columns:1fr 380px;gap:20px;margin-bottom:32px}
-  @media(max-width:1100px){.two-col{grid-template-columns:1fr}}
+  /* Source pills */
+  .source-strip{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+  .source-pill{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:5px 12px;display:flex;align-items:center;gap:7px}
+  .sp-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+  .sp-label{font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+  .sp-count{font-family:'IBM Plex Mono',monospace;font-size:.63rem;color:var(--muted)}
 
-  /* ── Section title ── */
-  .section-title{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);font-weight:700;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+  /* Section title */
+  .section-title{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);font-weight:700;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border)}
 
-  /* ── Table ── */
-  .table-wrap{border:1px solid var(--border);border-radius:3px;overflow:hidden;overflow-x:auto}
-  table{width:100%;border-collapse:collapse;font-size:.875rem}
+  /* Tables */
+  .table-wrap{border:1px solid var(--border);border-radius:3px;overflow:hidden;overflow-x:auto;margin-bottom:20px}
+  table{width:100%;border-collapse:collapse;font-size:.85rem}
   thead{background:var(--surface)}
-  thead th{padding:10px 16px;text-align:left;color:var(--muted);font-weight:700;font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;border-bottom:1px solid var(--border);white-space:nowrap;font-family:'Barlow Condensed',sans-serif}
-  tbody tr{border-bottom:1px solid var(--border);transition:background .12s}
+  thead th{padding:9px 14px;text-align:left;color:var(--muted);font-weight:700;font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;border-bottom:1px solid var(--border);white-space:nowrap;font-family:'Barlow Condensed',sans-serif}
+  tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
   tbody tr:last-child{border-bottom:none}
   tbody tr:hover{background:rgba(232,137,12,.04)}
-  tbody td{padding:9px 16px;vertical-align:middle}
-  .mono{font-family:'IBM Plex Mono',monospace;font-size:.78rem}
+  tbody tr.clickable{cursor:pointer}
+  tbody tr.selected{background:rgba(232,137,12,.07)!important}
+  tbody td{padding:8px 14px;vertical-align:middle}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:.76rem}
 
-  /* ── Badges / pills ── */
-  .badge{display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-weight:700;letter-spacing:.08em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
-  .badge-approved  {background:rgba(46,182,125,.1); color:var(--green); border:1px solid rgba(46,182,125,.22)}
-  .badge-assembled {background:rgba(74,158,255,.08);color:var(--blue);  border:1px solid rgba(74,158,255,.22)}
-  .badge-review    {background:rgba(236,178,46,.1); color:var(--yellow);border:1px solid rgba(236,178,46,.22)}
-  .badge-rejected  {background:rgba(224,30,90,.1);  color:var(--red);   border:1px solid rgba(224,30,90,.22)}
-  .badge-collecting{background:var(--accent-glow);  color:var(--accent);border:1px solid var(--border-strong)}
+  /* Badges */
+  .badge{display:inline-block;padding:2px 8px;border-radius:2px;font-size:.62rem;font-weight:700;letter-spacing:.08em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+  .b-approved{background:rgba(46,182,125,.1);color:var(--green);border:1px solid rgba(46,182,125,.22)}
+  .b-assembled{background:rgba(74,158,255,.08);color:var(--blue);border:1px solid rgba(74,158,255,.22)}
+  .b-review{background:rgba(236,178,46,.1);color:var(--yellow);border:1px solid rgba(236,178,46,.22)}
+  .b-rejected{background:rgba(224,30,90,.1);color:var(--red);border:1px solid rgba(224,30,90,.22)}
+  .b-collecting{background:var(--accent-glow);color:var(--accent);border:1px solid var(--border-strong)}
+  .sev-critical{display:inline-block;padding:2px 8px;border-radius:2px;font-size:.62rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.08em;background:rgba(224,30,90,.1);color:var(--red);border:1px solid rgba(224,30,90,.22)}
+  .sev-major{display:inline-block;padding:2px 8px;border-radius:2px;font-size:.62rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.08em;background:rgba(236,178,46,.1);color:var(--yellow);border:1px solid rgba(236,178,46,.22)}
+  .sev-minor{display:inline-block;padding:2px 8px;border-radius:2px;font-size:.62rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.08em;background:rgba(232,137,12,.08);color:var(--accent);border:1px solid var(--border-strong)}
+  .stat-open{color:var(--red);font-size:.7rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase}
+  .stat-review{color:var(--yellow);font-size:.7rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase}
+  .stat-signoff{color:var(--purple);font-size:.7rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase}
+  .stat-closed{color:var(--green);font-size:.7rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase}
 
-  .sev-critical{background:rgba(224,30,90,.1); color:var(--red);   border:1px solid rgba(224,30,90,.22);display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.08em}
-  .sev-major   {background:rgba(236,178,46,.1);color:var(--yellow);border:1px solid rgba(236,178,46,.22);display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.08em}
-  .sev-minor   {background:rgba(232,137,12,.08);color:var(--accent);border:1px solid var(--border-strong);display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.08em}
+  /* Batch detail panel (right drawer) */
+  .detail-panel{width:0;overflow:hidden;background:var(--surface);border-left:1px solid var(--border);transition:width .2s ease;display:flex;flex-direction:column;flex-shrink:0}
+  .detail-panel.open{width:560px}
+  .detail-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:12px;flex-shrink:0}
+  .detail-close{background:none;border:1px solid var(--border);color:var(--muted);border-radius:2px;padding:4px 10px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;transition:all .15s;flex-shrink:0}
+  .detail-close:hover{border-color:var(--border-strong);color:var(--text)}
+  .detail-title{font-family:'Barlow Condensed',sans-serif;font-size:1.05rem;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+  .detail-sub{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--muted);margin-top:3px}
 
-  /* ── Deviation sidebar ── */
-  .dev-card{background:var(--card);border:1px solid var(--border);border-radius:3px;margin-bottom:8px;padding:12px 14px;transition:border-color .15s}
-  .dev-card:hover{border-color:var(--border-strong)}
-  .dev-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
-  .dev-param{font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--text)}
-  .dev-desc{font-size:.78rem;color:var(--muted);line-height:1.4;margin-bottom:6px}
-  .dev-footer{display:flex;align-items:center;justify-content:space-between}
-  .dev-batch{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted)}
-  .dev-status{font-size:.65rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
-  .dev-status.open{color:var(--red)}
-  .dev-status.review{color:var(--yellow)}
+  /* Tabs */
+  .tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto}
+  .tab-btn{padding:10px 16px;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s}
+  .tab-btn:hover{color:var(--text)}
+  .tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+  .tab-content{flex:1;overflow-y:auto;padding:16px 20px}
+  .tab-pane{display:none}
+  .tab-pane.active{display:block}
 
-  /* ── Source pills ── */
-  .source-strip{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
-  .source-pill{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:6px 14px;display:flex;align-items:center;gap:8px}
-  .source-pill .sp-dot{width:6px;height:6px;border-radius:50%}
-  .source-pill .sp-label{font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
-  .source-pill .sp-count{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted)}
+  /* Overview grid */
+  .ov-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+  .ov-field{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:12px 14px}
+  .ov-label{font-family:'Barlow Condensed',sans-serif;font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:5px}
+  .ov-value{font-family:'IBM Plex Mono',monospace;font-size:.82rem}
 
-  /* ── New-row flash ── */
+  /* Steps timeline */
+  .step-row{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+  .step-num{width:24px;height:24px;border-radius:50%;background:rgba(46,182,125,.1);border:1px solid rgba(46,182,125,.3);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:.8rem;color:var(--green);flex-shrink:0;margin-top:1px}
+  .step-body{flex:1}
+  .step-name{font-weight:600;font-size:.83rem;margin-bottom:2px}
+  .step-meta{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted)}
+
+  /* Deviation workflow inline */
+  .dev-workflow{background:var(--card2);border:1px solid var(--border);border-radius:3px;padding:12px 14px;margin-top:8px}
+  .dev-workflow-title{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:10px}
+  .workflow-field{margin-bottom:10px}
+  .workflow-label{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px}
+  .workflow-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:2px;color:var(--text);font-family:'Barlow',sans-serif;font-size:.82rem;padding:7px 10px;outline:none;resize:vertical;transition:border-color .15s}
+  .workflow-input:focus{border-color:var(--border-strong)}
+  .workflow-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .btn{padding:6px 14px;border-radius:2px;font-family:'Barlow Condensed',sans-serif;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;cursor:pointer;border:1px solid;transition:all .15s}
+  .btn-primary{background:var(--accent-glow);color:var(--accent);border-color:var(--border-strong)}
+  .btn-primary:hover{background:rgba(232,137,12,.18)}
+  .btn-signoff{background:rgba(155,89,182,.1);color:var(--purple);border-color:rgba(155,89,182,.3)}
+  .btn-signoff:hover{background:rgba(155,89,182,.18)}
+  .btn-close-dev{background:rgba(46,182,125,.08);color:var(--green);border-color:rgba(46,182,125,.25)}
+  .btn-close-dev:hover{background:rgba(46,182,125,.16)}
+  .btn-ghost{background:none;color:var(--muted);border-color:var(--border)}
+  .btn-ghost:hover{color:var(--text);border-color:var(--border-strong)}
+  .comment-history{margin-top:10px}
+  .comment-entry{background:var(--bg);border:1px solid var(--border);border-radius:2px;padding:8px 10px;margin-bottom:6px}
+  .comment-meta{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted);margin-bottom:4px}
+  .comment-text{font-size:.8rem}
+
+  /* Deviations view filters */
+  .filter-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+  .filter-label{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+  .filter-chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{padding:4px 12px;border-radius:2px;font-family:'Barlow Condensed',sans-serif;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;border:1px solid var(--border);color:var(--muted);background:var(--card);transition:all .15s}
+  .chip:hover{border-color:var(--border-strong);color:var(--text)}
+  .chip.active{border-color:var(--border-strong);color:var(--accent);background:var(--accent-glow)}
+
+  /* Audit trail */
+  .audit-row{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--border)}
+  .audit-row:last-child{border-bottom:none}
+  .audit-ts{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);flex-shrink:0;width:100px}
+  .audit-actor{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--accent);flex-shrink:0;width:90px}
+  .audit-action{font-size:.78rem}
+
+  /* PDF link */
+  .pdf-link{display:inline-flex;align-items:center;gap:5px;color:var(--accent);font-family:'IBM Plex Mono',monospace;font-size:.72rem;cursor:pointer;text-decoration:none}
+  .pdf-link:hover{text-decoration:underline}
+
+  /* New row flash */
   .new-row{animation:newrow .9s ease}
   @keyframes newrow{from{background:rgba(232,137,12,.12)}to{background:transparent}}
 
-  /* ── Progress bar ── */
-  .progress-bar{height:2px;background:var(--faint);border-radius:1px;overflow:hidden;margin-top:6px}
-  .progress-fill{height:100%;background:var(--accent);border-radius:1px;transition:width 1s linear}
+  /* OOS highlight */
+  .oos{color:var(--red)!important}
 
-  /* ── Footer ── */
-  footer{margin-top:40px;padding:18px 32px;border-top:1px solid var(--border);color:var(--muted);font-size:.72rem;display:flex;justify-content:space-between;align-items:center;font-family:'IBM Plex Mono',monospace}
-  .footer-links a{color:var(--accent);text-decoration:none}
-  .footer-links a:hover{text-decoration:underline}
+  /* Divider */
+  .divider{height:1px;background:var(--border);margin:14px 0}
+
+  /* Footer */
+  footer{padding:14px 24px;border-top:1px solid var(--border);color:var(--muted);font-size:.68rem;display:flex;justify-content:space-between;align-items:center;font-family:'IBM Plex Mono',monospace;flex-shrink:0}
+  footer a{color:var(--accent);text-decoration:none}
+  footer a:hover{text-decoration:underline}
   ::-webkit-scrollbar{width:4px;height:4px}
   ::-webkit-scrollbar-track{background:var(--bg)}
   ::-webkit-scrollbar-thumb{background:var(--faint);border-radius:2px}
@@ -129,103 +203,81 @@
 
 <header>
   <div class="wordmark">DEMAIC<span class="o">O</span></div>
-  <div class="header-divider"></div>
-  <div class="header-text">
+  <div class="hdiv"></div>
+  <div class="htitle">
     <h1>Automated Batch Records</h1>
     <div class="sub">RabbitMQ trigger &rarr; concurrent collection &rarr; deviation workflow &rarr; eBR + PDF &middot; 21 CFR Part 11 &middot; EU GMP Annex 11</div>
   </div>
-  <div class="header-right">
+  <div class="hright">
     <span class="demo-badge">Demo</span>
     <div class="live-dot"></div>
     <span class="live-label">Live</span>
   </div>
 </header>
 
-<div class="container">
+<div class="app">
 
-  <!-- Stats -->
-  <div class="stats">
-    <div class="stat-card s-accent"><div class="label">Batches Assembled</div><div class="value" id="s-batches">0</div><div class="delta">since shift start</div></div>
-    <div class="stat-card s-red"><div class="label">Deviations Flagged</div><div class="value" id="s-devs">0</div><div class="delta" id="s-devs-sub">today</div></div>
-    <div class="stat-card s-yellow"><div class="label">Open Deviations</div><div class="value" id="s-open">0</div><div class="delta">awaiting review</div></div>
-    <div class="stat-card s-green"><div class="label">Avg Assembly Time</div><div class="value" id="s-time">0</div><div class="delta">seconds per batch</div></div>
-    <div class="stat-card s-blue"><div class="label">LIMS Results Pulled</div><div class="value" id="s-lims">0</div><div class="delta">this shift</div></div>
-  </div>
+  <!-- Sidebar nav -->
+  <nav class="sidebar">
+    <div class="nav-item active" id="nav-batches" onclick="switchView('batches')">
+      <div class="nav-icon">&#x1f4cb;</div>
+      <div class="nav-label">Batches</div>
+    </div>
+    <div class="nav-item" id="nav-deviations" onclick="switchView('deviations')">
+      <div class="nav-icon">&#x26a0;&#xfe0f;</div>
+      <div class="nav-label">Deviations</div>
+    </div>
+  </nav>
 
-  <!-- Pipeline stages -->
-  <div class="section-title">Collection Pipeline &mdash; Last Batch</div>
-  <div class="pipeline" id="pipeline">
-    <div class="pipe-stage">
-      <div class="pipe-icon done" id="p0">&#x1f4e8;</div>
-      <div class="pipe-label">RabbitMQ<br>Trigger</div>
-      <div class="pipe-sub" id="p0-sub">batch.closed</div>
-    </div>
-    <div class="pipe-arrow">&rsaquo;</div>
-    <div class="pipe-stage">
-      <div class="pipe-icon" id="p1">&#x1f3ed;</div>
-      <div class="pipe-label">MES<br>Collector</div>
-      <div class="pipe-sub" id="p1-sub">&mdash;</div>
-    </div>
-    <div class="pipe-arrow">&rsaquo;</div>
-    <div class="pipe-stage">
-      <div class="pipe-icon" id="p2">&#x1f4c8;</div>
-      <div class="pipe-label">Historian<br>Collector</div>
-      <div class="pipe-sub" id="p2-sub">&mdash;</div>
-    </div>
-    <div class="pipe-arrow">&rsaquo;</div>
-    <div class="pipe-stage">
-      <div class="pipe-icon" id="p3">&#x1f9ea;</div>
-      <div class="pipe-label">LIMS<br>Collector</div>
-      <div class="pipe-sub" id="p3-sub">&mdash;</div>
-    </div>
-    <div class="pipe-arrow">&rsaquo;</div>
-    <div class="pipe-stage">
-      <div class="pipe-icon" id="p4">&#x1f9e9;</div>
-      <div class="pipe-label">Record<br>Assembly</div>
-      <div class="pipe-sub" id="p4-sub">&mdash;</div>
-    </div>
-    <div class="pipe-arrow">&rsaquo;</div>
-    <div class="pipe-stage">
-      <div class="pipe-icon" id="p5">&#x26a0;&#xfe0f;</div>
-      <div class="pipe-label">Deviation<br>Detection</div>
-      <div class="pipe-sub" id="p5-sub">&mdash;</div>
-    </div>
-    <div class="pipe-arrow">&rsaquo;</div>
-    <div class="pipe-stage">
-      <div class="pipe-icon" id="p6">&#x1f4c4;</div>
-      <div class="pipe-label">PDF<br>Report</div>
-      <div class="pipe-sub" id="p6-sub">&mdash;</div>
-    </div>
-    <div class="pipe-arrow">&rsaquo;</div>
-    <div class="pipe-stage">
-      <div class="pipe-icon" id="p7">&#x1f5c4;&#xfe0f;</div>
-      <div class="pipe-label">PostgreSQL<br>Persist</div>
-      <div class="pipe-sub" id="p7-sub">&mdash;</div>
-    </div>
-  </div>
+  <!-- Main content -->
+  <div class="main">
 
-  <!-- Source pills -->
-  <div class="source-strip">
-    <div class="source-pill"><div class="sp-dot" style="background:var(--accent)"></div><div class="sp-label">MES</div><div class="sp-count" id="src-mes">AspenTech APRM</div></div>
-    <div class="source-pill"><div class="sp-dot" style="background:var(--blue)"></div><div class="sp-label">Historian</div><div class="sp-count" id="src-hist">OSIsoft PI Web API</div></div>
-    <div class="source-pill"><div class="sp-dot" style="background:var(--green)"></div><div class="sp-label">LIMS</div><div class="sp-count" id="src-lims">STARLIMS</div></div>
-    <div class="source-pill"><div class="sp-dot" style="background:var(--yellow)"></div><div class="sp-label">Broker</div><div class="sp-count">RabbitMQ 3.13</div></div>
-    <div class="source-pill"><div class="sp-dot" style="background:var(--muted)"></div><div class="sp-label">DB</div><div class="sp-count">PostgreSQL 16</div></div>
-  </div>
+    <!-- ── BATCHES VIEW ── -->
+    <div class="view" id="view-batches">
 
-  <!-- Main two-column area -->
-  <div class="two-col">
+      <div class="stats">
+        <div class="stat-card s-accent"><div class="label">Batches Assembled</div><div class="value" id="s-batches">0</div><div class="delta">since shift start</div></div>
+        <div class="stat-card s-red"><div class="label">Deviations Flagged</div><div class="value" id="s-devs">0</div><div class="delta">this shift</div></div>
+        <div class="stat-card s-yellow"><div class="label">Open Deviations</div><div class="value" id="s-open">0</div><div class="delta">awaiting review</div></div>
+        <div class="stat-card s-green"><div class="label">Avg Assembly Time</div><div class="value" id="s-time">—</div><div class="delta">seconds per batch</div></div>
+        <div class="stat-card s-blue"><div class="label">LIMS Results Pulled</div><div class="value" id="s-lims">0</div><div class="delta">this shift</div></div>
+      </div>
 
-    <!-- Left: batch table -->
-    <div>
-      <div class="section-title">Batch Record Log</div>
+      <div class="section-title">Collection Pipeline &mdash; Last Batch</div>
+      <div class="pipeline" id="pipeline">
+        <div class="pipe-stage"><div class="pipe-icon done" id="p0">&#x1f4e8;</div><div class="pipe-label">RabbitMQ<br>Trigger</div><div class="pipe-sub" id="p0-sub">batch.closed</div></div>
+        <div class="pipe-arrow">&rsaquo;</div>
+        <div class="pipe-stage"><div class="pipe-icon" id="p1">&#x1f3ed;</div><div class="pipe-label">MES<br>Collector</div><div class="pipe-sub" id="p1-sub">&mdash;</div></div>
+        <div class="pipe-arrow">&rsaquo;</div>
+        <div class="pipe-stage"><div class="pipe-icon" id="p2">&#x1f4c8;</div><div class="pipe-label">Historian<br>Collector</div><div class="pipe-sub" id="p2-sub">&mdash;</div></div>
+        <div class="pipe-arrow">&rsaquo;</div>
+        <div class="pipe-stage"><div class="pipe-icon" id="p3">&#x1f9ea;</div><div class="pipe-label">LIMS<br>Collector</div><div class="pipe-sub" id="p3-sub">&mdash;</div></div>
+        <div class="pipe-arrow">&rsaquo;</div>
+        <div class="pipe-stage"><div class="pipe-icon" id="p4">&#x1f9e9;</div><div class="pipe-label">Record<br>Assembly</div><div class="pipe-sub" id="p4-sub">&mdash;</div></div>
+        <div class="pipe-arrow">&rsaquo;</div>
+        <div class="pipe-stage"><div class="pipe-icon" id="p5">&#x26a0;&#xfe0f;</div><div class="pipe-label">Deviation<br>Detection</div><div class="pipe-sub" id="p5-sub">&mdash;</div></div>
+        <div class="pipe-arrow">&rsaquo;</div>
+        <div class="pipe-stage"><div class="pipe-icon" id="p6">&#x1f4c4;</div><div class="pipe-label">PDF<br>Report</div><div class="pipe-sub" id="p6-sub">&mdash;</div></div>
+        <div class="pipe-arrow">&rsaquo;</div>
+        <div class="pipe-stage"><div class="pipe-icon" id="p7">&#x1f5c4;&#xfe0f;</div><div class="pipe-label">PostgreSQL<br>Persist</div><div class="pipe-sub" id="p7-sub">&mdash;</div></div>
+      </div>
+
+      <div class="source-strip">
+        <div class="source-pill"><div class="sp-dot" style="background:var(--accent)"></div><div class="sp-label">MES</div><div class="sp-count" id="src-mes">AspenTech APRM</div></div>
+        <div class="source-pill"><div class="sp-dot" style="background:var(--blue)"></div><div class="sp-label">Historian</div><div class="sp-count" id="src-hist">OSIsoft PI Web API</div></div>
+        <div class="source-pill"><div class="sp-dot" style="background:var(--green)"></div><div class="sp-label">LIMS</div><div class="sp-count" id="src-lims">STARLIMS</div></div>
+        <div class="source-pill"><div class="sp-dot" style="background:var(--yellow)"></div><div class="sp-label">Broker</div><div class="sp-count">RabbitMQ 3.13</div></div>
+        <div class="source-pill"><div class="sp-dot" style="background:var(--muted)"></div><div class="sp-label">DB</div><div class="sp-count">PostgreSQL 16</div></div>
+      </div>
+
+      <div class="section-title">Batch Record Log <span style="color:var(--muted);font-size:.6rem;font-weight:400;text-transform:none;letter-spacing:0">&mdash; click a row to inspect</span></div>
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
               <th>Batch ID</th><th>Product</th><th>Batch End</th>
-              <th>Assembly</th><th>MES Steps</th><th>Hist. Readings</th>
-              <th>LIMS Results</th><th>Deviations</th><th>Status</th><th>PDF</th>
+              <th>Assembly</th><th>MES Steps</th><th>Readings</th>
+              <th>LIMS</th><th>Deviations</th><th>Status</th><th>PDF</th>
             </tr>
           </thead>
           <tbody id="batch-body"></tbody>
@@ -233,275 +285,606 @@
       </div>
     </div>
 
-    <!-- Right: open deviations -->
-    <div>
-      <div class="section-title">Open Deviations</div>
-      <div id="dev-list"></div>
+    <!-- ── DEVIATIONS VIEW ── -->
+    <div class="view hidden" id="view-deviations">
+      <div style="margin-bottom:18px">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:1.1rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Deviation Management</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--muted)">Cross-batch · operator comment &rarr; corrective action &rarr; supervisor sign-off</div>
+      </div>
+
+      <div class="filter-bar">
+        <div class="filter-label">Severity</div>
+        <div class="filter-chips" id="sev-chips">
+          <div class="chip active" data-sev="all">All</div>
+          <div class="chip" data-sev="critical">Critical</div>
+          <div class="chip" data-sev="major">Major</div>
+          <div class="chip" data-sev="minor">Minor</div>
+        </div>
+        <div class="filter-label" style="margin-left:12px">Status</div>
+        <div class="filter-chips" id="stat-chips">
+          <div class="chip active" data-stat="all">All</div>
+          <div class="chip" data-stat="open">Open</div>
+          <div class="chip" data-stat="under_review">Under Review</div>
+          <div class="chip" data-stat="awaiting_signoff">Awaiting Sign-off</div>
+          <div class="chip" data-stat="closed">Closed</div>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Severity</th><th>ID</th><th>Batch</th><th>Parameter</th><th>Actual</th><th>Limit</th><th>Source</th><th>Status</th><th>Action</th></tr>
+          </thead>
+          <tbody id="dev-table-body"></tbody>
+        </table>
+      </div>
+
+      <!-- Inline deviation workflow panel -->
+      <div id="dev-workflow-panel" style="display:none;margin-top:4px">
+        <div class="dev-workflow">
+          <div class="dev-workflow-title" id="dwp-title">Deviation Workflow</div>
+          <div id="dwp-history"></div>
+          <div id="dwp-form"></div>
+        </div>
+      </div>
     </div>
 
-  </div>
+  </div><!-- /.main -->
 
-  <!-- Deviation detail table -->
-  <div class="section-title">Deviation Detail &mdash; Last 20</div>
-  <div class="table-wrap" style="margin-bottom:0">
-    <table>
-      <thead>
-        <tr><th>Severity</th><th>Batch ID</th><th>Type</th><th>Parameter</th><th>Actual</th><th>Limit</th><th>Unit</th><th>Source</th><th>Status</th></tr>
-      </thead>
-      <tbody id="dev-body"></tbody>
-    </table>
-  </div>
+  <!-- ── BATCH DETAIL PANEL ── -->
+  <aside class="detail-panel" id="detail-panel">
+    <div class="detail-header">
+      <div style="flex:1">
+        <div class="detail-title" id="dp-title">—</div>
+        <div class="detail-sub" id="dp-sub">—</div>
+      </div>
+      <a class="pdf-link" id="dp-pdf" href="#" onclick="return false">&#x2B07; Download PDF</a>
+      <button class="detail-close" onclick="closeDetail()">&#x2715; Close</button>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('overview')">Overview</button>
+      <button class="tab-btn" onclick="switchTab('steps')">Steps</button>
+      <button class="tab-btn" onclick="switchTab('params')">Parameters</button>
+      <button class="tab-btn" onclick="switchTab('lims')">LIMS</button>
+      <button class="tab-btn" onclick="switchTab('deviations')">Deviations</button>
+      <button class="tab-btn" onclick="switchTab('audit')">Audit Trail</button>
+    </div>
+    <div class="tab-content">
+      <div class="tab-pane active" id="tab-overview"></div>
+      <div class="tab-pane" id="tab-steps"></div>
+      <div class="tab-pane" id="tab-params"></div>
+      <div class="tab-pane" id="tab-lims"></div>
+      <div class="tab-pane" id="tab-deviations"></div>
+      <div class="tab-pane" id="tab-audit"></div>
+    </div>
+  </aside>
 
-</div>
+</div><!-- /.app -->
 
 <footer>
-  <div>demaico &mdash; Automated Batch Records Dashboard &mdash; Demo Mode</div>
-  <div class="footer-links"><a href="https://github.com/CharisKomos/demaico_AutomatedBatchRecords" target="_blank">GitHub Repository</a></div>
+  <div>demaico &mdash; Automated Batch Records &mdash; Demo Mode</div>
+  <div><a href="https://github.com/CharisKomos/demaico_AutomatedBatchRecords" target="_blank">GitHub Repository</a></div>
 </footer>
 
 <script>
-// ── Static seed data ───────────────────────────────────────────────────────────
+// ─── Static data ──────────────────────────────────────────────────────────────
 const PRODUCTS=[
-  {code:"API-X45",name:"Compound X45"},
-  {code:"API-R12",name:"Riluzole API"},
-  {code:"API-S80",name:"Simvastatin"},
-  {code:"API-M33",name:"Metformin HCl"},
-  {code:"API-L07",name:"Losartan K"},
+  {code:'API-X45',name:'Compound X45',steps:['Charge','Mix','Heat','React','Cool','Filter','Dry','Sample']},
+  {code:'API-R12',name:'Riluzole API', steps:['Charge','Dissolve','React','Quench','Extract','Wash','Concentrate','Crystallise','Dry']},
+  {code:'API-S80',name:'Simvastatin', steps:['Charge','Reflux','React','Cool','Filter','Wash','Dry','Mill']},
+  {code:'API-M33',name:'Metformin HCl',steps:['Charge','Mix','Granulate','Dry','Blend','Compress','Coat']},
+  {code:'API-L07',name:'Losartan K',  steps:['Charge','React','Neutralise','Extract','Crystallise','Filter','Dry']},
 ];
-const MES_V  =["AspenTech APRM","Rockwell PharmaSuite","Siemens Opcenter","AVEVA MES","Ignition Sepasoft"];
-const HIST_V =["OSIsoft PI Web API","AspenTech IP.21","Honeywell PHD","AVEVA Historian","InfluxDB 2.x"];
-const LIMS_V =["STARLIMS","LabVantage 8","SampleManager 12","Generic REST"];
-const PARAMS =[
-  {tag:"T_REACTOR_01",name:"Reactor Temperature",unit:"°C",lo:65,hi:75},
-  {tag:"P_VESSEL_02", name:"Vessel Pressure",    unit:"bar",lo:1.8,hi:2.5},
-  {tag:"PH_TANK_03",  name:"pH Value",           unit:"pH", lo:6.8,hi:7.4},
-  {tag:"F_FEED_04",   name:"Feed Flow Rate",     unit:"L/h",lo:45,hi:55},
-  {tag:"T_JACKET_05", name:"Jacket Temperature", unit:"°C", lo:20,hi:28},
-  {tag:"ASSAY_01",    name:"Potency Assay",      unit:"%",  lo:98,hi:102},
-  {tag:"RS_01",       name:"Related Substances", unit:"%",  lo:0, hi:0.5},
-  {tag:"MICRO_01",    name:"Microbial Count",    unit:"CFU/mL",lo:0,hi:10},
-  {tag:"MOISTURE_01", name:"Moisture Content",   unit:"%",  lo:0.1,hi:0.5},
+const OPERATORS=['J.Martinez','T.Kovacs','A.Patel','S.Nguyen','E.Fischer','R.Chen'];
+const MES_V  =['AspenTech APRM','Rockwell PharmaSuite','Siemens Opcenter','AVEVA MES','Ignition Sepasoft'];
+const HIST_V =['OSIsoft PI Web API','AspenTech IP.21','Honeywell PHD','AVEVA Historian','InfluxDB 2.x'];
+const LIMS_V =['STARLIMS','LabVantage 8','SampleManager 12','Generic REST'];
+const PROC_PARAMS=[
+  {tag:'T_REACTOR_01',name:'Reactor Temperature',unit:'°C', lo:65, hi:75},
+  {tag:'P_VESSEL_02', name:'Vessel Pressure',    unit:'bar',lo:1.8,hi:2.5},
+  {tag:'PH_TANK_03',  name:'pH Value',           unit:'pH', lo:6.8,hi:7.4},
+  {tag:'F_FEED_04',   name:'Feed Flow Rate',     unit:'L/h',lo:45, hi:55},
+  {tag:'T_JACKET_05', name:'Jacket Temperature', unit:'°C', lo:20, hi:28},
+  {tag:'AGIT_06',     name:'Agitator Speed',     unit:'rpm',lo:120,hi:180},
+  {tag:'COND_07',     name:'Condenser Temp',     unit:'°C', lo:5,  hi:15},
 ];
-const TYPE_MAP={T_REACTOR_01:"process",P_VESSEL_02:"process",PH_TANK_03:"process",F_FEED_04:"process",
-                T_JACKET_05:"process",ASSAY_01:"lims",RS_01:"lims",MICRO_01:"lims",MOISTURE_01:"lims"};
+const LIMS_TESTS=[
+  {test:'Potency Assay',     unit:'%',    lo:98.0,hi:102.0},
+  {test:'Related Substances',unit:'%',    lo:0,   hi:0.5},
+  {test:'Microbial Count',   unit:'CFU/mL',lo:0,  hi:10},
+  {test:'Moisture Content',  unit:'%',    lo:0.1, hi:0.5},
+  {test:'Particle Size D90', unit:'μm',   lo:50,  hi:150},
+  {test:'Heavy Metals',      unit:'ppm',  lo:0,   hi:5},
+  {test:'Residual Solvent',  unit:'ppm',  lo:0,   hi:410},
+];
 
-let batchCounter=0, devCounter=0, totalDevs=0, totalOpen=0, totalLIMS=0, totalTime=0, timeCount=0;
-let batches=[], allDevs=[];
+let batchCounter=0,devCounter=0;
+let batches=[],allDevs=[];
+let totalLIMS=0,totalTime=0,timeCount=0;
+let selectedBatch=null,selectedDevId=null;
+let devSevFilter='all',devStatFilter='all';
+let srcIdx=0,pipeActive=false;
 
 function rnd(a,b){return Math.random()*(b-a)+a}
 function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
 function pad(n){return String(n).padStart(2,'0')}
 function fmtDt(d){return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' '+pad(d.getHours())+':'+pad(d.getMinutes())}
+function fmtTime(d){return pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds())}
 function fmtSec(s){return s.toFixed(1)+'s'}
-
-function makeBatchId(){batchCounter++;return 'B-'+new Date().getFullYear()+'-'+String(batchCounter).padStart(4,'0')}
+function makeBatchId(){batchCounter++;return 'B-2025-'+String(batchCounter).padStart(4,'0')}
 function makeDevId(){devCounter++;return 'DEV-'+String(devCounter).padStart(5,'0')}
+function sevPct(pct){if(pct>30)return'critical';if(pct>15)return'major';return'minor'}
 
-function severity(pct){
-  if(pct>30)return'critical';
-  if(pct>15)return'major';
-  return'minor';
-}
-
+// ─── Generate rich batch data ─────────────────────────────────────────────────
 function genBatch(){
   const prod=pick(PRODUCTS);
   const endTime=new Date();
   const startTime=new Date(endTime.getTime()-rnd(4,18)*3600*1000);
-  const steps=Math.floor(rnd(6,18));
-  const readings=Math.floor(rnd(800,4500));
-  const limsRes=Math.floor(rnd(8,28));
   const asmSec=rnd(3,12);
   const batchId=makeBatchId();
 
-  totalLIMS+=limsRes;
-  totalTime+=asmSec;timeCount++;
+  // Steps
+  const steps=prod.steps.map((name,i)=>{
+    const dur=rnd(20,90);
+    const stStart=new Date(startTime.getTime()+i*rnd(30,120)*60000);
+    return{num:i+1,name,startTime:stStart,duration:Math.round(dur),
+           operator:pick(OPERATORS),status:'completed'};
+  });
 
-  // generate deviations
-  const devs=[];
-  const numDevs=Math.random()<0.35?0:Math.floor(rnd(1,5));
-  for(let i=0;i<numDevs;i++){
-    const param=pick(PARAMS);
-    let actual,limit,desc,source;
-    const overLo=Math.random()<0.5;
-    if(overLo){
-      const pct=rnd(1,40);
-      actual=param.lo*(1-pct/100);
-      limit=param.lo;
-      const sevLabel=severity(pct);
-      desc=`${param.name} below low limit: ${actual.toFixed(2)} ${param.unit} (limit ${limit} ${param.unit})`;
-      source=TYPE_MAP[param.tag]==='lims'?'lims':'pi_web_api';
-      devs.push({
-        id:makeDevId(),batchId,param:param.tag,name:param.name,
-        actual:actual.toFixed(3),limit:`≥ ${limit}`,unit:param.unit,
-        severity:sevLabel,type:TYPE_MAP[param.tag]||'process',
-        status:Math.random()<0.3?'under_review':'open',source,desc
-      });
+  // Process parameters (historian readings)
+  const readings=Math.floor(rnd(800,4500));
+  const params=PROC_PARAMS.map(p=>{
+    const oos=Math.random()<0.12;
+    let val;
+    if(oos){
+      val=Math.random()<0.5?p.lo*(1-rnd(0.01,0.35)):p.hi*(1+rnd(0.01,0.35));
     } else {
-      const pct=rnd(1,40);
-      actual=param.hi*(1+pct/100);
-      limit=param.hi;
-      const sevLabel=severity(pct);
-      desc=`${param.name} above high limit: ${actual.toFixed(2)} ${param.unit} (limit ${limit} ${param.unit})`;
-      source=TYPE_MAP[param.tag]==='lims'?'lims':'pi_web_api';
-      devs.push({
-        id:makeDevId(),batchId,param:param.tag,name:param.name,
-        actual:actual.toFixed(3),limit:`≤ ${limit}`,unit:param.unit,
-        severity:sevLabel,type:TYPE_MAP[param.tag]||'process',
-        status:Math.random()<0.3?'under_review':'open',source,desc
-      });
+      val=rnd(p.lo,p.hi);
     }
+    return{...p,value:parseFloat(val.toFixed(3)),oos};
+  });
+
+  // LIMS results
+  const limsTests=LIMS_TESTS.slice(0,Math.floor(rnd(4,LIMS_TESTS.length+1)));
+  const limsResults=limsTests.map(t=>{
+    const fail=Math.random()<0.08;
+    let result;
+    if(fail){result=t.hi>0?parseFloat((t.hi*(1+rnd(0.05,0.4))).toFixed(3)):parseFloat(rnd(0.1,1).toFixed(3));}
+    else{result=parseFloat(rnd(t.lo||0,t.hi).toFixed(3));}
+    const analyst=pick(OPERATORS);
+    const completedAt=new Date(endTime.getTime()-rnd(5,60)*60000);
+    return{id:'LR-'+Math.random().toString(36).slice(2,7).toUpperCase(),
+           test:t.test,result,lo:t.lo,hi:t.hi,unit:t.unit,
+           status:fail?'FAIL':'PASS',analyst,completedAt,fail};
+  });
+
+  // Deviations from OOS params + LIMS FAILs
+  const devs=[];
+  params.filter(p=>p.oos).forEach(p=>{
+    const overHi=p.value>p.hi;
+    const limit=overHi?p.hi:p.lo;
+    const pct=Math.abs((p.value-limit)/limit)*100;
+    devs.push({
+      id:makeDevId(),batchId,severity:sevPct(pct),type:'process',
+      param:p.tag,name:p.name,actual:p.value.toFixed(3),
+      limit:(overHi?'≤ ':'≥ ')+limit,unit:p.unit,source:'PI Web API',
+      desc:`${p.name} ${overHi?'above high limit':'below low limit'}: ${p.value.toFixed(2)} ${p.unit} (limit ${limit} ${p.unit}, deviation ${pct.toFixed(1)}%)`,
+      status:Math.random()<0.4?'under_review':'open',comments:[],signedOff:false
+    });
+  });
+  limsResults.filter(r=>r.fail).forEach(r=>{
+    devs.push({
+      id:makeDevId(),batchId,severity:'critical',type:'lims',
+      param:r.test,name:r.test,actual:r.result,
+      limit:`≤ ${r.hi}`,unit:r.unit,source:'LIMS',
+      desc:`LIMS test ${r.test} FAIL: result ${r.result} ${r.unit} (limit ≤ ${r.hi} ${r.unit})`,
+      status:'open',comments:[],signedOff:false
+    });
+  });
+  // Extra random deviations for realistic volume
+  if(devs.length===0&&Math.random()<0.5){
+    const p=pick(PROC_PARAMS);
+    const pct=rnd(2,25);
+    const overHi=Math.random()<0.5;
+    const limit=overHi?p.hi:p.lo;
+    const actual=overHi?p.hi*(1+pct/100):p.lo*(1-pct/100);
+    devs.push({
+      id:makeDevId(),batchId,severity:sevPct(pct),type:'process',
+      param:p.tag,name:p.name,actual:actual.toFixed(3),
+      limit:(overHi?'≤ ':'≥ ')+limit,unit:p.unit,source:'PI Web API',
+      desc:`${p.name} ${overHi?'above high limit':'below low limit'}: ${actual.toFixed(2)} ${p.unit} (limit ${limit} ${p.unit}, deviation ${pct.toFixed(1)}%)`,
+      status:'open',comments:[],signedOff:false
+    });
   }
 
-  const status=devs.length===0?'approved':devs.some(d=>d.severity==='critical')?'deviation_review':'assembled';
-  totalDevs+=devs.length;
-  totalOpen+=devs.filter(d=>d.status==='open').length;
-  allDevs=[...devs,...allDevs].slice(0,50);
+  // Audit trail
+  const auditEvents=[
+    {ts:new Date(startTime.getTime()),actor:'System',action:'Batch opened',detail:`Production order ${batchId.replace('B-','PO-')}`},
+    {ts:new Date(endTime.getTime()-asmSec*1000+1000),actor:'RabbitMQ',action:'batch.closed received',detail:`routing_key=batch.closed queue=abr.batch.close`},
+    {ts:new Date(endTime.getTime()-asmSec*1000+2000),actor:'MES Collector',action:'MES data collected',detail:`${steps.length} steps, ${prod.code}`},
+    {ts:new Date(endTime.getTime()-asmSec*1000+2500),actor:'Historian',action:'PI data collected',detail:`${readings.toLocaleString()} readings`},
+    {ts:new Date(endTime.getTime()-asmSec*1000+3000),actor:'LIMS Collector',action:'LIMS results pulled',detail:`${limsResults.length} test results`},
+    {ts:new Date(endTime.getTime()-asmSec*1000+4000),actor:'Assembler',action:'Record assembled',detail:`${devs.length} deviation(s) detected`},
+    {ts:new Date(endTime.getTime()-asmSec*1000+5000),actor:'PDF Generator',action:'PDF report generated',detail:`${batchId}.pdf — 7 sections`},
+    {ts:new Date(endTime.getTime()),actor:'System',action:'Record persisted to PostgreSQL',detail:'audit_events + batch_records tables updated'},
+  ];
+  devs.forEach(d=>{
+    auditEvents.push({ts:new Date(endTime.getTime()+Math.random()*300000),actor:'Deviation Detector',action:'Deviation flagged',detail:`${d.id} — ${d.severity.toUpperCase()} — ${d.name}`});
+  });
+  auditEvents.sort((a,b)=>a.ts-b.ts);
 
-  return{batchId,prod,startTime,endTime,steps,readings,limsRes,asmSec,devs,status};
+  const status=devs.some(d=>d.severity==='critical')?'deviation_review':devs.length?'assembled':'approved';
+  totalLIMS+=limsResults.length;totalTime+=asmSec;timeCount++;
+  allDevs=[...devs,...allDevs].slice(0,100);
+  return{batchId,prod,startTime,endTime,steps,params,readings,limsResults,devs,auditEvents,asmSec,status};
 }
 
+// ─── Badges ───────────────────────────────────────────────────────────────────
 function statusBadge(s){
-  const map={approved:'badge-approved',assembled:'badge-assembled',
-             deviation_review:'badge-review',collecting:'badge-collecting',rejected:'badge-rejected'};
-  const label={approved:'Approved',assembled:'Assembled',deviation_review:'Dev Review',
-               collecting:'Collecting',rejected:'Rejected'};
-  return `<span class="badge ${map[s]||'badge-assembled'}">${label[s]||s}</span>`;
+  const m={approved:'b-approved Approved',assembled:'b-assembled Assembled',
+           deviation_review:'b-review Dev Review',collecting:'b-collecting Collecting',rejected:'b-rejected Rejected'};
+  const parts=(m[s]||'b-assembled '+s).split(' ');
+  return `<span class="badge ${parts[0]}">${parts.slice(1).join(' ')}</span>`;
 }
-function sevBadge(s){
-  return `<span class="sev-${s}">${s.toUpperCase()}</span>`;
+function sevBadge(s){return `<span class="sev-${s}">${s.toUpperCase()}</span>`;}
+function devStatusHtml(s){
+  const m={open:'stat-open Open','under_review':'stat-review Under Review',
+           awaiting_signoff:'stat-signoff Awaiting Sign-off',closed:'stat-closed Closed'};
+  const parts=(m[s]||'stat-open '+s).split(' ');
+  return `<span class="${parts[0]}">${parts.slice(1).join(' ')}</span>`;
 }
 
+// ─── Batch list rendering ─────────────────────────────────────────────────────
 function renderBatches(){
-  const tbody=document.getElementById('batch-body');
-  tbody.innerHTML=batches.slice(0,20).map((b,i)=>`
-    <tr class="${i===0?'new-row':''}">
+  document.getElementById('batch-body').innerHTML=batches.slice(0,25).map((b,i)=>`
+    <tr class="clickable${i===0?' new-row':''}${selectedBatch&&selectedBatch.batchId===b.batchId?' selected':''}" onclick="openDetail('${b.batchId}')">
       <td class="mono">${b.batchId}</td>
-      <td>${b.prod.code}<span style="color:var(--muted);font-size:.75rem"> ${b.prod.name}</span></td>
-      <td class="mono" style="font-size:.75rem">${fmtDt(b.endTime)}</td>
+      <td>${b.prod.code}<span style="color:var(--muted);font-size:.73rem"> ${b.prod.name}</span></td>
+      <td class="mono" style="font-size:.73rem">${fmtDt(b.endTime)}</td>
       <td class="mono">${fmtSec(b.asmSec)}</td>
-      <td>${b.steps}</td>
+      <td>${b.steps.length}</td>
       <td>${b.readings.toLocaleString()}</td>
-      <td>${b.limsRes}</td>
-      <td style="font-weight:700;color:${b.devs.length>0?'var(--yellow)':'var(--green)'}">${b.devs.length}</td>
+      <td>${b.limsResults.length}</td>
+      <td style="font-weight:700;color:${b.devs.length?'var(--yellow)':'var(--green)'}">${b.devs.length}</td>
       <td>${statusBadge(b.status)}</td>
-      <td><span style="color:var(--accent);font-size:.75rem;font-family:'IBM Plex Mono',monospace;cursor:pointer">&#x2B07; PDF</span></td>
+      <td><span class="pdf-link">&#x2B07; PDF</span></td>
     </tr>`).join('');
 }
 
-function renderDevSidebar(){
-  const open=allDevs.filter(d=>d.status==='open'||d.status==='under_review').slice(0,8);
-  const el=document.getElementById('dev-list');
-  if(!open.length){el.innerHTML='<div style="color:var(--muted);font-size:.8rem;font-family:\'IBM Plex Mono\',monospace;padding:12px 0">No open deviations</div>';return;}
-  el.innerHTML=open.map(d=>`
-    <div class="dev-card">
-      <div class="dev-card-top">
-        <div class="dev-param">${d.param}</div>
-        ${sevBadge(d.severity)}
-      </div>
-      <div class="dev-desc">${d.desc}</div>
-      <div class="dev-footer">
-        <div class="dev-batch">${d.batchId}</div>
-        <div class="dev-status ${d.status==='under_review'?'review':'open'}">${d.status.replace('_',' ')}</div>
-      </div>
-    </div>`).join('');
-}
-
-function renderDevTable(){
-  const tbody=document.getElementById('dev-body');
-  tbody.innerHTML=allDevs.slice(0,20).map(d=>`
-    <tr>
-      <td>${sevBadge(d.severity)}</td>
-      <td class="mono">${d.batchId}</td>
-      <td style="font-size:.75rem">${d.type}</td>
-      <td class="mono" style="font-size:.75rem">${d.name}</td>
-      <td class="mono">${d.actual}</td>
-      <td class="mono">${d.limit}</td>
-      <td>${d.unit}</td>
-      <td style="font-size:.75rem;color:var(--muted)">${d.source}</td>
-      <td><span style="font-size:.72rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;color:${d.status==='open'?'var(--red)':'var(--yellow)'}">${d.status.replace('_',' ')}</span></td>
-    </tr>`).join('');
-}
-
+// ─── Stats ────────────────────────────────────────────────────────────────────
 function updateStats(){
   document.getElementById('s-batches').textContent=batches.length;
-  document.getElementById('s-devs').textContent=totalDevs;
-  document.getElementById('s-open').textContent=totalOpen;
-  document.getElementById('s-time').textContent=timeCount>0?(totalTime/timeCount).toFixed(1):'—';
+  const totalDevCount=allDevs.length;
+  const openCount=allDevs.filter(d=>d.status==='open'||d.status==='under_review'||d.status==='awaiting_signoff').length;
+  document.getElementById('s-devs').textContent=totalDevCount;
+  document.getElementById('s-open').textContent=openCount;
+  document.getElementById('s-time').textContent=timeCount?(totalTime/timeCount).toFixed(1):'—';
   document.getElementById('s-lims').textContent=totalLIMS;
 }
 
-// ── Pipeline animation ─────────────────────────────────────────────────────────
-let pipeActive=false;
-function animatePipeline(batch){
-  if(pipeActive)return;
-  pipeActive=true;
+// ─── Detail panel ─────────────────────────────────────────────────────────────
+function openDetail(batchId){
+  selectedBatch=batches.find(b=>b.batchId===batchId);
+  if(!selectedBatch)return;
+  document.getElementById('dp-title').textContent=selectedBatch.batchId+' — '+selectedBatch.prod.code;
+  document.getElementById('dp-sub').textContent=selectedBatch.prod.name+' · '+fmtDt(selectedBatch.startTime)+' → '+fmtDt(selectedBatch.endTime);
+  document.getElementById('dp-pdf').textContent='↓ Download PDF';
+  document.getElementById('detail-panel').classList.add('open');
+  renderBatches();
+  switchTab('overview');
+}
+function closeDetail(){
+  selectedBatch=null;
+  document.getElementById('detail-panel').classList.remove('open');
+  renderBatches();
+}
+function switchTab(name){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
+    const names=['overview','steps','params','lims','deviations','audit'];
+    b.classList.toggle('active',names[i]===name);
+  });
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(selectedBatch) renderTab(name);
+}
+function renderTab(name){
+  const b=selectedBatch;
+  if(name==='overview'){
+    document.getElementById('tab-overview').innerHTML=`
+      <div class="ov-grid">
+        <div class="ov-field"><div class="ov-label">Batch ID</div><div class="ov-value">${b.batchId}</div></div>
+        <div class="ov-field"><div class="ov-label">Product</div><div class="ov-value">${b.prod.code}</div></div>
+        <div class="ov-field"><div class="ov-label">Start</div><div class="ov-value">${fmtDt(b.startTime)}</div></div>
+        <div class="ov-field"><div class="ov-label">End</div><div class="ov-value">${fmtDt(b.endTime)}</div></div>
+        <div class="ov-field"><div class="ov-label">Assembly Time</div><div class="ov-value">${fmtSec(b.asmSec)}</div></div>
+        <div class="ov-field"><div class="ov-label">Status</div><div class="ov-value">${statusBadge(b.status)}</div></div>
+        <div class="ov-field"><div class="ov-label">MES Steps</div><div class="ov-value">${b.steps.length}</div></div>
+        <div class="ov-field"><div class="ov-label">Historian Readings</div><div class="ov-value">${b.readings.toLocaleString()}</div></div>
+        <div class="ov-field"><div class="ov-label">LIMS Results</div><div class="ov-value">${b.limsResults.length}</div></div>
+        <div class="ov-field"><div class="ov-label">Deviations</div><div class="ov-value" style="color:${b.devs.length?'var(--yellow)':'var(--green)'}">${b.devs.length}</div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="section-title">Deviation Summary</div>
+      ${b.devs.length===0?`<div style="color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:.75rem;padding:10px 0">No deviations — batch within specification.</div>`:
+        b.devs.map(d=>`
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+          ${sevBadge(d.severity)}
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:.73rem;flex:1">${d.name}</span>
+          ${devStatusHtml(d.status)}
+        </div>`).join('')}`;
+  }
+  if(name==='steps'){
+    document.getElementById('tab-steps').innerHTML=`
+      <div class="section-title">${b.steps.length} Batch Steps</div>
+      ${b.steps.map(s=>`
+        <div class="step-row">
+          <div class="step-num">${s.num}</div>
+          <div class="step-body">
+            <div class="step-name">${s.name}</div>
+            <div class="step-meta">${fmtDt(s.startTime)} &middot; ${s.duration} min &middot; ${s.operator}</div>
+          </div>
+          <span class="badge b-approved" style="margin-top:2px">Done</span>
+        </div>`).join('')}`;
+  }
+  if(name==='params'){
+    document.getElementById('tab-params').innerHTML=`
+      <div class="section-title">${b.readings.toLocaleString()} Historian Readings &mdash; Parameter Summary</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tag</th><th>Parameter</th><th>Value</th><th>Low</th><th>High</th><th>Unit</th><th>Status</th></tr></thead>
+          <tbody>${b.params.map(p=>`
+            <tr>
+              <td class="mono">${p.tag}</td>
+              <td>${p.name}</td>
+              <td class="mono ${p.oos?'oos':''}">${p.value}</td>
+              <td class="mono">${p.lo}</td>
+              <td class="mono">${p.hi}</td>
+              <td>${p.unit}</td>
+              <td>${p.oos?`<span class="sev-critical">OOS</span>`:`<span style="color:var(--green);font-size:.7rem;font-family:'Barlow Condensed',sans-serif;font-weight:700">PASS</span>`}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+  if(name==='lims'){
+    document.getElementById('tab-lims').innerHTML=`
+      <div class="section-title">${b.limsResults.length} LIMS Test Results</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Test</th><th>Result</th><th>Low</th><th>High</th><th>Unit</th><th>Analyst</th><th>Status</th></tr></thead>
+          <tbody>${b.limsResults.map(r=>`
+            <tr>
+              <td>${r.test}</td>
+              <td class="mono ${r.fail?'oos':''}">${r.result}</td>
+              <td class="mono">${r.lo||'—'}</td>
+              <td class="mono">${r.hi}</td>
+              <td>${r.unit}</td>
+              <td class="mono" style="font-size:.7rem">${r.analyst}</td>
+              <td>${r.fail?`<span class="sev-critical">FAIL</span>`:`<span style="color:var(--green);font-size:.7rem;font-family:'Barlow Condensed',sans-serif;font-weight:700">PASS</span>`}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+  if(name==='deviations') renderDeviationsTab();
+  if(name==='audit'){
+    document.getElementById('tab-audit').innerHTML=`
+      <div class="section-title">Audit Trail &mdash; ${b.auditEvents.length} events</div>
+      ${b.auditEvents.map(e=>`
+        <div class="audit-row">
+          <div class="audit-ts">${fmtTime(e.ts)}</div>
+          <div class="audit-actor">${e.actor.split(' ')[0]}</div>
+          <div class="audit-action"><strong>${e.action}</strong><div style="color:var(--muted);font-size:.72rem;font-family:'IBM Plex Mono',monospace;margin-top:2px">${e.detail}</div></div>
+        </div>`).join('')}`;
+  }
+}
+
+function renderDeviationsTab(){
+  const b=selectedBatch;
+  if(!b){return;}
+  document.getElementById('tab-deviations').innerHTML=b.devs.length===0
+    ?`<div style="color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:.75rem;padding:10px 0">No deviations detected for this batch.</div>`
+    :b.devs.map(d=>devCardHtml(d,true)).join('');
+}
+
+function devCardHtml(d, inDetail){
+  const canComment=d.status==='open';
+  const canSignOff=d.status==='awaiting_signoff'||( d.severity==='critical'&&d.status==='under_review');
+  const canClose=d.status==='under_review'&&d.severity!=='critical';
+  const isClosed=d.status==='closed';
+  const commentsHtml=d.comments.length?`
+    <div class="comment-history">${d.comments.map(c=>`
+      <div class="comment-entry">
+        <div class="comment-meta">${c.actor} &middot; ${c.ts} &middot; ${c.type}</div>
+        <div class="comment-text">${c.text}</div>
+      </div>`).join('')}
+    </div>`:'';
+  const formHtml=isClosed?`<div style="color:var(--green);font-size:.75rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;padding:8px 0">&#x2713; Deviation Closed</div>`:
+    canSignOff?`
+      <div class="dev-workflow" style="margin-top:8px">
+        <div class="dev-workflow-title">Supervisor Sign-off Required (Critical)</div>
+        ${commentsHtml}
+        <div class="workflow-actions">
+          <button class="btn btn-signoff" onclick="signOff('${d.id}')">&#x270D; Supervisor Sign-off</button>
+        </div>
+      </div>`:
+    canComment?`
+      <div class="dev-workflow" style="margin-top:8px">
+        <div class="dev-workflow-title">Operator Response Required</div>
+        ${commentsHtml}
+        <div class="workflow-field"><div class="workflow-label">Operator Comment</div>
+          <input class="workflow-input" id="cmt-${d.id}" placeholder="Describe the observed deviation…"></div>
+        <div class="workflow-field"><div class="workflow-label">Corrective Action</div>
+          <input class="workflow-input" id="ca-${d.id}" placeholder="Corrective action taken or planned…"></div>
+        <div class="workflow-actions">
+          <button class="btn btn-primary" onclick="submitComment('${d.id}')">Submit &amp; Move to Review</button>
+        </div>
+      </div>`:
+    canClose?`
+      <div class="dev-workflow" style="margin-top:8px">
+        <div class="dev-workflow-title">Under Review</div>
+        ${commentsHtml}
+        <div class="workflow-actions">
+          <button class="btn btn-close-dev" onclick="closeDev('${d.id}')">&#x2713; Close Deviation</button>
+        </div>
+      </div>`:
+    commentsHtml?`<div class="dev-workflow" style="margin-top:8px">${commentsHtml}</div>`:'';
+
+  return `<div id="dcard-${d.id}" style="background:var(--card);border:1px solid var(--border);border-radius:3px;padding:12px 14px;margin-bottom:10px">
+    <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:6px">
+      ${sevBadge(d.severity)}
+      <div style="flex:1">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:.78rem;margin-bottom:2px">${d.param}</div>
+        <div style="font-size:.78rem;color:var(--muted)">${d.desc}</div>
+      </div>
+      ${devStatusHtml(d.status)}
+    </div>
+    ${formHtml}
+  </div>`;
+}
+
+// ─── Deviation workflow actions ───────────────────────────────────────────────
+function findDev(id){return allDevs.find(d=>d.id===id);}
+function submitComment(id){
+  const d=findDev(id);if(!d)return;
+  const cmt=document.getElementById('cmt-'+id)?.value.trim();
+  const ca=document.getElementById('ca-'+id)?.value.trim();
+  if(!cmt||!ca){alert('Please enter both a comment and a corrective action.');return;}
+  const now=new Date();
+  d.comments.push({actor:pick(OPERATORS),ts:fmtDt(now),type:'Operator Comment',text:cmt});
+  d.comments.push({actor:pick(OPERATORS),ts:fmtDt(now),type:'Corrective Action',text:ca});
+  d.status=d.severity==='critical'?'awaiting_signoff':'under_review';
+  refreshAfterWorkflow();
+}
+function signOff(id){
+  const d=findDev(id);if(!d)return;
+  d.comments.push({actor:'Supervisor '+pick(OPERATORS),ts:fmtDt(new Date()),type:'Supervisor Sign-off',text:'Sign-off granted. Deviation reviewed and accepted.'});
+  d.status='closed';
+  refreshAfterWorkflow();
+}
+function closeDev(id){
+  const d=findDev(id);if(!d)return;
+  d.status='closed';
+  d.comments.push({actor:pick(OPERATORS),ts:fmtDt(new Date()),type:'Closure',text:'Deviation closed.'});
+  refreshAfterWorkflow();
+}
+function refreshAfterWorkflow(){
+  if(selectedBatch) renderDeviationsTab();
+  renderDevView();
+  updateStats();
+}
+
+// ─── Deviations view ─────────────────────────────────────────────────────────
+function switchView(name){
+  document.getElementById('view-batches').classList.toggle('hidden',name!=='batches');
+  document.getElementById('view-deviations').classList.toggle('hidden',name!=='deviations');
+  document.getElementById('nav-batches').classList.toggle('active',name==='batches');
+  document.getElementById('nav-deviations').classList.toggle('active',name==='deviations');
+  if(name==='deviations') renderDevView();
+}
+
+function renderDevView(){
+  const filtered=allDevs.filter(d=>{
+    if(devSevFilter!=='all'&&d.severity!==devSevFilter)return false;
+    if(devStatFilter!=='all'&&d.status!==devStatFilter)return false;
+    return true;
+  }).slice(0,50);
+  const sel=selectedDevId;
+  document.getElementById('dev-table-body').innerHTML=filtered.map(d=>`
+    <tr class="clickable${d.id===sel?' selected':''}" onclick="selectDev('${d.id}')">
+      <td>${sevBadge(d.severity)}</td>
+      <td class="mono" style="font-size:.7rem">${d.id}</td>
+      <td class="mono" style="font-size:.7rem">${d.batchId}</td>
+      <td style="font-size:.78rem">${d.name}</td>
+      <td class="mono ${d.status==='closed'?'':'oos'}">${d.actual}</td>
+      <td class="mono">${d.limit}</td>
+      <td style="font-size:.72rem;color:var(--muted)">${d.source}</td>
+      <td>${devStatusHtml(d.status)}</td>
+      <td style="font-size:.72rem;color:var(--accent);cursor:pointer" onclick="event.stopPropagation();selectDev('${d.id}')">
+        ${d.status==='open'?'Add Comment →':d.status==='awaiting_signoff'?'Sign Off →':d.status==='under_review'&&d.severity!=='critical'?'Close →':'View'}
+      </td>
+    </tr>`).join('');
+  if(sel){
+    const d=allDevs.find(x=>x.id===sel);
+    if(d){
+      document.getElementById('dev-workflow-panel').style.display='block';
+      document.getElementById('dev-workflow-panel').innerHTML=`<div class="dev-workflow">${devCardHtml(d,false)}</div>`;
+    }
+  } else {
+    document.getElementById('dev-workflow-panel').style.display='none';
+  }
+}
+function selectDev(id){
+  selectedDevId=selectedDevId===id?null:id;
+  renderDevView();
+}
+
+// Filter chips
+document.querySelectorAll('#sev-chips .chip').forEach(c=>{
+  c.addEventListener('click',()=>{
+    devSevFilter=c.dataset.sev;
+    document.querySelectorAll('#sev-chips .chip').forEach(x=>x.classList.toggle('active',x===c));
+    renderDevView();
+  });
+});
+document.querySelectorAll('#stat-chips .chip').forEach(c=>{
+  c.addEventListener('click',()=>{
+    devStatFilter=c.dataset.stat;
+    document.querySelectorAll('#stat-chips .chip').forEach(x=>x.classList.toggle('active',x===c));
+    renderDevView();
+  });
+});
+
+// ─── Pipeline animation ───────────────────────────────────────────────────────
+function animatePipeline(b){
+  if(pipeActive)return; pipeActive=true;
   const stages=[
     {id:'p0',sub:'batch.closed ✓'},
-    {id:'p1',sub:`${batch.steps} steps, ${batch.prod.code}`},
-    {id:'p2',sub:`${batch.readings.toLocaleString()} readings`},
-    {id:'p3',sub:`${batch.limsRes} results`},
+    {id:'p1',sub:`${b.steps.length} steps, ${b.prod.code}`},
+    {id:'p2',sub:`${b.readings.toLocaleString()} readings`},
+    {id:'p3',sub:`${b.limsResults.length} results`},
     {id:'p4',sub:'assembling…'},
-    {id:'p5',sub:`${batch.devs.length} deviation(s)`},
-    {id:'p6',sub:`${fmtSec(batch.asmSec)}`},
+    {id:'p5',sub:`${b.devs.length} deviation(s)`},
+    {id:'p6',sub:fmtSec(b.asmSec)},
     {id:'p7',sub:'persisted ✓'},
   ];
-  // Reset all
-  stages.forEach(s=>{
-    const el=document.getElementById(s.id);
-    el.className='pipe-icon';
-    document.getElementById(s.id+'-sub').textContent='—';
-  });
+  stages.forEach(s=>{document.getElementById(s.id).className='pipe-icon';document.getElementById(s.id+'-sub').textContent='—';});
   stages.forEach((s,i)=>{
     setTimeout(()=>{
       const el=document.getElementById(s.id);
-      if(i<stages.length-1)el.className='pipe-icon active';
-      else el.className='pipe-icon done';
+      el.className=i<stages.length-1?'pipe-icon active':'pipe-icon done';
       document.getElementById(s.id+'-sub').textContent=s.sub;
-      if(i>0){
-        const prev=document.getElementById(stages[i-1].id);
-        prev.className='pipe-icon done';
-      }
+      if(i>0)document.getElementById(stages[i-1].id).className='pipe-icon done';
       if(i===stages.length-1)setTimeout(()=>{pipeActive=false;},2000);
-    },i*500);
+    },i*450);
   });
 }
 
-// ── Source rotation ────────────────────────────────────────────────────────────
-let srcIdx=0;
+let srcI=0;
 function rotateSources(){
-  document.getElementById('src-mes').textContent=MES_V[srcIdx%MES_V.length];
-  document.getElementById('src-hist').textContent=HIST_V[srcIdx%HIST_V.length];
-  document.getElementById('src-lims').textContent=LIMS_V[srcIdx%LIMS_V.length];
-  srcIdx++;
+  document.getElementById('src-mes').textContent=MES_V[srcI%MES_V.length];
+  document.getElementById('src-hist').textContent=HIST_V[srcI%HIST_V.length];
+  document.getElementById('src-lims').textContent=LIMS_V[srcI%LIMS_V.length];
+  srcI++;
 }
 
-// ── Main tick ─────────────────────────────────────────────────────────────────
+// ─── Main tick ────────────────────────────────────────────────────────────────
 function tick(){
   const b=genBatch();
-  batches=[b,...batches];
+  batches.unshift(b);
   renderBatches();
-  renderDevSidebar();
-  renderDevTable();
   updateStats();
   animatePipeline(b);
-  if(batches.length%4===0)rotateSources();
+  if(batches.length%4===0) rotateSources();
+  if(document.getElementById('view-deviations').classList.contains('hidden')===false) renderDevView();
 }
 
-// Seed with initial data
-for(let i=0;i<8;i++)batches.push(genBatch());
-// recalculate allDevs
-allDevs=batches.flatMap(b=>b.devs).slice(0,50);
-batches.forEach(b=>{totalLIMS+=b.limsRes;totalTime+=b.asmSec;timeCount++;});
-totalDevs=allDevs.length;
-totalOpen=allDevs.filter(d=>d.status==='open').length;
-
+// ─── Init ─────────────────────────────────────────────────────────────────────
+for(let i=0;i<8;i++){const b=genBatch();batches.push(b);}
+allDevs=batches.flatMap(b=>b.devs).slice(0,100);
 renderBatches();
-renderDevSidebar();
-renderDevTable();
 updateStats();
 animatePipeline(batches[0]);
-
-// Add a new batch every 7 seconds
 setInterval(tick,7000);
 </script>
 </body>
