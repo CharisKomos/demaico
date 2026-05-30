@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Automated Batch Records &mdash; demaico</title>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;600;700&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500&display=swap');
+  :root{
+    --bg:#0b0b0b;--surface:#111111;--card:#161616;--card-hover:#1c1c1c;
+    --accent:#e8890c;--accent-dim:#a05f06;--accent-glow:rgba(232,137,12,0.10);
+    --text:#f0ece4;--muted:#888070;--faint:#2a2520;
+    --border:rgba(232,137,12,0.14);--border-strong:rgba(232,137,12,0.32);
+    --green:#2EB67D;--red:#E01E5A;--yellow:#ECB22E;--blue:#4a9eff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+  /* ── Header ── */
+  header{background:var(--surface);border-bottom:1px solid var(--border-strong);padding:14px 32px;display:flex;align-items:center;gap:14px}
+  .wordmark{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:3px;color:var(--text)}
+  .wordmark .o{color:var(--accent)}
+  .header-divider{width:1px;height:28px;background:var(--border-strong);margin:0 4px}
+  .header-text h1{font-family:'Barlow Condensed',sans-serif;font-size:.95rem;font-weight:700;text-transform:uppercase;letter-spacing:2px}
+  .header-text .sub{color:var(--muted);font-size:.72rem;margin-top:2px;font-family:'IBM Plex Mono',monospace}
+  .header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+  .live-label{color:var(--green);font-size:.72rem;font-weight:700;letter-spacing:.12em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+  .demo-badge{background:var(--accent-glow);color:var(--accent);border:1px solid var(--border-strong);border-radius:2px;padding:3px 10px;font-size:.68rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:3px;text-transform:uppercase}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+  /* ── Layout ── */
+  .container{max-width:1600px;margin:0 auto;padding:28px 32px}
+
+  /* ── Stats ── */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:32px}
+  .stat-card{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:20px 22px;position:relative;overflow:hidden}
+  .stat-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+  .stat-card.s-accent::after{background:var(--accent)}
+  .stat-card.s-green::after{background:var(--green)}
+  .stat-card.s-red::after{background:var(--red)}
+  .stat-card.s-yellow::after{background:var(--yellow)}
+  .stat-card.s-blue::after{background:var(--blue)}
+  .stat-card .label{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px}
+  .stat-card .value{font-family:'Bebas Neue',sans-serif;font-size:3.2rem;line-height:1}
+  .stat-card.s-accent .value{color:var(--accent)}
+  .stat-card.s-green .value{color:var(--green)}
+  .stat-card.s-red .value{color:var(--red)}
+  .stat-card.s-yellow .value{color:var(--yellow)}
+  .stat-card.s-blue .value{color:var(--blue)}
+  .stat-card .delta{font-size:.7rem;color:var(--muted);margin-top:6px;font-family:'IBM Plex Mono',monospace}
+
+  /* ── Pipeline diagram ── */
+  .pipeline{display:flex;align-items:center;gap:0;margin-bottom:32px;background:var(--card);border:1px solid var(--border);border-radius:3px;padding:18px 24px;overflow-x:auto}
+  .pipe-stage{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;min-width:100px}
+  .pipe-icon{width:44px;height:44px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;border:1px solid var(--border)}
+  .pipe-icon.active{border-color:var(--accent);background:var(--accent-glow);box-shadow:0 0 12px var(--accent-glow)}
+  .pipe-icon.done{border-color:rgba(46,182,125,.3);background:rgba(46,182,125,.06)}
+  .pipe-label{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);text-align:center;line-height:1.2}
+  .pipe-sub{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--accent);text-align:center}
+  .pipe-arrow{color:var(--muted);font-size:.9rem;padding:0 4px;padding-bottom:20px;flex-shrink:0}
+
+  /* ── Two-column layout ── */
+  .two-col{display:grid;grid-template-columns:1fr 380px;gap:20px;margin-bottom:32px}
+  @media(max-width:1100px){.two-col{grid-template-columns:1fr}}
+
+  /* ── Section title ── */
+  .section-title{font-family:'Barlow Condensed',sans-serif;font-size:.68rem;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);font-weight:700;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+
+  /* ── Table ── */
+  .table-wrap{border:1px solid var(--border);border-radius:3px;overflow:hidden;overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:.875rem}
+  thead{background:var(--surface)}
+  thead th{padding:10px 16px;text-align:left;color:var(--muted);font-weight:700;font-size:.65rem;text-transform:uppercase;letter-spacing:.12em;border-bottom:1px solid var(--border);white-space:nowrap;font-family:'Barlow Condensed',sans-serif}
+  tbody tr{border-bottom:1px solid var(--border);transition:background .12s}
+  tbody tr:last-child{border-bottom:none}
+  tbody tr:hover{background:rgba(232,137,12,.04)}
+  tbody td{padding:9px 16px;vertical-align:middle}
+  .mono{font-family:'IBM Plex Mono',monospace;font-size:.78rem}
+
+  /* ── Badges / pills ── */
+  .badge{display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-weight:700;letter-spacing:.08em;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase}
+  .badge-approved  {background:rgba(46,182,125,.1); color:var(--green); border:1px solid rgba(46,182,125,.22)}
+  .badge-assembled {background:rgba(74,158,255,.08);color:var(--blue);  border:1px solid rgba(74,158,255,.22)}
+  .badge-review    {background:rgba(236,178,46,.1); color:var(--yellow);border:1px solid rgba(236,178,46,.22)}
+  .badge-rejected  {background:rgba(224,30,90,.1);  color:var(--red);   border:1px solid rgba(224,30,90,.22)}
+  .badge-collecting{background:var(--accent-glow);  color:var(--accent);border:1px solid var(--border-strong)}
+
+  .sev-critical{background:rgba(224,30,90,.1); color:var(--red);   border:1px solid rgba(224,30,90,.22);display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.08em}
+  .sev-major   {background:rgba(236,178,46,.1);color:var(--yellow);border:1px solid rgba(236,178,46,.22);display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.08em}
+  .sev-minor   {background:rgba(232,137,12,.08);color:var(--accent);border:1px solid var(--border-strong);display:inline-block;padding:2px 8px;border-radius:2px;font-size:.65rem;font-weight:700;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.08em}
+
+  /* ── Deviation sidebar ── */
+  .dev-card{background:var(--card);border:1px solid var(--border);border-radius:3px;margin-bottom:8px;padding:12px 14px;transition:border-color .15s}
+  .dev-card:hover{border-color:var(--border-strong)}
+  .dev-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
+  .dev-param{font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--text)}
+  .dev-desc{font-size:.78rem;color:var(--muted);line-height:1.4;margin-bottom:6px}
+  .dev-footer{display:flex;align-items:center;justify-content:space-between}
+  .dev-batch{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted)}
+  .dev-status{font-size:.65rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+  .dev-status.open{color:var(--red)}
+  .dev-status.review{color:var(--yellow)}
+
+  /* ── Source pills ── */
+  .source-strip{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+  .source-pill{background:var(--card);border:1px solid var(--border);border-radius:2px;padding:6px 14px;display:flex;align-items:center;gap:8px}
+  .source-pill .sp-dot{width:6px;height:6px;border-radius:50%}
+  .source-pill .sp-label{font-family:'Barlow Condensed',sans-serif;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+  .source-pill .sp-count{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted)}
+
+  /* ── New-row flash ── */
+  .new-row{animation:newrow .9s ease}
+  @keyframes newrow{from{background:rgba(232,137,12,.12)}to{background:transparent}}
+
+  /* ── Progress bar ── */
+  .progress-bar{height:2px;background:var(--faint);border-radius:1px;overflow:hidden;margin-top:6px}
+  .progress-fill{height:100%;background:var(--accent);border-radius:1px;transition:width 1s linear}
+
+  /* ── Footer ── */
+  footer{margin-top:40px;padding:18px 32px;border-top:1px solid var(--border);color:var(--muted);font-size:.72rem;display:flex;justify-content:space-between;align-items:center;font-family:'IBM Plex Mono',monospace}
+  .footer-links a{color:var(--accent);text-decoration:none}
+  .footer-links a:hover{text-decoration:underline}
+  ::-webkit-scrollbar{width:4px;height:4px}
+  ::-webkit-scrollbar-track{background:var(--bg)}
+  ::-webkit-scrollbar-thumb{background:var(--faint);border-radius:2px}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wordmark">DEMAIC<span class="o">O</span></div>
+  <div class="header-divider"></div>
+  <div class="header-text">
+    <h1>Automated Batch Records</h1>
+    <div class="sub">MES &rarr; Historian &rarr; LIMS &rarr; eBR + deviation detection &middot; pharma GMP</div>
+  </div>
+  <div class="header-right">
+    <span class="demo-badge">Demo</span>
+    <div class="live-dot"></div>
+    <span class="live-label">Live</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-card s-accent"><div class="label">Batches Assembled</div><div class="value" id="s-batches">0</div><div class="delta">since shift start</div></div>
+    <div class="stat-card s-red"><div class="label">Deviations Flagged</div><div class="value" id="s-devs">0</div><div class="delta" id="s-devs-sub">today</div></div>
+    <div class="stat-card s-yellow"><div class="label">Open Deviations</div><div class="value" id="s-open">0</div><div class="delta">awaiting review</div></div>
+    <div class="stat-card s-green"><div class="label">Avg Assembly Time</div><div class="value" id="s-time">0</div><div class="delta">seconds per batch</div></div>
+    <div class="stat-card s-blue"><div class="label">LIMS Results Pulled</div><div class="value" id="s-lims">0</div><div class="delta">this shift</div></div>
+  </div>
+
+  <!-- Pipeline stages -->
+  <div class="section-title">Collection Pipeline &mdash; Last Batch</div>
+  <div class="pipeline" id="pipeline">
+    <div class="pipe-stage">
+      <div class="pipe-icon done" id="p0">&#x1f4e8;</div>
+      <div class="pipe-label">RabbitMQ<br>Trigger</div>
+      <div class="pipe-sub" id="p0-sub">batch.closed</div>
+    </div>
+    <div class="pipe-arrow">&rsaquo;</div>
+    <div class="pipe-stage">
+      <div class="pipe-icon" id="p1">&#x1f3ed;</div>
+      <div class="pipe-label">MES<br>Collector</div>
+      <div class="pipe-sub" id="p1-sub">&mdash;</div>
+    </div>
+    <div class="pipe-arrow">&rsaquo;</div>
+    <div class="pipe-stage">
+      <div class="pipe-icon" id="p2">&#x1f4c8;</div>
+      <div class="pipe-label">Historian<br>Collector</div>
+      <div class="pipe-sub" id="p2-sub">&mdash;</div>
+    </div>
+    <div class="pipe-arrow">&rsaquo;</div>
+    <div class="pipe-stage">
+      <div class="pipe-icon" id="p3">&#x1f9ea;</div>
+      <div class="pipe-label">LIMS<br>Collector</div>
+      <div class="pipe-sub" id="p3-sub">&mdash;</div>
+    </div>
+    <div class="pipe-arrow">&rsaquo;</div>
+    <div class="pipe-stage">
+      <div class="pipe-icon" id="p4">&#x1f9e9;</div>
+      <div class="pipe-label">Record<br>Assembly</div>
+      <div class="pipe-sub" id="p4-sub">&mdash;</div>
+    </div>
+    <div class="pipe-arrow">&rsaquo;</div>
+    <div class="pipe-stage">
+      <div class="pipe-icon" id="p5">&#x26a0;&#xfe0f;</div>
+      <div class="pipe-label">Deviation<br>Detection</div>
+      <div class="pipe-sub" id="p5-sub">&mdash;</div>
+    </div>
+    <div class="pipe-arrow">&rsaquo;</div>
+    <div class="pipe-stage">
+      <div class="pipe-icon" id="p6">&#x1f4c4;</div>
+      <div class="pipe-label">PDF<br>Report</div>
+      <div class="pipe-sub" id="p6-sub">&mdash;</div>
+    </div>
+    <div class="pipe-arrow">&rsaquo;</div>
+    <div class="pipe-stage">
+      <div class="pipe-icon" id="p7">&#x1f5c4;&#xfe0f;</div>
+      <div class="pipe-label">PostgreSQL<br>Persist</div>
+      <div class="pipe-sub" id="p7-sub">&mdash;</div>
+    </div>
+  </div>
+
+  <!-- Source pills -->
+  <div class="source-strip">
+    <div class="source-pill"><div class="sp-dot" style="background:var(--accent)"></div><div class="sp-label">MES</div><div class="sp-count" id="src-mes">AspenTech APRM</div></div>
+    <div class="source-pill"><div class="sp-dot" style="background:var(--blue)"></div><div class="sp-label">Historian</div><div class="sp-count" id="src-hist">OSIsoft PI Web API</div></div>
+    <div class="source-pill"><div class="sp-dot" style="background:var(--green)"></div><div class="sp-label">LIMS</div><div class="sp-count" id="src-lims">STARLIMS</div></div>
+    <div class="source-pill"><div class="sp-dot" style="background:var(--yellow)"></div><div class="sp-label">Broker</div><div class="sp-count">RabbitMQ 3.13</div></div>
+    <div class="source-pill"><div class="sp-dot" style="background:var(--muted)"></div><div class="sp-label">DB</div><div class="sp-count">PostgreSQL 16</div></div>
+  </div>
+
+  <!-- Main two-column area -->
+  <div class="two-col">
+
+    <!-- Left: batch table -->
+    <div>
+      <div class="section-title">Batch Record Log</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Batch ID</th><th>Product</th><th>Batch End</th>
+              <th>Assembly</th><th>MES Steps</th><th>Hist. Readings</th>
+              <th>LIMS Results</th><th>Deviations</th><th>Status</th><th>PDF</th>
+            </tr>
+          </thead>
+          <tbody id="batch-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Right: open deviations -->
+    <div>
+      <div class="section-title">Open Deviations</div>
+      <div id="dev-list"></div>
+    </div>
+
+  </div>
+
+  <!-- Deviation detail table -->
+  <div class="section-title">Deviation Detail &mdash; Last 20</div>
+  <div class="table-wrap" style="margin-bottom:0">
+    <table>
+      <thead>
+        <tr><th>Severity</th><th>Batch ID</th><th>Type</th><th>Parameter</th><th>Actual</th><th>Limit</th><th>Unit</th><th>Source</th><th>Status</th></tr>
+      </thead>
+      <tbody id="dev-body"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<footer>
+  <div>demaico &mdash; Automated Batch Records Dashboard &mdash; Demo Mode</div>
+  <div class="footer-links"><a href="https://github.com/CharisKomos/demaico_AutomatedBatchRecords" target="_blank">GitHub Repository</a></div>
+</footer>
+
+<script>
+// ── Static seed data ───────────────────────────────────────────────────────────
+const PRODUCTS=[
+  {code:"API-X45",name:"Compound X45"},
+  {code:"API-R12",name:"Riluzole API"},
+  {code:"API-S80",name:"Simvastatin"},
+  {code:"API-M33",name:"Metformin HCl"},
+  {code:"API-L07",name:"Losartan K"},
+];
+const MES_V  =["AspenTech APRM","Rockwell PharmaSuite","Siemens Opcenter","AVEVA MES","Ignition Sepasoft"];
+const HIST_V =["OSIsoft PI Web API","AspenTech IP.21","Honeywell PHD","AVEVA Historian","InfluxDB 2.x"];
+const LIMS_V =["STARLIMS","LabVantage 8","SampleManager 12","Generic REST"];
+const PARAMS =[
+  {tag:"T_REACTOR_01",name:"Reactor Temperature",unit:"°C",lo:65,hi:75},
+  {tag:"P_VESSEL_02", name:"Vessel Pressure",    unit:"bar",lo:1.8,hi:2.5},
+  {tag:"PH_TANK_03",  name:"pH Value",           unit:"pH", lo:6.8,hi:7.4},
+  {tag:"F_FEED_04",   name:"Feed Flow Rate",     unit:"L/h",lo:45,hi:55},
+  {tag:"T_JACKET_05", name:"Jacket Temperature", unit:"°C", lo:20,hi:28},
+  {tag:"ASSAY_01",    name:"Potency Assay",      unit:"%",  lo:98,hi:102},
+  {tag:"RS_01",       name:"Related Substances", unit:"%",  lo:0, hi:0.5},
+  {tag:"MICRO_01",    name:"Microbial Count",    unit:"CFU/mL",lo:0,hi:10},
+  {tag:"MOISTURE_01", name:"Moisture Content",   unit:"%",  lo:0.1,hi:0.5},
+];
+const TYPE_MAP={T_REACTOR_01:"process",P_VESSEL_02:"process",PH_TANK_03:"process",F_FEED_04:"process",
+                T_JACKET_05:"process",ASSAY_01:"lims",RS_01:"lims",MICRO_01:"lims",MOISTURE_01:"lims"};
+
+let batchCounter=0, devCounter=0, totalDevs=0, totalOpen=0, totalLIMS=0, totalTime=0, timeCount=0;
+let batches=[], allDevs=[];
+
+function rnd(a,b){return Math.random()*(b-a)+a}
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
+function pad(n){return String(n).padStart(2,'0')}
+function fmtDt(d){return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})+' '+pad(d.getHours())+':'+pad(d.getMinutes())}
+function fmtSec(s){return s.toFixed(1)+'s'}
+
+function makeBatchId(){batchCounter++;return 'B-'+new Date().getFullYear()+'-'+String(batchCounter).padStart(4,'0')}
+function makeDevId(){devCounter++;return 'DEV-'+String(devCounter).padStart(5,'0')}
+
+function severity(pct){
+  if(pct>30)return'critical';
+  if(pct>15)return'major';
+  return'minor';
+}
+
+function genBatch(){
+  const prod=pick(PRODUCTS);
+  const endTime=new Date();
+  const startTime=new Date(endTime.getTime()-rnd(4,18)*3600*1000);
+  const steps=Math.floor(rnd(6,18));
+  const readings=Math.floor(rnd(800,4500));
+  const limsRes=Math.floor(rnd(8,28));
+  const asmSec=rnd(3,12);
+  const batchId=makeBatchId();
+
+  totalLIMS+=limsRes;
+  totalTime+=asmSec;timeCount++;
+
+  // generate deviations
+  const devs=[];
+  const numDevs=Math.random()<0.35?0:Math.floor(rnd(1,5));
+  for(let i=0;i<numDevs;i++){
+    const param=pick(PARAMS);
+    let actual,limit,desc,source;
+    const overLo=Math.random()<0.5;
+    if(overLo){
+      const pct=rnd(1,40);
+      actual=param.lo*(1-pct/100);
+      limit=param.lo;
+      const sevLabel=severity(pct);
+      desc=`${param.name} below low limit: ${actual.toFixed(2)} ${param.unit} (limit ${limit} ${param.unit})`;
+      source=TYPE_MAP[param.tag]==='lims'?'lims':'pi_web_api';
+      devs.push({
+        id:makeDevId(),batchId,param:param.tag,name:param.name,
+        actual:actual.toFixed(3),limit:`≥ ${limit}`,unit:param.unit,
+        severity:sevLabel,type:TYPE_MAP[param.tag]||'process',
+        status:Math.random()<0.3?'under_review':'open',source,desc
+      });
+    } else {
+      const pct=rnd(1,40);
+      actual=param.hi*(1+pct/100);
+      limit=param.hi;
+      const sevLabel=severity(pct);
+      desc=`${param.name} above high limit: ${actual.toFixed(2)} ${param.unit} (limit ${limit} ${param.unit})`;
+      source=TYPE_MAP[param.tag]==='lims'?'lims':'pi_web_api';
+      devs.push({
+        id:makeDevId(),batchId,param:param.tag,name:param.name,
+        actual:actual.toFixed(3),limit:`≤ ${limit}`,unit:param.unit,
+        severity:sevLabel,type:TYPE_MAP[param.tag]||'process',
+        status:Math.random()<0.3?'under_review':'open',source,desc
+      });
+    }
+  }
+
+  const status=devs.length===0?'approved':devs.some(d=>d.severity==='critical')?'deviation_review':'assembled';
+  totalDevs+=devs.length;
+  totalOpen+=devs.filter(d=>d.status==='open').length;
+  allDevs=[...devs,...allDevs].slice(0,50);
+
+  return{batchId,prod,startTime,endTime,steps,readings,limsRes,asmSec,devs,status};
+}
+
+function statusBadge(s){
+  const map={approved:'badge-approved',assembled:'badge-assembled',
+             deviation_review:'badge-review',collecting:'badge-collecting',rejected:'badge-rejected'};
+  const label={approved:'Approved',assembled:'Assembled',deviation_review:'Dev Review',
+               collecting:'Collecting',rejected:'Rejected'};
+  return `<span class="badge ${map[s]||'badge-assembled'}">${label[s]||s}</span>`;
+}
+function sevBadge(s){
+  return `<span class="sev-${s}">${s.toUpperCase()}</span>`;
+}
+
+function renderBatches(){
+  const tbody=document.getElementById('batch-body');
+  tbody.innerHTML=batches.slice(0,20).map((b,i)=>`
+    <tr class="${i===0?'new-row':''}">
+      <td class="mono">${b.batchId}</td>
+      <td>${b.prod.code}<span style="color:var(--muted);font-size:.75rem"> ${b.prod.name}</span></td>
+      <td class="mono" style="font-size:.75rem">${fmtDt(b.endTime)}</td>
+      <td class="mono">${fmtSec(b.asmSec)}</td>
+      <td>${b.steps}</td>
+      <td>${b.readings.toLocaleString()}</td>
+      <td>${b.limsRes}</td>
+      <td style="font-weight:700;color:${b.devs.length>0?'var(--yellow)':'var(--green)'}">${b.devs.length}</td>
+      <td>${statusBadge(b.status)}</td>
+      <td><span style="color:var(--accent);font-size:.75rem;font-family:'IBM Plex Mono',monospace;cursor:pointer">&#x2B07; PDF</span></td>
+    </tr>`).join('');
+}
+
+function renderDevSidebar(){
+  const open=allDevs.filter(d=>d.status==='open'||d.status==='under_review').slice(0,8);
+  const el=document.getElementById('dev-list');
+  if(!open.length){el.innerHTML='<div style="color:var(--muted);font-size:.8rem;font-family:\'IBM Plex Mono\',monospace;padding:12px 0">No open deviations</div>';return;}
+  el.innerHTML=open.map(d=>`
+    <div class="dev-card">
+      <div class="dev-card-top">
+        <div class="dev-param">${d.param}</div>
+        ${sevBadge(d.severity)}
+      </div>
+      <div class="dev-desc">${d.desc}</div>
+      <div class="dev-footer">
+        <div class="dev-batch">${d.batchId}</div>
+        <div class="dev-status ${d.status==='under_review'?'review':'open'}">${d.status.replace('_',' ')}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderDevTable(){
+  const tbody=document.getElementById('dev-body');
+  tbody.innerHTML=allDevs.slice(0,20).map(d=>`
+    <tr>
+      <td>${sevBadge(d.severity)}</td>
+      <td class="mono">${d.batchId}</td>
+      <td style="font-size:.75rem">${d.type}</td>
+      <td class="mono" style="font-size:.75rem">${d.name}</td>
+      <td class="mono">${d.actual}</td>
+      <td class="mono">${d.limit}</td>
+      <td>${d.unit}</td>
+      <td style="font-size:.75rem;color:var(--muted)">${d.source}</td>
+      <td><span style="font-size:.72rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;color:${d.status==='open'?'var(--red)':'var(--yellow)'}">${d.status.replace('_',' ')}</span></td>
+    </tr>`).join('');
+}
+
+function updateStats(){
+  document.getElementById('s-batches').textContent=batches.length;
+  document.getElementById('s-devs').textContent=totalDevs;
+  document.getElementById('s-open').textContent=totalOpen;
+  document.getElementById('s-time').textContent=timeCount>0?(totalTime/timeCount).toFixed(1):'—';
+  document.getElementById('s-lims').textContent=totalLIMS;
+}
+
+// ── Pipeline animation ─────────────────────────────────────────────────────────
+let pipeActive=false;
+function animatePipeline(batch){
+  if(pipeActive)return;
+  pipeActive=true;
+  const stages=[
+    {id:'p0',sub:'batch.closed ✓'},
+    {id:'p1',sub:`${batch.steps} steps, ${batch.prod.code}`},
+    {id:'p2',sub:`${batch.readings.toLocaleString()} readings`},
+    {id:'p3',sub:`${batch.limsRes} results`},
+    {id:'p4',sub:'assembling…'},
+    {id:'p5',sub:`${batch.devs.length} deviation(s)`},
+    {id:'p6',sub:`${fmtSec(batch.asmSec)}`},
+    {id:'p7',sub:'persisted ✓'},
+  ];
+  // Reset all
+  stages.forEach(s=>{
+    const el=document.getElementById(s.id);
+    el.className='pipe-icon';
+    document.getElementById(s.id+'-sub').textContent='—';
+  });
+  stages.forEach((s,i)=>{
+    setTimeout(()=>{
+      const el=document.getElementById(s.id);
+      if(i<stages.length-1)el.className='pipe-icon active';
+      else el.className='pipe-icon done';
+      document.getElementById(s.id+'-sub').textContent=s.sub;
+      if(i>0){
+        const prev=document.getElementById(stages[i-1].id);
+        prev.className='pipe-icon done';
+      }
+      if(i===stages.length-1)setTimeout(()=>{pipeActive=false;},2000);
+    },i*500);
+  });
+}
+
+// ── Source rotation ────────────────────────────────────────────────────────────
+let srcIdx=0;
+function rotateSources(){
+  document.getElementById('src-mes').textContent=MES_V[srcIdx%MES_V.length];
+  document.getElementById('src-hist').textContent=HIST_V[srcIdx%HIST_V.length];
+  document.getElementById('src-lims').textContent=LIMS_V[srcIdx%LIMS_V.length];
+  srcIdx++;
+}
+
+// ── Main tick ─────────────────────────────────────────────────────────────────
+function tick(){
+  const b=genBatch();
+  batches=[b,...batches];
+  renderBatches();
+  renderDevSidebar();
+  renderDevTable();
+  updateStats();
+  animatePipeline(b);
+  if(batches.length%4===0)rotateSources();
+}
+
+// Seed with initial data
+for(let i=0;i<8;i++)batches.push(genBatch());
+// recalculate allDevs
+allDevs=batches.flatMap(b=>b.devs).slice(0,50);
+batches.forEach(b=>{totalLIMS+=b.limsRes;totalTime+=b.asmSec;timeCount++;});
+totalDevs=allDevs.length;
+totalOpen=allDevs.filter(d=>d.status==='open').length;
+
+renderBatches();
+renderDevSidebar();
+renderDevTable();
+updateStats();
+animatePipeline(batches[0]);
+
+// Add a new batch every 7 seconds
+setInterval(tick,7000);
+</script>
+</body>
+</html>
