@@ -238,7 +238,7 @@ section {
 
 .hero-title {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(64px, 8vw, 130px);
+  font-size: clamp(64px, 7.5vw, 130px);
   line-height: 0.92;
   letter-spacing: 2px;
   color: var(--text);
