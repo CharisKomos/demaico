@@ -317,8 +317,8 @@ section {
   display: block;
 }
 
-/* ── DMAIC ── */
-#dmaic {
+/* ── APPROACH ── */
+#approach {
   padding: 120px 60px;
   background: var(--bg-surface);
   border-top: 1px solid var(--border);
@@ -409,8 +409,8 @@ section {
   max-width: 180px;
 }
 
-/* ── SERVICES ── */
-#services { padding: 120px 60px; }
+/* ── SMART PLANT ── */
+#smart-plant { padding: 120px 60px; }
 
 .services-grid {
   display: grid;
@@ -714,7 +714,7 @@ footer {
   #hero { padding: 100px 80px 100px; }
   .hero-stats { right: 80px; bottom: 100px; }
   .hero-number { right: 80px; }
-  #dmaic, #services, #industries, #contact { padding: 140px 80px; }
+  #approach, #industries, #lean-production, #smart-plant, #work, #contact { padding: 140px 80px; }
   footer { padding: 40px 80px; }
   .services-grid { grid-template-columns: repeat(3, 1fr); }
 }
@@ -735,7 +735,7 @@ footer {
   .hero-stats { right: 36px; bottom: 80px; gap: 20px; }
   .hero-stat-num { font-size: 28px; }
 
-  #dmaic, #services, #industries, #contact { padding: 80px 36px; }
+  #approach, #industries, #lean-production, #smart-plant, #work, #contact { padding: 80px 36px; }
   footer { padding: 28px 36px; }
 
   .dmaic-letter { font-size: 42px; }
@@ -780,7 +780,7 @@ footer {
   .hero-actions { flex-direction: column; align-items: flex-start; gap: 12px; }
   .btn-primary, .btn-ghost { width: 100%; text-align: center; padding: 14px 24px; }
 
-  #dmaic { padding: 64px 24px; }
+  #approach, #industries, #lean-production, #smart-plant, #work, #contact { padding: 64px 24px; }
   .dmaic-header { flex-direction: column; gap: 16px; align-items: flex-start; }
   .dmaic-header p { text-align: left; max-width: 100%; }
   .dmaic-track { flex-direction: column; gap: 0; }
@@ -795,15 +795,12 @@ footer {
   .dmaic-letter { font-size: 40px; margin-top: 0; }
   .dmaic-desc { max-width: 100%; }
 
-  #services { padding: 64px 24px; }
   .services-grid { grid-template-columns: 1fr; }
   .service-card { padding: 32px 24px; }
 
-  #industries { padding: 64px 24px; }
   .industries-layout { gap: 40px; }
   .industries-list { grid-template-columns: 1fr; }
 
-  #contact { padding: 64px 24px; }
   .cta-form { max-width: 100%; }
   .cta-row { grid-template-columns: 1fr; }
 
@@ -931,9 +928,9 @@ footer {
   letter-spacing: 0.5px;
 }
 
-/* ── DMAIC Analytics Platform Section ─────────────────────────────── */
+/* ── Six Sigma Lean Production Analytics Platform Section ─────────── */
 
-#dmaic-analytics {
+#lean-production {
   padding: 120px 60px;
   background: var(--bg-surface);
   border-top: 1px solid var(--border);
@@ -1042,10 +1039,8 @@ footer {
 /* ── Work / Demos ─────────────────────────────────────────────────── */
 
 @media (max-width: 900px) {
-  #work { padding: 80px 32px; }
   .demos-grid { grid-template-columns: 1fr; }
   .demo-preview { height: 200px; }
-  #dmaic-analytics { padding: 80px 32px; }
   .platform-intro { flex-direction: column; gap: 16px; align-items: flex-start; }
   .platform-intro p { text-align: left; max-width: 100%; }
   .capability-grid { grid-template-columns: 1fr 1fr; }
@@ -1053,9 +1048,7 @@ footer {
 }
 
 @media (max-width: 480px) {
-  #work { padding: 64px 24px; }
   .demo-preview { height: 160px; }
-  #dmaic-analytics { padding: 64px 24px; }
   .capability-grid { grid-template-columns: 1fr; }
   .demo-preview--large { height: 260px; }
 }
