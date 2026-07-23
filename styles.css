@@ -238,7 +238,7 @@ section {
 
 .hero-title {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(64px, 7.5vw, 130px);
+  font-size: 115px;
   line-height: 0.92;
   letter-spacing: 2px;
   color: var(--text);
@@ -582,6 +582,83 @@ section {
   line-height: 1.6;
 }
 
+/* Industry categories: Manufacturing / Retail / Services / Hospitality */
+.industry-cats {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.industry-cat-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 30px;
+  letter-spacing: 2px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.industry-cat-name::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.industry-cat-count {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--accent);
+}
+
+.industry-sub-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.industry-sub {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 22px 24px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.industry-sub::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 2px; width: 0;
+  background: var(--accent);
+  transition: width 0.35s ease;
+}
+
+.industry-sub:hover { border-color: var(--border-strong); background: var(--bg-card-hover); }
+.industry-sub:hover::after { width: 100%; }
+
+.industry-sub-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 7px;
+}
+
+.industry-sub-detail {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.industries-cta { margin-top: 8px; }
+
 /* ── CONTACT / CTA ── */
 #contact {
   padding: 120px 60px;
@@ -785,6 +862,7 @@ footer {
   .nav-links { gap: 24px; }
 
   #hero { padding: 88px 36px 80px; }
+  .hero-title { font-size: clamp(56px, 9vw, 92px); }
   .hero-number { font-size: 18vw; right: 36px; top: 100px; opacity: 0.6; }
   .hero-stats { right: 36px; bottom: 80px; gap: 20px; }
   .hero-stat-num { font-size: 28px; }
@@ -799,6 +877,7 @@ footer {
 
   .industries-layout { grid-template-columns: 1fr; gap: 48px; }
   .industries-left { max-width: 480px; }
+  .industry-sub-grid { grid-template-columns: repeat(2, 1fr); }
 
   .cta-row { grid-template-columns: 1fr; }
 }
@@ -816,6 +895,7 @@ footer {
     min-height: 100svh;
     justify-content: flex-end;
   }
+  .hero-title { font-size: clamp(46px, 12vw, 78px); }
   .hero-number {
     font-size: clamp(100px, 28vw, 200px);
     right: 16px; top: 80px;
@@ -854,6 +934,8 @@ footer {
 
   .industries-layout { gap: 40px; }
   .industries-list { grid-template-columns: 1fr; }
+  .industry-sub-grid { grid-template-columns: 1fr; }
+  .industry-cat-name { font-size: 26px; }
 
   .cta-form { max-width: 100%; }
   .cta-row { grid-template-columns: 1fr; }
