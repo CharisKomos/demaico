@@ -66,7 +66,7 @@ nav {
 
 .nav-links a {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--text-muted);
@@ -78,7 +78,7 @@ nav {
 
 .nav-cta {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 2px;
   text-transform: uppercase;
   background: transparent;
@@ -169,7 +169,7 @@ nav {
   margin: 20px 24px 0;
   display: block;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 2px;
   text-transform: uppercase;
   background: var(--accent);
@@ -192,8 +192,8 @@ section {
 
 .section-label {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 4px;
+  font-size: 13px;
+  letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--accent);
   margin-bottom: 16px;
@@ -229,8 +229,8 @@ section {
 
 .hero-tagline {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 4px;
+  font-size: 13px;
+  letter-spacing: 2px;
   color: var(--accent);
   text-transform: uppercase;
   margin-bottom: 24px;
@@ -263,7 +263,7 @@ section {
 
 .btn-primary {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 2px;
   text-transform: uppercase;
   background: var(--accent);
@@ -280,7 +280,7 @@ section {
 
 .btn-ghost {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 2px;
   text-transform: uppercase;
   background: transparent;
@@ -310,11 +310,14 @@ section {
 
 .hero-stat-label {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 3px;
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  line-height: 1.5;
   text-transform: uppercase;
   color: var(--text-muted);
   display: block;
+  max-width: 260px;
+  margin-top: 4px;
 }
 
 /* ── APPROACH ── */
@@ -757,7 +760,7 @@ textarea.cta-input { resize: none; overflow-y: auto; min-height: 84px; line-heig
 
 .cta-submit {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 2px;
   text-transform: uppercase;
   background: var(--accent);
@@ -794,7 +797,7 @@ footer {
 
 .footer-copy {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
+  font-size: 13px;
   letter-spacing: 2px;
   color: var(--text-muted);
 }
@@ -805,7 +808,7 @@ footer {
 
 .footer-links a {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
+  font-size: 13px;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: var(--text-muted);
@@ -904,13 +907,14 @@ footer {
   }
   .hero-stats {
     position: static;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: flex-start;
-    gap: 32px;
+    gap: 18px;
     margin-top: 40px;
     text-align: left;
   }
   .hero-stat-num { font-size: 26px; }
+  .hero-stat-label { max-width: none; }
   .hero-actions { flex-direction: column; align-items: flex-start; gap: 12px; }
   .btn-primary, .btn-ghost { width: 100%; text-align: center; padding: 14px 24px; }
 
@@ -951,9 +955,9 @@ footer {
 
 /* Mobile */
 @media (max-width: 480px) {
-  .hero-tagline { font-size: 9px; letter-spacing: 2px; }
+  .hero-tagline { font-size: 11px; letter-spacing: 2px; }
   .hero-sub { font-size: 14px; }
-  .section-label { font-size: 9px; }
+  .section-label { font-size: 11px; }
   .dmaic-header h2 { font-size: 36px; }
   .service-title { font-size: 18px; }
   .industries-left h2 { font-size: 36px; }
