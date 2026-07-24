@@ -406,7 +406,7 @@ section {
 }
 
 .dmaic-desc {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-muted);
   line-height: 1.7;
   max-width: 180px;
@@ -655,7 +655,7 @@ section {
 }
 
 .industry-sub-detail {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--text-muted);
   line-height: 1.6;
 }
@@ -1048,7 +1048,7 @@ footer {
 }
 
 .capability-desc {
-  font-size: 13px;
+  font-size: 14px;
   color: var(--text-muted);
   line-height: 1.7;
 }
@@ -1149,7 +1149,7 @@ footer {
   display: flex;
   align-items: flex-start;
   gap: 14px;
-  font-size: 13.5px;
+  font-size: 14px;
   color: var(--text);
   line-height: 1.6;
 }
