@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 116 118">
+  <style>
+    .ink{stroke:#141414}
+    @media (prefers-color-scheme:dark){.ink{stroke:#f0ece4}}
+  </style>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <g class="ink" stroke-width="9">
+      <path d="M27,24 V90"/>
+      <path d="M27,24 H55"/>
+      <path d="M27,90 H90"/>
+      <path d="M55,24 C82,26 90,52 90,90"/>
+    </g>
+    <path d="M30,27 C32,54 46,80 86,88" stroke="#e8890c" stroke-width="5"/>
+    <path d="M23,101 H90" stroke="#e8890c" stroke-width="4.5"/>
+    <path d="M90,101 l-9,-5 M90,101 l-9,5" stroke="#e8890c" stroke-width="4.5"/>
+  </g>
+  <circle cx="27" cy="24" r="8" fill="#e8890c"/>
+</svg>
