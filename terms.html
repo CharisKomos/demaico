@@ -24,7 +24,8 @@
       background: rgba(11,11,11,0.92); backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
-    .legal-logo { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 3px; color: var(--text); text-decoration: none; }
+    .legal-logo { display: inline-flex; align-items: center; text-decoration: none; }
+    .legal-logo img { height: 36px; width: auto; display: block; }
     .legal-logo .logo-dmaic { color: var(--accent); }
     .legal-back { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); text-decoration: none; }
     .legal-back:hover { color: var(--accent); }
@@ -43,7 +44,7 @@
 </head>
 <body>
   <nav class="legal-nav">
-    <a href="/" class="legal-logo"><span class="logo-dmaic">D</span>e<span class="logo-dmaic">MAIC</span>o</a>
+    <a href="/" class="legal-logo"><img src="/logo-light.png" alt="DeMAICo" /></a>
     <a href="/" class="legal-back">← Back to site</a>
   </nav>
 
