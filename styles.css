@@ -221,9 +221,8 @@ section {
 
 /* ── HERO ── */
 #hero {
-  min-height: 100vh;
-  display: flex; flex-direction: column; justify-content: flex-end;
-  padding: 88px 60px 80px;
+  display: flex; flex-direction: column; justify-content: flex-start;
+  padding: 124px 60px 96px;
   position: relative;
 }
 
@@ -307,31 +306,6 @@ section {
 
 .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
 
-.hero-stats {
-  position: absolute; right: 60px; bottom: 80px;
-  display: flex; flex-direction: column; gap: 28px;
-  text-align: right;
-}
-
-.hero-stat-num {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 36px;
-  letter-spacing: 2px;
-  color: var(--accent);
-  display: block;
-}
-
-.hero-stat-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 12px;
-  letter-spacing: 1.2px;
-  line-height: 1.5;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  display: block;
-  max-width: 260px;
-  margin-top: 4px;
-}
 
 /* ── APPROACH ── */
 #approach {
@@ -769,10 +743,9 @@ footer {
 /* Large screens */
 @media (min-width: 1400px) {
   nav { padding: 0 80px; }
-  #hero { padding: 100px 80px 100px; }
-  .hero-stats { right: 80px; bottom: 100px; }
+  #hero { padding: 148px 80px 120px; }
   .hero-number { right: 80px; }
-  #approach, #consulting, #platform, #industries, #contact { padding: 140px 80px; }
+  #approach, #consulting, #services, #platform, #platform-cta, #industries, #sectors, #contact { padding: 140px 80px; }
   footer { padding: 40px 80px; }
 }
 
@@ -787,13 +760,11 @@ footer {
   nav { padding: 0 36px; }
   .nav-links { gap: 24px; }
 
-  #hero { padding: 88px 36px 80px; }
+  #hero { padding: 112px 36px 88px; }
   .hero-title { font-size: clamp(49px, 7.8vw, 80px); }
   .hero-number { font-size: 18vw; right: 36px; top: 100px; opacity: 0.6; }
-  .hero-stats { right: 36px; bottom: 80px; gap: 20px; }
-  .hero-stat-num { font-size: 28px; }
 
-  #approach, #consulting, #platform, #industries, #contact { padding: 80px 36px; }
+  #approach, #consulting, #services, #platform, #platform-cta, #industries, #sectors, #contact { padding: 80px 36px; }
   footer { padding: 28px 36px; }
 
   .dmaic-letter { font-size: 42px; }
@@ -814,11 +785,7 @@ footer {
   .hamburger { display: flex; }
   .mobile-menu { display: block; }
 
-  #hero {
-    padding: 80px 24px 80px;
-    min-height: 100svh;
-    justify-content: flex-end;
-  }
+  #hero { padding: 96px 24px 72px; }
   .hero-title { font-size: clamp(40px, 10.4vw, 68px); }
   .hero-number {
     font-size: clamp(100px, 28vw, 200px);
@@ -826,20 +793,10 @@ footer {
     opacity: 0.35;
     letter-spacing: -4px;
   }
-  .hero-stats {
-    position: static;
-    flex-direction: column;
-    justify-content: flex-start;
-    gap: 18px;
-    margin-top: 40px;
-    text-align: left;
-  }
-  .hero-stat-num { font-size: 26px; }
-  .hero-stat-label { max-width: none; }
   .hero-actions { flex-direction: column; align-items: flex-start; gap: 12px; }
   .btn-primary, .btn-ghost { width: 100%; text-align: center; padding: 14px 24px; }
 
-  #approach, #consulting, #platform, #industries, #contact { padding: 64px 24px; }
+  #approach, #consulting, #services, #platform, #platform-cta, #industries, #sectors, #contact { padding: 64px 24px; }
   .dmaic-header { flex-direction: column; gap: 16px; align-items: flex-start; }
   .dmaic-header p { text-align: left; max-width: 100%; }
   .dmaic-track { flex-direction: column; gap: 0; }
@@ -1114,179 +1071,6 @@ footer {
   color: var(--text-muted);
 }
 
-.app-shot-live {
-  margin-left: auto;
-  display: flex; align-items: center; gap: 6px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 2px;
-  color: var(--accent);
-}
-
-.app-shot-live .live-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--accent);
-  animation: shot-pulse 1.6s infinite;
-}
-
-@keyframes shot-pulse { 0%,100%{opacity:1} 50%{opacity:0.25} }
-
-.app-shot-body { display: flex; min-height: 340px; }
-
-.app-shot-nav {
-  width: 150px;
-  flex-shrink: 0;
-  background: var(--bg-surface);
-  border-right: 1px solid var(--border);
-  padding: 18px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.app-shot-logo {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 18px;
-  letter-spacing: 2px;
-  color: var(--text);
-  padding: 0 8px 16px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid var(--border);
-}
-.app-shot-logo .logo-dmaic { color: var(--accent); }
-
-.app-shot-phase {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 1px;
-  color: var(--text-muted);
-  padding: 9px 10px;
-  border-radius: 6px;
-}
-
-.app-shot-phase.active {
-  background: var(--accent-glow);
-  color: var(--accent);
-}
-
-.app-shot-main { flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-
-.app-shot-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-
-.shot-tile {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 14px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.shot-tile-label {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.shot-tile-val {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 32px;
-  letter-spacing: 1px;
-  color: var(--text);
-  line-height: 1;
-}
-.shot-tile-val em { font-style: normal; font-size: 18px; color: var(--text-muted); }
-
-.shot-tile-note {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 1px;
-  color: var(--text-muted);
-}
-.shot-tile-note.ok { color: var(--accent); }
-
-.app-shot-chart {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 14px 16px 12px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.shot-chart-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-
-.shot-chart-title {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.shot-chart-tag {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 1px;
-  color: var(--text-muted);
-}
-
-.app-shot-chart svg { width: 100%; height: 150px; display: block; }
-
-.shot-usl, .shot-lsl {
-  stroke: var(--accent-dim);
-  stroke-width: 1;
-  stroke-dasharray: 4 4;
-  opacity: 0.7;
-}
-.shot-target { stroke: var(--text-faint); stroke-width: 1; }
-
-.shot-series {
-  fill: none;
-  stroke: var(--accent);
-  stroke-width: 1.75;
-  vector-effect: non-scaling-stroke;
-}
-
-.shot-dots circle { fill: var(--accent); }
-.shot-dots circle.shot-flag {
-  fill: var(--bg-card);
-  stroke: var(--accent);
-  stroke-width: 2;
-}
-
-.shot-axis {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 8px;
-  fill: var(--text-muted);
-  letter-spacing: 0.5px;
-}
-
-.shot-chart-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-
-.shot-anomaly {
-  display: flex; align-items: center; gap: 7px;
-  font-size: 11px;
-  color: var(--text-muted);
-}
-.shot-anomaly strong { color: var(--accent); font-weight: 600; }
-.shot-anomaly-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-glow);
-  flex-shrink: 0;
-}
-
-.shot-chart-src {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.5px;
-  color: var(--text-faint);
-}
-
 /* ── RESPONSIVE — new sections ────────────────────────────────────── */
 
 @media (max-width: 1024px) {
@@ -1295,11 +1079,150 @@ footer {
 
 @media (max-width: 768px) {
   .consult-cards { grid-template-columns: 1fr; }
-  .app-shot-body { min-height: 0; }
 }
 
-@media (max-width: 480px) {
-  .app-shot-nav { display: none; }
-  .app-shot-tiles { grid-template-columns: 1fr 1fr; }
-  .app-shot-tiles .shot-tile:last-child { grid-column: 1 / -1; }
+/* ── NAV DROPDOWN ("We Offer") ────────────────────────────────────── */
+
+.nav-drop { position: relative; }
+
+/* bridges the gap between the nav item and the menu so hover survives */
+.nav-drop::after {
+  content: '';
+  position: absolute;
+  top: 100%; left: 0; right: 0;
+  height: 26px;
+}
+
+.nav-drop-toggle {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s;
+}
+
+.nav-drop-toggle:hover,
+.nav-drop:hover .nav-drop-toggle,
+.nav-drop.open .nav-drop-toggle { color: var(--accent); }
+
+.nav-caret { font-size: 9px; line-height: 1; transition: transform 0.2s; }
+.nav-drop.open .nav-caret { transform: rotate(180deg); }
+
+.nav-drop-menu {
+  position: absolute;
+  top: calc(100% + 26px);
+  left: -20px;
+  min-width: 300px;
+  list-style: none;
+  background: rgba(11,11,11,0.98);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  padding: 8px 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+}
+
+.nav-drop:hover .nav-drop-menu,
+.nav-drop.open .nav-drop-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.nav-drop-menu li a {
+  display: block;
+  padding: 13px 22px;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  line-height: 1.4;
+}
+
+.nav-drop-menu li a:hover { background: rgba(232,137,12,0.05); }
+.nav-drop-menu li a.is-current { color: var(--accent); }
+
+/* ── MOBILE MENU — grouped items ──────────────────────────────────── */
+
+.mobile-menu.open { max-height: 640px; }
+
+.mobile-menu .mobile-group {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 16px 24px 6px;
+}
+
+.mobile-menu ul li a.mobile-sub {
+  padding-left: 40px;
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+
+.mobile-menu ul li a.is-current { color: var(--accent); }
+
+/* ── SERVICES ─────────────────────────────────────────────────────── */
+
+#services {
+  padding: 120px 60px;
+  background: var(--bg);
+}
+
+.service-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+}
+
+.service-line .consult-cards { margin-top: 0; }
+
+/* ── PLATFORM TEASER / PAGE CTA ───────────────────────────────────── */
+
+#platform-cta {
+  padding: 120px 60px;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.teaser-body { max-width: 760px; }
+.teaser-body .tool-lead { margin-bottom: 36px; }
+
+#platform-cta .cta-inner p { margin-bottom: 40px; }
+
+/* ── SECTORS ──────────────────────────────────────────────────────── */
+
+#sectors {
+  padding: 120px 60px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+
+/* On the platform page #platform sits directly under the hero, so it keeps
+   the plain ground and relies on its hairline borders for separation. */
+#platform { background: var(--bg); }
+
+/* Nav items must not wrap — "We Offer" would otherwise break over two lines
+   on narrow laptops before the mobile breakpoint takes over. */
+.nav-links a, .nav-drop-toggle { white-space: nowrap; }
+
+/* current page marker on the top-level nav */
+.nav-links a.is-current { color: var(--accent); }
+
+/* The platform screenshot sits inside the .app-shot window frame. */
+.app-shot-img {
+  display: block;
+  width: 100%;
+  height: auto;
 }

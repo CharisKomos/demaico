@@ -40,3 +40,32 @@ function scaleDemoPreviews() {
 }
 scaleDemoPreviews();
 window.addEventListener('resize', scaleDemoPreviews);
+
+// ── NAV DROPDOWN ("We Offer") ──
+// Hover opens it on desktop (CSS); this makes click and keyboard work too.
+document.querySelectorAll('.nav-drop').forEach(drop => {
+  const toggle = drop.querySelector('.nav-drop-toggle');
+  if (!toggle) return;
+
+  const setOpen = (open) => {
+    drop.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+  };
+
+  toggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    setOpen(!drop.classList.contains('open'));
+  });
+
+  drop.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { setOpen(false); toggle.focus(); }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!drop.contains(e.target)) setOpen(false);
+  });
+
+  drop.querySelectorAll('.nav-drop-menu a').forEach(link => {
+    link.addEventListener('click', () => setOpen(false));
+  });
+});

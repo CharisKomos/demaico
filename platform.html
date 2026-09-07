@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lean Six Sigma Analytics Platform — DeMAICo</title>
+  <meta name="description" content="The DeMAICo Lean Six Sigma Analytics Platform — our own continuous DMAIC instrument. It turns historian and MES data into live process capability, anomaly detection, waste classification, and improvement tracking." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
+  <link rel="stylesheet" href="/fonts.css" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo"><img src="/logo-light.png" alt="DeMAICo" width="116" height="40" style="display:block;height:40px;width:auto" /></a>
+  <ul class="nav-links">
+    <li><a href="/">Main</a></li>
+    <li class="nav-drop">
+      <button type="button" class="nav-drop-toggle" aria-expanded="false" aria-haspopup="true">We Offer<span class="nav-caret" aria-hidden="true">▾</span></button>
+      <ul class="nav-drop-menu">
+        <li><a href="/services.html">Consulting Services</a></li>
+        <li><a href="/platform.html" class="is-current" aria-current="page">Lean Six Sigma Analytics Platform</a></li>
+      </ul>
+    </li>
+  </ul>
+  <a href="/#contact" class="nav-cta">Book a Consultation</a>
+  <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <ul>
+    <li><a href="/" class="mobile-nav-link">Main</a></li>
+    <li><span class="mobile-group">We Offer</span></li>
+    <li><a href="/services.html" class="mobile-nav-link mobile-sub">Consulting Services</a></li>
+    <li><a href="/platform.html" class="mobile-nav-link mobile-sub is-current" aria-current="page">Lean Six Sigma Analytics Platform</a></li>
+  </ul>
+  <a href="/#contact" class="mobile-cta mobile-nav-link">Book a Consultation</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-number">6σ</div>
+
+  <p class="hero-tagline">// Define · Measure · Analyse · Improve · Control</p>
+
+  <h1 class="hero-title">
+    Lean Six Sigma<br/>
+    Analytics<br/>
+    <span class="accent">Platform</span>
+  </h1>
+
+  <p class="hero-sub">
+    Our own DMAIC analytics platform — the instrument behind a DeMAICo process-improvement engagement. It scores your historian and MES data continuously, detects and classifies what goes wrong, and tracks every improvement from baseline to verified gain.
+  </p>
+
+  <div class="hero-actions">
+    <a href="/#contact" class="btn-primary">Book a Consultation</a>
+    <a href="#platform" class="btn-ghost">What It Does</a>
+  </div>
+</section>
+
+<!-- PLATFORM (our tool) -->
+<section id="platform">
+  <div class="platform-intro reveal">
+    <div>
+      <div class="section-label">Inside The Platform</div>
+      <h2 class="section-title">What It<br/>Does</h2>
+    </div>
+  </div>
+
+  <div class="tool-showcase reveal">
+    <div class="tool-copy">
+      <p class="tool-lead">
+        Where a typical Six Sigma project produces a one-off report, ours produces a living instrument. CTQs are defined once; the platform then measures, detects, classifies, and tracks improvement automatically — giving your team a continuous view of process health long after the engagement ends.
+      </p>
+      <ul class="tool-points">
+        <li><span>An in-house tool, used on engagements — never licensed or handed over as a product.</span></li>
+        <li><span>Works on both real-time and batch data — scoring live streams as they arrive and back-loading historical exports just the same.</span></li>
+        <li><span>Every detection is source-attributed — rule or model, threshold, and timestamp — for GMP-grade traceability.</span></li>
+        <li><span>Selected screens and reports become part of your project deliverables and control plan.</span></li>
+      </ul>
+    </div>
+
+    <!-- Screenshot of the DeMAICo platform: the Overview page of a live project. -->
+    <figure class="app-shot">
+      <div class="app-shot-bar">
+        <span class="app-shot-dots"><i></i><i></i><i></i></span>
+        <span class="app-shot-crumb">DeMAICo · Overview — Polypropylene Line 2</span>
+      </div>
+      <img class="app-shot-img" src="/platform-overview.webp" width="2000" height="1686" loading="lazy" decoding="async"
+           alt="The DeMAICo Overview page: a 100% process-health gauge, OEE 0.866, Cpk 1.413, sigma level 4.239 and batch yield, a 24-hour summary of SPC violations and events processed, a live anomaly feed, and an SPC control chart of melt flow index with its control limits." />
+    </figure>
+  </div>
+
+  <div class="capability-grid reveal">
+    <div class="capability-item">
+      <div class="capability-letter">01</div>
+      <div class="capability-title">Real-Time Measurement</div>
+      <div class="capability-desc">Historian tags scored against CTQ spec limits every 5 seconds. Process capability (Cp, Cpk), OEE, and sigma level updated continuously — not in a monthly report.</div>
+    </div>
+    <div class="capability-item">
+      <div class="capability-letter">02</div>
+      <div class="capability-title">Anomaly Detection</div>
+      <div class="capability-desc">Rule-first ML engine: deterministic rules (priority ≥80) take precedence over ML inference. CUSUM, EWMA, and Western Electric SPC rules applied simultaneously to every tag.</div>
+    </div>
+    <div class="capability-item">
+      <div class="capability-letter">03</div>
+      <div class="capability-title">Waste Classification</div>
+      <div class="capability-desc">Every detected deviation is automatically classified against all 8 DOWNTIME waste categories — giving Lean teams an audit-ready evidence base without manual data gathering.</div>
+    </div>
+    <div class="capability-item">
+      <div class="capability-letter">04</div>
+      <div class="capability-title">Improvement Tracking</div>
+      <div class="capability-desc">Improvement actions logged with baseline and target sigma. Status advances open → in progress → verified → closed, with the before/after sigma delta shown for every closed action.</div>
+    </div>
+    <div class="capability-item">
+      <div class="capability-letter">05</div>
+      <div class="capability-title">GMP Audit Traceability</div>
+      <div class="capability-desc">Every detection decision is source-attributed — rule name or ML model version, threshold, and timestamp. Aligned with 21 CFR Part 11 and EU GMP Annex 11 requirements.</div>
+    </div>
+    <div class="capability-item">
+      <div class="capability-letter">06</div>
+      <div class="capability-title">Multi-Site Fleet View</div>
+      <div class="capability-desc">A cross-project health dashboard surfaces the sites needing attention first — health score, critical anomaly count, SPC violations, and top waste category in a single triage view.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="platform-cta">
+  <div class="cta-inner reveal">
+    <div class="section-label">Start the Conversation</div>
+    <h2 class="section-title">See It On<br/><span class="accent">Your</span><br/>Process</h2>
+    <p>
+      The platform comes with the engagement — we point it at your data, real-time or batch, and leave the screens that matter behind in your control plan. Tell us about your process and we'll show you its capabilities and how it can instantly add value to your operations.
+    </p>
+    <div class="hero-actions">
+      <a href="/#contact" class="btn-primary">Book a Consultation</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo"><img src="/logo-light.png" alt="DeMAICo" width="98" height="34" style="display:block;height:34px;width:auto" /></div>
+  <span class="footer-copy">© 2026 DeMAICo - All rights reserved.</span>
+  <ul class="footer-links">
+    <li><a href="/">Home</a></li>
+    <li><a href="/services.html">Services</a></li>
+    <li><a href="/#contact">Contact</a></li>
+    <li><a href="/privacy.html">Privacy</a></li>
+    <li><a href="/terms.html">Terms</a></li>
+  </ul>
+  <ul class="footer-social">
+    <li>
+      <a href="https://www.linkedin.com/company/demaico" target="_blank" rel="noopener noreferrer" aria-label="DeMAICo on LinkedIn" title="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+          <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.25h3.96V21H3V9.25zM9.5 9.25h3.8v1.6h.05c.53-.95 1.82-1.95 3.75-1.95 4.01 0 4.75 2.5 4.75 5.76V21h-3.96v-5.55c0-1.32-.02-3.03-1.9-3.03-1.9 0-2.19 1.44-2.19 2.93V21H9.5V9.25z"/>
+        </svg>
+      </a>
+    </li>
+  </ul>
+</footer>
+
+
+<script src="/main.js"></script>
+</body>
+</html>
