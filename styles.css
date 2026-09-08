@@ -281,23 +281,6 @@ section {
 
 .btn-primary:hover { opacity: 0.85; }
 
-.btn-ghost {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 13px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  background: transparent;
-  color: var(--text-muted);
-  border: 1px solid var(--border);
-  padding: 16px 36px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: border-color 0.2s, color 0.2s;
-}
-
-.btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
-
-
 /* ── APPROACH ── */
 #approach {
   padding: 120px 60px;
@@ -785,7 +768,7 @@ footer {
     letter-spacing: -4px;
   }
   .hero-actions { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .btn-primary, .btn-ghost { width: 100%; text-align: center; padding: 14px 24px; }
+  .btn-primary { width: 100%; text-align: center; padding: 14px 24px; }
 
   #approach, #consulting, #services, #platform, #platform-cta, #industries, #sectors, #contact { padding: 64px 24px; }
   .dmaic-header { flex-direction: column; gap: 16px; align-items: flex-start; }
