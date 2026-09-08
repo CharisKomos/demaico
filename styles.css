@@ -239,15 +239,6 @@ section {
   letter-spacing: -8px;
 }
 
-.hero-tagline {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 13px;
-  letter-spacing: 2px;
-  color: var(--accent);
-  text-transform: uppercase;
-  margin-bottom: 24px;
-}
-
 .hero-title {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 100px;
@@ -832,7 +823,6 @@ footer {
 /* Mobile */
 @media (max-width: 480px) {
   .nav-logo img { height: 34px; }
-  .hero-tagline { font-size: 11px; letter-spacing: 2px; }
   .hero-sub { font-size: 14px; }
   .section-label { font-size: 11px; }
   .section-title { font-size: 36px; }
@@ -1226,3 +1216,9 @@ footer {
   width: 100%;
   height: auto;
 }
+
+/* Nav items sit at the right of the bar, next to the call to action, rather
+   than floating in the middle of it. The logo's auto margin takes the slack,
+   so the hamburger still lands on the right at mobile widths. */
+nav { justify-content: flex-start; gap: 36px; }
+.nav-logo { margin-right: auto; }
