@@ -229,14 +229,19 @@ section {
 .hero-number {
   position: absolute;
   top: 120px; right: 60px;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(180px, 22vw, 340px);
-  line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 1px var(--text-faint);
+  width: clamp(180px, 22vw, 340px);
+  aspect-ratio: 1;
+  overflow: hidden;
   pointer-events: none;
   user-select: none;
-  letter-spacing: -8px;
+  opacity: 0.8;
+}
+
+.hero-number img {
+  display: block;
+  height: 100%;
+  width: auto;
+  max-width: none;
 }
 
 .hero-title {
