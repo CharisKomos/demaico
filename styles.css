@@ -856,7 +856,6 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 64px;
 }
 
 .platform-intro p {
@@ -993,13 +992,11 @@ footer {
   display: grid;
   grid-template-columns: 0.85fr 1.15fr;
   gap: 56px;
-  align-items: center;
   margin-bottom: 72px;
 }
 
 .tool-lead {
   font-size: 17px;
-  color: var(--text-muted);
   line-height: 1.8;
   margin-bottom: 28px;
 }
