@@ -229,12 +229,14 @@ section {
 .hero-number {
   position: absolute;
   top: 120px; right: 60px;
-  width: clamp(180px, 22vw, 340px);
-  aspect-ratio: 1;
-  overflow: hidden;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(180px, 22vw, 340px);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--text-faint);
   pointer-events: none;
   user-select: none;
-  opacity: 0.8;
+  letter-spacing: -8px;
 }
 
 .hero-number img {
