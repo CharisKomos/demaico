@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lean Six Sigma Analytics Platform — DeMAICo</title>
-  <meta name="description" content="The DeMAICo Lean Six Sigma Analytics Platform — our own continuous DMAIC instrument. It turns historian and MES data into live process capability, anomaly detection, waste classification, and improvement tracking." />
+  <meta name="description" content="Real-time CTQ scoring, rule-first anomaly detection, DOWNTIME waste classification and improvement tracking, with 21 CFR Part 11 / Annex 11 traceability." />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="apple-touch-icon" href="/favicon.png" />
@@ -13,153 +13,122 @@
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a href="/" class="nav-logo"><img src="/logo-light.png" alt="DeMAICo" width="116" height="40" style="display:block;height:40px;width:auto" /></a>
-  <ul class="nav-links">
-    <li><a href="/">Main</a></li>
-    <li class="nav-drop">
-      <button type="button" class="nav-drop-toggle" aria-expanded="false" aria-haspopup="true">Our Services<span class="nav-caret" aria-hidden="true">▾</span></button>
-      <ul class="nav-drop-menu">
-        <li><a href="/services.html">Consulting Services</a></li>
-        <li><a href="/platform.html" class="is-current" aria-current="page">Lean Six Sigma Analytics Platform</a></li>
-      </ul>
-    </li>
-  </ul>
-  <a href="/#contact" class="nav-cta">Book a Consultation</a>
-  <button class="hamburger" id="hamburger" aria-label="Toggle menu">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
-
-<!-- MOBILE MENU -->
-<div class="mobile-menu" id="mobile-menu">
-  <ul>
-    <li><a href="/" class="mobile-nav-link">Main</a></li>
-    <li><span class="mobile-group">Our Services</span></li>
-    <li><a href="/services.html" class="mobile-nav-link mobile-sub">Consulting Services</a></li>
-    <li><a href="/platform.html" class="mobile-nav-link mobile-sub is-current" aria-current="page">Lean Six Sigma Analytics Platform</a></li>
-  </ul>
-  <a href="/#contact" class="mobile-cta mobile-nav-link">Book a Consultation</a>
-</div>
-
-<!-- HERO -->
-<section id="hero">
-  <div class="hero-number">6σ</div>
-
-  <h1 class="hero-title">
-    Lean Six Sigma<br/>
-    Analytics<br/>
-    <span class="accent">Platform</span>
-  </h1>
-
-  <p class="hero-sub">
-    Our own DMAIC analytics platform — the instrument behind a DeMAICo process-improvement engagement. It scores your historian and MES data continuously, detects and classifies what goes wrong, and tracks every improvement from baseline to verified gain.
-  </p>
-</section>
-
-<!-- PLATFORM (our tool) -->
-<section id="platform">
-  <div class="platform-intro reveal">
-    <div>
-      <div class="section-label">Inside The Platform</div>
-      <h2 class="section-title">What It<br/>Does</h2>
-    </div>
+<header>
+  <div class="wrap hdr">
+    <a href="/" class="logo" aria-label="DeMAICo home"><img src="/logo-dark.png" alt="DeMAICo" width="104" height="36"></a>
+    <nav class="main" aria-label="Main">
+      <a href="/" data-nav="home">Overview</a>
+      <span class="navgrp"><span class="navlbl">Lean Six Sigma</span>
+        <a href="/lean-six-sigma.html" data-nav="six-sigma">Process Improvement</a>
+        <a href="/platform.html" data-nav="platform" class="on" aria-current="page">Analytics Platform</a></span>
+      <span class="navsep" aria-hidden="true"></span>
+      <a href="/services.html" data-nav="services">Consulting Services</a>
+    </nav>
+    <a href="/contact.html" class="btn btn-primary btn-sm">Book a diagnostic call</a>
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="mnav"><span></span><span></span><span></span></button>
   </div>
+  <div class="mnav" id="mnav">
+    <a href="/">Overview</a>
+    <span class="mlbl">Lean Six Sigma</span>
+    <a href="/lean-six-sigma.html">Process Improvement</a>
+    <a href="/platform.html">Analytics Platform</a>
+    <span class="mlbl">Consulting</span>
+    <a href="/services.html">Consulting Services</a>
+    <a href="/contact.html" class="btn btn-primary">Book a diagnostic call</a>
+  </div>
+</header>
 
-  <div class="tool-showcase reveal">
-    <div class="tool-copy">
-      <p class="tool-lead">
-        Where a typical Six Sigma project produces a one-off report, ours produces a living instrument. CTQs are defined once; the platform then measures, detects, classifies, and tracks improvement automatically — giving your team a continuous view of process health long after the engagement ends.
-      </p>
-      <ul class="tool-points">
-        <li><span>Works on both real-time and batch data — scoring live streams as they arrive and back-loading historical exports just the same.</span></li>
-        <li><span>Every detection is source-attributed — rule or model, threshold, and timestamp — for GMP-grade traceability.</span></li>
-        <li><span>Selected screens and reports become part of your project deliverables and control plan.</span></li>
-      </ul>
+<main id="main">
+  <section class="phero">
+    <div class="wrap">
+      <div class="crumbs"><a href="/">Overview</a> / Analytics Platform</div>
+      <div class="eyebrow">Lean Six Sigma Analytics Platform</div>
+      <h1 style="margin-top:16px;max-width:900px">Not a one-off report.<br>A <span class="hl">living instrument</span>.</h1>
+      <p class="lead">Define your CTQs once. The platform measures, detects, classifies and tracks improvement automatically, on real-time and batch data.</p>
     </div>
+  </section>
 
-    <!-- Screenshot of the DeMAICo platform: the Overview page of a live project. -->
-    <figure class="app-shot">
-      <div class="app-shot-bar">
-        <span class="app-shot-dots"><i></i><i></i><i></i></span>
-        <span class="app-shot-crumb">DeMAICo · Overview — Polypropylene Line 2</span>
+  <section class="dark-sec">
+    <div class="wrap">
+      <div class="eyebrow">Explore the platform</div>
+      <h2>Six capabilities. One screen.</h2>
+      <p class="lead">Select a capability to see where it lives. The chart runs live — try switching detection rules.</p>
+      <div class="explorer">
+        <div class="caps" id="caps"></div>
+        <div class="dash" id="dash">
+          <div class="zone z-kpi" data-z="1"><h5>Cpk · worst CTQ</h5><div class="bignum" id="p-cpk">1.41</div></div>
+          <div class="zone z-kpi" data-z="1"><h5>Sigma level</h5><div class="bignum" id="p-sig">4.24</div></div>
+          <div class="zone z-kpi" data-z="1"><h5>OEE</h5><div class="bignum" id="p-oee">0.87</div></div>
+          <div class="zone z-chart" data-z="1 2"><h5>SPC · PP2_MFI_PV</h5>
+            <div class="rules" id="rules"><button data-r="we" class="on">Western Electric</button><button data-r="cusum" class="on">CUSUM</button><button data-r="ewma">EWMA</button></div>
+            <svg id="platChart" viewBox="0 0 520 200" preserveAspectRatio="none" style="width:100%;height:auto"></svg>
+          </div>
+          <div class="zone z-feed" data-z="2 5"><h5>Anomaly feed</h5><div class="feed" id="feed"></div></div>
+          <div class="zone z-waste" data-z="3"><h5>DOWNTIME waste · 30d</h5><div class="bars" id="waste"></div></div>
+          <div class="zone z-act" data-z="4"><h5>Improvement actions</h5><div class="act">
+            <div><span>Reactor temp loop retune</span><span class="pill" style="color:#46D49A;border-color:#46D49A">verified +0.4σ</span></div>
+            <div><span>Grade-change SOP</span><span class="pill" style="color:#4FA3F7;border-color:#4FA3F7">in progress</span></div>
+            <div><span>MFI lab sampling plan</span><span class="pill" style="color:var(--signal);border-color:var(--signal)">open</span></div>
+            <div><span>Pellet dryer PM</span><span class="pill" style="color:#8D929B;border-color:#8D929B">closed +0.2σ</span></div>
+          </div></div>
+          <div class="zone z-audit" data-z="5"><h5>Detection record</h5><div class="audit" id="audit">waiting for next detection…</div></div>
+          <div class="zone z-fleet" data-z="6"><h5>Fleet · site health</h5><div class="fleet">
+            <div><span>Site A · Line 2</span><span>92%</span><span style="color:#46D49A">●</span></div>
+            <div><span>Site A · Line 4</span><span>78%</span><span style="color:var(--signal)">●</span></div>
+            <div><span>Site B · Packaging</span><span>64%</span><span style="color:#E5625A">●</span></div>
+          </div></div>
+        </div>
       </div>
-      <img class="app-shot-img" src="/platform-overview.webp" width="2000" height="1686" loading="lazy" decoding="async"
-           alt="The DeMAICo Overview page: a 100% process-health gauge, OEE 0.866, Cpk 1.413, sigma level 4.239 and batch yield, a 24-hour summary of SPC violations and events processed, a live anomaly feed, and an SPC control chart of melt flow index with its control limits." />
-    </figure>
-  </div>
+      <div class="shot-toggle"><button class="on" data-s="0">Interactive preview</button><button data-s="1">Real screenshot</button></div>
+      <div class="shot" id="shot"><img src="/platform-overview.webp" alt="DeMAICo Overview page for Polypropylene Line 2: process health, OEE, Cpk, sigma level, anomaly feed and SPC control chart." loading="lazy"></div>
+    </div>
+  </section>
 
-  <div class="capability-grid reveal">
-    <div class="capability-item">
-      <div class="capability-letter">01</div>
-      <div class="capability-title">Real-Time Measurement</div>
-      <div class="capability-desc">Historian tags scored against CTQ spec limits every 5 seconds. Process capability (Cp, Cpk), OEE, and sigma level updated continuously — not in a monthly report.</div>
+  <section>
+    <div class="wrap compliance">
+      <div>
+        <div class="eyebrow">Built for regulated sites</div>
+        <h2>Every detection explains itself.</h2>
+        <p class="lead">Rules take precedence over ML. Each decision records its source, threshold and timestamp — evidence an auditor can follow.</p>
+        <div class="stds"><span>21 CFR Part 11</span><span>EU GMP Annex 11</span><span>Rule-first ML (priority ≥ 80)</span></div>
+      </div>
+<div class="record"><span class="k">detection_id</span>  <span class="v">D-2026-11-0412</span>
+<span class="k">tag</span>           PP2_MFI_PV
+<span class="k">source</span>        <span class="o">rule:CUSUM-</span>   <span class="k">priority</span> 90
+<span class="k">threshold</span>     h = 4.0
+<span class="k">value</span>         4.12  (downward shift)
+<span class="k">waste_class</span>   Defects
+<span class="k">timestamp</span>     2026-11-12T08:15:05Z
+<span class="k">ml_model</span>      not invoked (rule precedence)</div>
     </div>
-    <div class="capability-item">
-      <div class="capability-letter">02</div>
-      <div class="capability-title">Anomaly Detection</div>
-      <div class="capability-desc">Rule-first ML engine: deterministic rules (priority ≥80) take precedence over ML inference. CUSUM, EWMA, and Western Electric SPC rules applied simultaneously to every tag.</div>
-    </div>
-    <div class="capability-item">
-      <div class="capability-letter">03</div>
-      <div class="capability-title">Waste Classification</div>
-      <div class="capability-desc">Every detected deviation is automatically classified against all 8 DOWNTIME waste categories — giving Lean teams an audit-ready evidence base without manual data gathering.</div>
-    </div>
-    <div class="capability-item">
-      <div class="capability-letter">04</div>
-      <div class="capability-title">Improvement Tracking</div>
-      <div class="capability-desc">Improvement actions logged with baseline and target sigma. Status advances open → in progress → verified → closed, with the before/after sigma delta shown for every closed action.</div>
-    </div>
-    <div class="capability-item">
-      <div class="capability-letter">05</div>
-      <div class="capability-title">GMP Audit Traceability</div>
-      <div class="capability-desc">Every detection decision is source-attributed — rule name or ML model version, threshold, and timestamp. Aligned with 21 CFR Part 11 and EU GMP Annex 11 requirements.</div>
-    </div>
-    <div class="capability-item">
-      <div class="capability-letter">06</div>
-      <div class="capability-title">Multi-Site Fleet View</div>
-      <div class="capability-desc">A cross-project health dashboard surfaces the sites needing attention first — health score, critical anomaly count, SPC violations, and top waste category in a single triage view.</div>
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- CTA -->
-<section id="platform-cta">
-  <div class="cta-inner reveal">
-    <div class="section-label">Start the Conversation</div>
-    <h2 class="section-title">See It On<br/><span class="accent">Your</span><br/>Process</h2>
-    <p>
-      The platform comes with the engagement — we point it at your data, real-time or batch, and leave the screens that matter behind in your control plan. Tell us about your process and we'll show you its capabilities and how it can instantly add value to your operations.
-    </p>
-    <div class="hero-actions">
-      <a href="/#contact" class="btn-primary">Book a Consultation</a>
+  <section class="band">
+    <div class="wrap">
+      <div class="eyebrow">How it's delivered</div>
+      <h2>It comes with the engagement — and stays.</h2>
+      <div class="timeline">
+        <div class="tl"><span class="mono">Measure</span><h3>Connect</h3><p>We point it at your historian, MES or batch exports. Historical data back-loads to give the baseline.</p></div>
+        <div class="tl"><span class="mono">Analyse → Improve</span><h3>Detect &amp; track</h3><p>Deviations are flagged and classified; each improvement action is logged with baseline and target sigma.</p></div>
+        <div class="tl"><span class="mono">Control</span><h3>Hand over</h3><p>The screens that matter become part of your control plan, owned by your team after we leave.</p></div>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+</main>
 
-<!-- FOOTER -->
+<div class="slimcta" id="slimcta"><span>Not sure where to start? A diagnostic call scopes it in 30 minutes.</span><a href="/contact.html" class="btn">Book a call</a></div>
+
 <footer>
-  <div class="footer-logo"><img src="/logo-light.png" alt="DeMAICo" width="98" height="34" style="display:block;height:34px;width:auto" /></div>
-  <span class="footer-copy">© 2026 DeMAICo - All rights reserved.</span>
-  <ul class="footer-links">
-    <li><a href="/">Home</a></li>
-    <li><a href="/services.html">Services</a></li>
-    <li><a href="/#contact">Contact</a></li>
-    <li><a href="/privacy.html">Privacy</a></li>
-    <li><a href="/terms.html">Terms</a></li>
-  </ul>
-  <ul class="footer-social">
-    <li>
-      <a href="https://www.linkedin.com/company/demaico" target="_blank" rel="noopener noreferrer" aria-label="DeMAICo on LinkedIn" title="LinkedIn">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
-          <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.25h3.96V21H3V9.25zM9.5 9.25h3.8v1.6h.05c.53-.95 1.82-1.95 3.75-1.95 4.01 0 4.75 2.5 4.75 5.76V21h-3.96v-5.55c0-1.32-.02-3.03-1.9-3.03-1.9 0-2.19 1.44-2.19 2.93V21H9.5V9.25z"/>
-        </svg>
-      </a>
-    </li>
-  </ul>
+  <div class="wrap">
+    <div class="foot">
+      <div><img src="/logo-light.png" alt="DeMAICo" width="92" height="32"><p>Lean Six Sigma improvement and analytics, plus business &amp; manufacturing consulting.</p></div>
+      <div><h5>Lean Six Sigma</h5><a href="/lean-six-sigma.html">Process Improvement</a><a href="/platform.html">Analytics Platform</a></div>
+      <div><h5>Consulting Services</h5><a href="/services.html#s-bpc">Business Process</a><a href="/services.html#s-data">Data &amp; Reporting</a><a href="/services.html#s-devops">DevOps &amp; Validation</a></div>
+      <div><h5>Company</h5><a href="/contact.html">Contact</a><a href="https://www.linkedin.com/company/demaico">LinkedIn</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></div>
+    </div>
+    <div class="legal"><span>© 2026 DeMAICo — All rights reserved.</span></div>
+  </div>
 </footer>
-
 
 <script src="/main.js"></script>
 </body>
