@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact — DeMAICo</title>
+  <meta name="description" content="Book a diagnostic call with DeMAICo." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
+  <link rel="stylesheet" href="/fonts.css" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+<header>
+  <div class="wrap hdr">
+    <a href="/" class="logo" aria-label="DeMAICo home"><img src="/logo-dark.png" alt="DeMAICo" width="104" height="36"></a>
+    <nav class="main" aria-label="Main">
+      <a href="/" data-nav="home">Overview</a>
+      <span class="navgrp"><span class="navlbl">Lean Six Sigma</span>
+        <a href="/lean-six-sigma.html" data-nav="six-sigma">Process Improvement</a>
+        <a href="/platform.html" data-nav="platform">Analytics Platform</a></span>
+      <span class="navsep" aria-hidden="true"></span>
+      <a href="/services.html" data-nav="services">Consulting Services</a>
+    </nav>
+    <a href="/contact.html" class="btn btn-primary btn-sm">Book a diagnostic call</a>
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="mnav"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mnav" id="mnav">
+    <a href="/">Overview</a>
+    <span class="mlbl">Lean Six Sigma</span>
+    <a href="/lean-six-sigma.html">Process Improvement</a>
+    <a href="/platform.html">Analytics Platform</a>
+    <span class="mlbl">Consulting</span>
+    <a href="/services.html">Consulting Services</a>
+    <a href="/contact.html" class="btn btn-primary">Book a diagnostic call</a>
+  </div>
+</header>
+
+<main id="main">
+  <section class="phero" style="padding-bottom:96px">
+    <div class="wrap contact-grid">
+      <div class="contact-aside">
+        <div class="crumbs"><a href="/">Overview</a> / Contact</div>
+        <div class="eyebrow">Book a diagnostic call</div>
+        <h1 style="margin-top:16px;font-size:clamp(40px,5vw,64px)">Let's talk about value.</h1>
+        <p class="lead" style="margin-top:18px">Four short steps. What you share shapes the first call, so we arrive with a view on your process.</p>
+        <ul>
+          <li><span class="k">1</span><span>We reply within 48 hours.</span></li>
+          <li><span class="k">2</span><span>A 30-minute call to scope the problem — the Define phase, before any proposal.</span></li>
+          <li><span class="k">3</span><span>If there's a fit, we propose a Process Diagnostic on your data.</span></li>
+        </ul>
+        <p class="fine">Prefer email? Write to <a href="mailto:info@demaico.com">info@demaico.com</a></p>
+      </div>
+
+      <form class="wiz" id="wiz" action="https://formspree.io/f/xbdzwwev" method="POST" novalidate>
+        <!-- Spam honeypot: Formspree drops any submission where _gotcha is filled in. -->
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true" />
+        <input type="hidden" name="_subject" value="New enquiry from demaico.com" />
+        <input type="hidden" name="challenge_topics" id="f-topic" />
+        <input type="hidden" name="why_now_tags" id="f-why" />
+        <input type="hidden" name="sigma_check" id="f-sigma" />
+        <div class="prog"><i class="on"></i><i></i><i></i><i></i></div>
+        <div class="wstep on" data-s="0">
+          <span class="qnum">1 / 4 · Define</span>
+          <h3>What's the biggest challenge right now?</h3>
+          <p class="hint">Pick what fits, then add a line of detail.</p>
+          <div class="prefill" id="prefill"></div>
+          <div class="opts" data-group="topic">
+            <button type="button" class="opt" aria-pressed="false">Unstable quality / variation</button><button type="button" class="opt" aria-pressed="false">Low OEE / throughput</button><button type="button" class="opt" aria-pressed="false">Waste &amp; cost</button><button type="button" class="opt" aria-pressed="false">Slow back-office process</button><button type="button" class="opt" aria-pressed="false">Sustaining past gains</button><button type="button" class="opt" aria-pressed="false">Systems &amp; data integration</button><button type="button" class="opt" aria-pressed="false">Power BI reporting</button><button type="button" class="opt" aria-pressed="false">MES DevOps / validation</button>
+          </div>
+          <textarea rows="3" name="biggest_challenge" maxlength="1500" id="f-ch" placeholder="e.g. Melt flow drifts after grade changes on Line 2"></textarea>
+        </div>
+        <div class="wstep" data-s="1">
+          <span class="qnum">2 / 4 · Measure</span>
+          <h3>What have you already tried?</h3>
+          <p class="hint">It saves us both from proposing it again.</p>
+          <textarea rows="4" name="already_tried" maxlength="1500" placeholder="Projects, tools, consultants, internal fixes…"></textarea>
+        </div>
+        <div class="wstep" data-s="2">
+          <span class="qnum">3 / 4 · Why now</span>
+          <h3>Why is now the right time?</h3>
+          <div class="opts" data-group="why"><button type="button" class="opt" aria-pressed="false">Customer complaint / audit</button><button type="button" class="opt" aria-pressed="false">Cost pressure</button><button type="button" class="opt" aria-pressed="false">New line or product</button><button type="button" class="opt" aria-pressed="false">Leadership target</button></div>
+          <textarea rows="3" name="why_now" maxlength="1500" placeholder="Anything else on timing"></textarea>
+        </div>
+        <div class="wstep" data-s="3">
+          <span class="qnum">4 / 4 · Your details</span>
+          <h3>Where should we reply?</h3>
+          <div class="two-in" style="margin-top:14px">
+            <label>Name &amp; organization<input type="text" name="name" id="f-name" maxlength="50" required placeholder="You &amp; your organization"></label>
+            <label>Work email<input type="email" name="email" id="f-email" maxlength="120" required placeholder="you@company.com"></label>
+          </div>
+          <p class="fine">By sending, you agree to our <a href="/privacy.html">Privacy Policy</a>. We use your details only to respond — no marketing, no sharing.</p>
+          <p class="fine" id="wizErr" role="alert" style="display:none;color:var(--alarm)">Something went wrong sending your message. Please try again, or email info@demaico.com.</p>
+        </div>
+        <div class="wstep" data-s="4">
+          <div class="done"><div class="glyph">✓</div><h3>Thanks — that's the Define phase done.</h3><p class="hint" style="margin-top:8px">Your message is on its way. We'll be in touch shortly.</p></div>
+        </div>
+        <div class="wnav" id="wnav">
+          <button type="button" class="back" id="back" style="visibility:hidden">← Back</button>
+          <button type="button" class="btn btn-primary" id="next">Continue →</button>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div><img src="/logo-light.png" alt="DeMAICo" width="92" height="32"><p>Lean Six Sigma improvement and analytics, plus business &amp; manufacturing consulting.</p></div>
+      <div><h5>Lean Six Sigma</h5><a href="/lean-six-sigma.html">Process Improvement</a><a href="/platform.html">Analytics Platform</a></div>
+      <div><h5>Consulting Services</h5><a href="/services.html#s-bpc">Business Process</a><a href="/services.html#s-data">Data &amp; Reporting</a><a href="/services.html#s-devops">DevOps &amp; Validation</a></div>
+      <div><h5>Company</h5><a href="/contact.html">Contact</a><a href="https://www.linkedin.com/company/demaico">LinkedIn</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></div>
+    </div>
+    <div class="legal"><span>© 2026 DeMAICo — All rights reserved.</span></div>
+  </div>
+</footer>
+
+<script src="/main.js"></script>
+</body>
+</html>
