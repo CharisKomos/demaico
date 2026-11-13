@@ -337,3 +337,20 @@ footer{background:var(--ink);color:#B8B5AE;padding:60px 0 30px;margin-top:0}
 .legal{border-top:1px solid #2A2E35;margin-top:40px;padding-top:20px;font-family:var(--mono);font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
 @media(max-width:760px){.foot{grid-template-columns:1fr 1fr}}
 
+
+/* legal pages */
+.legal-meta{font-family:var(--mono);font-size:13px;color:var(--ink-3);margin-top:18px}
+.legal-meta a{color:var(--signal-ink)}
+.prose{max-width:760px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:44px 48px;font-size:17px;color:var(--ink-2)}
+.prose>*+*{margin-top:14px}
+.prose h2{font-size:30px;color:var(--ink);margin-top:40px;padding-top:28px;border-top:1px solid var(--line);scroll-margin-top:90px}
+.prose h2:first-child{margin-top:0;padding-top:0;border-top:0}
+.prose h3{font-family:var(--body);font-size:18px;font-weight:600;color:var(--ink);margin-top:22px}
+.prose strong{color:var(--ink);font-weight:600}
+.prose a{color:var(--signal-ink);text-underline-offset:3px}
+.prose ul,.prose ol{padding-left:22px;display:flex;flex-direction:column;gap:6px}
+.prose li::marker{color:var(--signal)}
+.prose table{width:100%;border-collapse:collapse;font-size:15.5px;display:block;overflow-x:auto}
+.prose th{font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);text-align:left;background:var(--paper)}
+.prose th,.prose td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+@media(max-width:700px){.prose{padding:28px 22px}.prose h2{font-size:26px}}

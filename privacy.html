@@ -4,61 +4,53 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Privacy Policy — DeMAICo</title>
-  <meta name="description" content="How DeMAICo collects, uses, and protects personal data, in compliance with the EU GDPR and Cyprus data protection law." />
+  <meta name="description" content="How DeMAICo collects, uses and protects personal data." />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="apple-touch-icon" href="/favicon.png" />
   <link rel="stylesheet" href="/fonts.css" />
-  <style>
-    :root {
-      --bg: #0b0b0b; --bg-surface: #111111; --accent: #e8890c;
-      --text: #f0ece4; --text-muted: #888070;
-      --border: rgba(232,137,12,0.15); --border-strong: rgba(232,137,12,0.35);
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Barlow', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
-    a { color: var(--accent); }
-    .legal-nav {
-      position: sticky; top: 0; z-index: 10;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 40px; height: 64px;
-      background: rgba(11,11,11,0.92); backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    .legal-logo { display: inline-flex; align-items: center; text-decoration: none; }
-    .legal-logo img { height: 36px; width: auto; display: block; }
-    .legal-logo .logo-dmaic { color: var(--accent); }
-    .legal-back { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); text-decoration: none; }
-    .legal-back:hover { color: var(--accent); }
-    .legal-wrap { max-width: 820px; margin: 0 auto; padding: 80px 40px 120px; }
-    .legal-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
-    h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(40px, 7vw, 72px); letter-spacing: 1px; line-height: 0.95; margin-bottom: 12px; }
-    .legal-meta { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text-muted); margin-bottom: 48px; }
-    h2 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 26px; letter-spacing: 0.5px; text-transform: uppercase; margin: 44px 0 14px; color: var(--text); }
-    h3 { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 19px; margin: 24px 0 8px; color: var(--accent); }
-    p, li { font-size: 16px; color: #d8d2c8; }
-    ul { margin: 8px 0 8px 22px; }
-    li { margin-bottom: 6px; }
-    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-    th, td { text-align: left; padding: 10px 12px; border: 1px solid var(--border); font-size: 15px; vertical-align: top; }
-    th { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); background: var(--bg-surface); }
-    .legal-note { border-left: 3px solid var(--accent); background: var(--bg-surface); padding: 14px 18px; margin: 24px 0; font-size: 15px; color: var(--text-muted); }
-    .legal-footer { border-top: 1px solid var(--border); padding: 28px 40px; text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--text-muted); }
-    strong { color: var(--text); }
-  </style>
+  <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-  <nav class="legal-nav">
-    <a href="/" class="legal-logo"><img src="/logo-light.png" alt="DeMAICo" width="104" height="36" style="display:block;height:36px;width:auto" /></a>
-    <a href="/" class="legal-back">← Back to site</a>
-  </nav>
 
-  <main class="legal-wrap">
-    <div class="legal-label">Legal</div>
-    <h1>Privacy Policy</h1>
-    <div class="legal-meta">Last updated: 25 July 2026</div>
+<header>
+  <div class="wrap hdr">
+    <a href="/" class="logo" aria-label="DeMAICo home"><img src="/logo-dark.png" alt="DeMAICo" width="104" height="36"></a>
+    <nav class="main" aria-label="Main">
+      <a href="/" data-nav="home">Overview</a>
+      <span class="navgrp"><span class="navlbl">Lean Six Sigma</span>
+        <a href="/lean-six-sigma.html" data-nav="six-sigma">Process Improvement</a>
+        <a href="/platform.html" data-nav="platform">Analytics Platform</a></span>
+      <span class="navsep" aria-hidden="true"></span>
+      <a href="/services.html" data-nav="services">Consulting Services</a>
+    </nav>
+    <a href="/contact.html" class="btn btn-primary btn-sm">Book a diagnostic call</a>
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="mnav"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mnav" id="mnav">
+    <a href="/">Overview</a>
+    <span class="mlbl">Lean Six Sigma</span>
+    <a href="/lean-six-sigma.html">Process Improvement</a>
+    <a href="/platform.html">Analytics Platform</a>
+    <span class="mlbl">Consulting</span>
+    <a href="/services.html">Consulting Services</a>
+    <a href="/contact.html" class="btn btn-primary">Book a diagnostic call</a>
+  </div>
+</header>
 
-    <p>This Privacy Policy explains how <strong>DeMAICo</strong> ("we", "us") collects, uses, and protects personal data when you visit <strong>demaico.com</strong> or contact us. We process personal data in accordance with the EU General Data Protection Regulation (Regulation (EU) 2016/679, "GDPR") and the Cyprus Law Providing for the Protection of Natural Persons with Regard to the Processing of Personal Data (Law 125(I)/2018).</p>
+<main id="main">
+  <section class="phero" style="padding-bottom:32px">
+    <div class="wrap">
+      <div class="crumbs"><a href="/">Overview</a> / Legal / Privacy Policy</div>
+      <div class="eyebrow">Legal</div>
+      <h1 style="margin-top:16px">Privacy Policy</h1>
+      <p class="legal-meta">Last updated: 13 November 2026 · See also our <a href="/terms.html">Terms of Use</a></p>
+    </div>
+  </section>
+  <section style="padding-top:0">
+    <div class="wrap">
+      <article class="prose">
+<p>This Privacy Policy explains how <strong>DeMAICo</strong> ("we", "us") collects, uses, and protects personal data when you visit <strong>demaico.com</strong> or contact us. We process personal data in accordance with the EU General Data Protection Regulation (Regulation (EU) 2016/679, "GDPR") and the Cyprus Law Providing for the Protection of Natural Persons with Regard to the Processing of Personal Data (Law 125(I)/2018).</p>
 
     <h2>1. Data Controller</h2>
     <p>The controller responsible for your personal data is:</p>
@@ -75,6 +67,7 @@
       <li>Your name, company, or organisation</li>
       <li>Email address</li>
       <li>The content of your responses to our questions (the challenge you want to solve, what you have already tried, and why now)</li>
+      <li>Any quick-pick options you select in the form and, if you used it, the figures and result from our sigma-level check</li>
     </ul>
     <h3>b) Technical data (hosting logs)</h3>
     <p>Our website is hosted on GitHub Pages and delivered through Cloudflare, which provides our DNS, content-delivery (CDN), and security layer. To serve the site and protect it against abuse, these providers may automatically process technical information such as your IP address, the pages you request, and your browser user-agent. We do not use this data to identify or profile you.</p>
@@ -134,11 +127,25 @@
 
     <h2>12. Contact</h2>
     <p>For any question about this policy or your personal data, contact <a href="mailto:privacy@demaico.com">privacy@demaico.com</a>.</p>
-  </main>
+      </article>
+    </div>
+  </section>
+</main>
 
-  <footer class="legal-footer">
-    <img src="/logo-light.png" alt="DeMAICo" width="98" height="34" style="display:block;height:34px;width:auto;margin:0 auto 14px" />
-    © 2026 DeMAICo &nbsp;·&nbsp; <a href="/terms.html">Terms of Use</a> &nbsp;·&nbsp; <a href="/">Home</a>
-  </footer>
+<div class="slimcta" id="slimcta"><span>Not sure where to start? A diagnostic call scopes it in 30 minutes.</span><a href="/contact.html" class="btn">Book a call</a></div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div><img src="/logo-light.png" alt="DeMAICo" width="92" height="32"><p>Lean Six Sigma improvement and analytics, plus business &amp; manufacturing consulting.</p></div>
+      <div><h5>Lean Six Sigma</h5><a href="/lean-six-sigma.html">Process Improvement</a><a href="/platform.html">Analytics Platform</a></div>
+      <div><h5>Consulting Services</h5><a href="/services.html#s-bpc">Business Process</a><a href="/services.html#s-data">Data &amp; Reporting</a><a href="/services.html#s-devops">DevOps &amp; Validation</a></div>
+      <div><h5>Company</h5><a href="/contact.html">Contact</a><a href="https://www.linkedin.com/company/demaico">LinkedIn</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></div>
+    </div>
+    <div class="legal"><span>© 2026 DeMAICo — All rights reserved.</span></div>
+  </div>
+</footer>
+
+<script src="/main.js"></script>
 </body>
 </html>
