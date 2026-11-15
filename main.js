@@ -142,7 +142,7 @@ if(wiz){
     document.getElementById('f-'+g.dataset.group).value=[...g.querySelectorAll('.opt.on')].map(o=>o.textContent).join(', ')});
   const next=document.getElementById('next'),back=document.getElementById('back'),err=document.getElementById('wizErr');
   function show(i){ws=i;steps.forEach((s,j)=>s.classList.toggle('on',j===i));bars.forEach((b,j)=>b.classList.toggle('on',j<=i));
-    back.style.visibility=i>0&&i<4?'visible':'hidden';next.textContent=i===3?'Send message →':'Continue →';
+    back.style.visibility=i>0&&i<4?'visible':'hidden';next.textContent=i===3?'Send message':'Continue →';
     document.getElementById('wnav').style.display=i===4?'none':'flex';
     const f=steps[i].querySelector('textarea,input:not([type=hidden])');if(f&&i>0)f.focus({preventScroll:true})}
   async function send(){
@@ -153,10 +153,13 @@ if(wiz){
     next.disabled=true;next.textContent='Sending…';err.style.display='none';
     try{
       const r=await fetch(wiz.action,{method:'POST',body:new FormData(wiz),headers:{Accept:'application/json'}});
+      // Formspree refuses background (AJAX) posts while its reCAPTCHA is on: fall back to a normal submit,
+      // which shows Formspree's CAPTCHA and confirmation page, as the old form did.
+      if(r.status===403){HTMLFormElement.prototype.submit.call(wiz);return}
       if(!r.ok)throw new Error(r.status);
       try{sessionStorage.removeItem('dm_sigma')}catch(_){}
       show(4);
-    }catch(_){err.style.display='block';next.textContent='Send message →'}
+    }catch(_){err.style.display='block';next.textContent='Send message'}
     next.disabled=false;
   }
   next.onclick=()=>{if(ws===3)send();else show(Math.min(3,ws+1))};
