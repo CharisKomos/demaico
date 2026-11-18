@@ -166,3 +166,13 @@ if(wiz){
   back.onclick=()=>show(Math.max(0,ws-1));
   wiz.addEventListener('submit',e=>{e.preventDefault();if(ws===3)send();else show(ws+1)});
 }
+
+/* ---------- role tabs (home page) ---------- */
+const lpTabs=[...document.querySelectorAll('.lp-tabs [role=tab]')];
+if(lpTabs.length){
+  const pick=t=>{lpTabs.forEach(x=>{const on=x===t;x.setAttribute('aria-selected',on);x.tabIndex=on?0:-1;document.getElementById(x.getAttribute('aria-controls')).hidden=!on})};
+  lpTabs.forEach((t,i)=>{
+    t.addEventListener('click',()=>pick(t));
+    t.addEventListener('keydown',e=>{const d=e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0;if(!d)return;e.preventDefault();const n=lpTabs[(i+d+lpTabs.length)%lpTabs.length];pick(n);n.focus()});
+  });
+}
