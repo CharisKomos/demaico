@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How we work — DeMAICo Lean Six Sigma Process Improvement &amp; Analytics</title>
+  <meta name="description" content="DeMAICo runs Lean Six Sigma projects on your own historian, MES and back-office data, and leaves a live analytics platform in your control plan so the gains hold. We also offer business and manufacturing consulting services." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
+  <link rel="stylesheet" href="/fonts.css" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+<header>
+  <div class="wrap hdr">
+    <a href="/" class="logo" aria-label="DeMAICo home"><img src="/logo-dark.png" alt="DeMAICo" width="104" height="36"></a>
+    <nav class="main" aria-label="Main">
+      <a href="/" data-nav="home">Home</a>
+      <span class="navgrp"><span class="navlbl">Lean Six Sigma</span>
+        <a href="/lean-six-sigma" data-nav="six-sigma">Fix a process</a>
+        <a href="/platform" data-nav="platform">Live dashboard</a></span>
+      <span class="navsep" aria-hidden="true"></span>
+      <a href="/services" data-nav="services">Consulting Services</a>
+    </nav>
+    <a href="/contact" class="btn btn-primary btn-sm">Book a diagnostic call</a>
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="mnav"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mnav" id="mnav">
+    <a href="/">Home</a>
+    <span class="mlbl">Lean Six Sigma</span>
+    <a href="/lean-six-sigma">Fix a process</a>
+    <a href="/platform">Live dashboard</a>
+    <span class="mlbl">Consulting</span>
+    <a href="/services">Consulting Services</a>
+    <a href="/contact" class="btn btn-primary">Book a diagnostic call</a>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow">Lean Six Sigma · DMAIC · Live SPC</div>
+        <h1 style="margin-top:18px">Make your process <span class="hl">capable</span>.<br>Then keep it that way.</h1>
+        <p class="lead">DeMAICo runs Lean Six Sigma projects with your team on your own historian, MES and back-office data — and leaves a live analytics platform in your control plan so the gain doesn't drift once we leave.</p>
+        <div class="cta-row">
+          <a href="/contact" class="btn btn-primary">Book a diagnostic call →</a>
+          <a href="/platform" class="btn btn-ghost">See the platform</a>
+        </div>
+        <div class="proof-line"><span>Works on your existing data</span><span>21 CFR Part 11 / Annex 11 traceable</span><span>Plant floor to back office</span></div>
+      </div>
+
+      <div class="panel" aria-label="Live SPC chart illustration">
+        <div class="panel-top"><span>Line 2 · Melt Flow Index · CTQ</span><span class="live">LIVE</span></div>
+        <div class="kpis">
+          <div class="kpi"><small>Cpk</small><b id="h-cpk">1.41</b></div>
+          <div class="kpi"><small>Sigma</small><b id="h-sig">4.24</b></div>
+          <div class="kpi"><small>OEE</small><b id="h-oee">0.87</b></div>
+          <div class="kpi"><small>Violations</small><b id="h-vio" class="warn">0</b></div>
+        </div>
+        <div class="chart-box"><svg id="heroChart" viewBox="0 0 520 210" preserveAspectRatio="none"></svg>
+          <div class="legend"><span><i style="background:#4FA3F7"></i>process</span><span><i style="background:#8D929B"></i>centre line</span><span><i style="background:#E5625A"></i>UCL / LCL</span><span><i style="background:var(--signal);height:8px;width:8px;border-radius:50%"></i>rule violation</span></div>
+        </div>
+        <div class="toast" id="heroToast"></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top:20px">
+    <div class="wrap">
+      <div class="eyebrow">Our Lean Six Sigma offering</div>
+      <h2>Experts who run the project.<br>An instrument that holds the result.</h2>
+      <div class="two">
+        <a href="/lean-six-sigma" class="way">
+          <span class="tag">Lean Six Sigma · Projects</span>
+          <span class="glyph">Δ</span>
+          <h3>Lean Six Sigma process improvement</h3>
+          <p>Capability studies, waste elimination and OEE projects led on your floor, evidenced with your data, handed over to your team.</p>
+          <span class="go">Explore process improvement</span>
+        </a>
+        <a href="/platform" class="way dark">
+          <span class="tag">Lean Six Sigma · Software</span>
+          <span class="glyph">6σ</span>
+          <h3>Lean Six Sigma Analytics Platform</h3>
+          <p>Scores CTQs every 5 seconds, detects and classifies deviations, and tracks each improvement from baseline to verified gain.</p>
+          <span class="go">Explore the platform</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="phases">
+    <div class="wrap">
+      <div class="eyebrow">How an engagement runs</div>
+      <h2>Every phase of DMAIC,<br>people and platform side by side.</h2>
+      <p class="lead">Pick a phase to see what our consultants do, what the platform does, and what you keep.</p>
+      <div class="steps" role="tablist" id="steps"></div>
+      <div class="step-body" id="stepBody"></div>
+    </div>
+  </section>
+
+  <section id="check">
+    <div class="wrap">
+      <div class="eyebrow">Quick check</div>
+      <h2>Where does your process stand?</h2>
+      <p class="lead">Enter one month of results. We'll estimate your sigma level the way a Measure phase would start.</p>
+      <div class="calc">
+        <div class="calc-in">
+          <label>Units produced or transactions processed<input type="number" id="c-units" value="12000" min="1"></label>
+          <label>Defects found<small>Rejects, rework, errors, late orders…</small><input type="number" id="c-def" value="180" min="0"></label>
+          <label>Defect opportunities per unit<small>Number of CTQs that can fail on one unit</small><input type="number" id="c-opp" value="4" min="1"></label>
+        </div>
+        <div class="calc-out">
+          <div class="mono" style="font-size:12px;color:var(--panel-mute);letter-spacing:.1em">ESTIMATED SIGMA LEVEL (1.5σ SHIFT)</div>
+          <div class="sig" id="c-sig">3.9<small>σ</small></div>
+          <div><div class="gauge"><i id="c-g"></i></div><div class="gscale" style="margin-top:8px"><span>1σ</span><span>2σ</span><span>3σ</span><span>4σ</span><span>5σ</span><span>6σ</span></div></div>
+          <div class="calc-stats">
+            <div><small>DPMO</small><b id="c-dpmo">–</b></div>
+            <div><small>Yield</small><b id="c-yield">–</b></div>
+          </div>
+          <p class="verdict" id="c-verdict"></p>
+          <a href="/contact" class="btn" id="c-cta" style="background:var(--signal);color:var(--ink);align-self:flex-start">Discuss this result →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alsoband">
+    <div class="wrap">
+      <div class="eyebrow">Also from DeMAICo</div>
+      <h2>Consulting Services</h2>
+      <p class="lead">Separate from our Six Sigma offering: hands-on consulting for the processes, data and software that run your operation.</p>
+      <div class="also">
+        <a href="/services#s-bpc"><b>Business Process Consulting</b><span>Operating models, KPIs, service levels and change management.</span></a>
+        <a href="/services#s-data"><b>Data &amp; Reporting</b><span>ERP, MES and historian integration, published in Power BI.</span></a>
+        <a href="/services#s-devops"><b>Manufacturing DevOps &amp; Validation</b><span>CI/CD and automated testing for manufacturing software.</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" style="padding:70px 0">
+    <div class="wrap">
+      <div class="eyebrow">Where we work</div>
+      <div class="sectors">
+        <h4>Manufacturing</h4>
+        <div class="chips"><span class="chip">Oil, Gas &amp; Petrochemical</span><span class="chip">Chemical</span><span class="chip">Pharma &amp; Biotech</span><span class="chip">Discrete</span><span class="chip">Power &amp; Utilities</span><span class="chip">Food &amp; Beverage</span></div>
+        <h4>Services</h4>
+        <div class="chips"><span class="chip">Banking &amp; Financial Services</span><span class="chip">Logistics &amp; Distribution</span><span class="chip">Shared Services &amp; Back Office</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="slimcta" id="slimcta"><span>Not sure where to start? A diagnostic call scopes it in 30 minutes.</span><a href="/contact" class="btn">Book a diagnostic call</a></div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div><img src="/logo-light.png" alt="DeMAICo" width="92" height="32"><p>Lean Six Sigma improvement and analytics, plus business &amp; manufacturing consulting.</p></div>
+      <div><h5>Lean Six Sigma</h5><a href="/lean-six-sigma">Fix a process</a><a href="/platform">Live dashboard</a><a href="/how-we-work">How we work</a></div>
+      <div><h5>Consulting Services</h5><a href="/services#s-bpc">Business Process</a><a href="/services#s-data">Data &amp; Reporting</a><a href="/services#s-devops">DevOps &amp; Validation</a></div>
+      <div><h5>Company</h5><a href="/contact">Contact</a><a href="https://www.linkedin.com/company/demaico">LinkedIn</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></div>
+    </div>
+    <div class="legal"><span>© 2026 DeMAICo Consulting Services — All rights reserved.</span></div>
+  </div>
+</footer>
+
+<script src="/main.js"></script>
+</body>
+</html>
